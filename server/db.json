@@ -161,7 +161,7 @@
       "address": "Calle Mercaderes 212, Arequipa"
     }
   ],
-  "tour_guides": [
+  "tourGuides": [
     {
       "id": "ec362332-9638-5382-abf5-2d43687b58b8",
       "userId": "5e3c3753-5f11-50c6-8395-0c1487e02d52",
@@ -532,7 +532,7 @@
       "description": "Punto de control 3: Cráter del Misti."
     }
   ],
-  "tour_schedules": [
+  "tourSchedules": [
     {
       "id": "5b0ec346-9de5-5286-98d6-54ae2a90e25b",
       "tourId": "c4ff7839-f81a-5570-924a-98288fd7006f",
@@ -924,7 +924,7 @@
       "joinedAt": "2026-09-02T20:45:00"
     }
   ],
-  "active_tours": [
+  "activeTours": [
     {
       "id": "75bdf7a9-8b4c-562b-b312-110782159389",
       "tourScheduleId": "5b0ec346-9de5-5286-98d6-54ae2a90e25b",
@@ -1018,7 +1018,7 @@
       "priceCurrency": "USD"
     }
   ],
-  "plan_features": [
+  "planFeatures": [
     {
       "id": "b2cfa400-2d63-5753-9ca2-0d765c636dae",
       "planId": "a121811b-48db-580c-b589-425ff7193629",
