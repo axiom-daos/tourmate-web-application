@@ -1,7 +1,5 @@
 import {Routes} from '@angular/router';
 
-
-
 /**
  * Route tree for learning presentation views.
  */
