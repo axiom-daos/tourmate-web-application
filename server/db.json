@@ -216,7 +216,7 @@
       "difficulty": "MEDIUM",
       "priceAmount": 180,
       "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "status": "PUBLISHED"
     },
     {
       "id": 2,
@@ -227,7 +227,7 @@
       "difficulty": "HARD",
       "priceAmount": 650,
       "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "status": "PUBLISHED"
     },
     {
       "id": 3,
@@ -238,7 +238,7 @@
       "difficulty": "EASY",
       "priceAmount": 90,
       "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "status": "PUBLISHED"
     },
     {
       "id": 4,
@@ -249,7 +249,7 @@
       "difficulty": "EASY",
       "priceAmount": 45,
       "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "status": "PUBLISHED"
     },
     {
       "id": 5,
@@ -260,7 +260,7 @@
       "difficulty": "EASY",
       "priceAmount": 70,
       "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "status": "PUBLISHED"
     },
     {
       "id": 6,
@@ -271,7 +271,7 @@
       "difficulty": "EASY",
       "priceAmount": 120,
       "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "status": "PUBLISHED"
     },
     {
       "id": 7,
@@ -282,7 +282,7 @@
       "difficulty": "MEDIUM",
       "priceAmount": 210,
       "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "status": "PUBLISHED"
     },
     {
       "id": 8,
@@ -293,7 +293,7 @@
       "difficulty": "HARD",
       "priceAmount": 320,
       "priceCurrency": "USD",
-      "status": "INACTIVE"
+      "status": "UNAVAILABLE"
     }
   ],
   "checkpoints": [
@@ -538,112 +538,112 @@
       "tourId": 1,
       "departureDatetime": "2026-10-01T06:30:00",
       "maxCapacity": 10,
-      "status": "IN_PROGRESS"
+      "status": "CLOSED"
     },
     {
       "id": 2,
       "tourId": 1,
       "departureDatetime": "2026-11-06T07:00:00",
       "maxCapacity": 20,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 3,
       "tourId": 2,
       "departureDatetime": "2026-10-05T07:00:00",
       "maxCapacity": 10,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 4,
       "tourId": 2,
       "departureDatetime": "2026-09-20T07:00:00",
       "maxCapacity": 10,
-      "status": "COMPLETED"
+      "status": "OPENED"
     },
     {
       "id": 5,
       "tourId": 3,
       "departureDatetime": "2026-10-06T07:00:00",
       "maxCapacity": 10,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 6,
       "tourId": 3,
       "departureDatetime": "2026-11-08T07:00:00",
       "maxCapacity": 20,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 7,
       "tourId": 4,
       "departureDatetime": "2026-10-01T07:00:00",
       "maxCapacity": 12,
-      "status": "IN_PROGRESS"
+      "status": "CLOSED"
     },
     {
       "id": 8,
       "tourId": 4,
       "departureDatetime": "2026-11-09T07:00:00",
       "maxCapacity": 20,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 9,
       "tourId": 5,
       "departureDatetime": "2026-10-01T08:00:00",
       "maxCapacity": 15,
-      "status": "IN_PROGRESS"
+      "status": "CLOSED"
     },
     {
       "id": 10,
       "tourId": 5,
       "departureDatetime": "2026-11-10T07:00:00",
       "maxCapacity": 10,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 11,
       "tourId": 6,
       "departureDatetime": "2026-10-09T07:00:00",
       "maxCapacity": 15,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 12,
       "tourId": 6,
       "departureDatetime": "2026-11-11T07:00:00",
       "maxCapacity": 12,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 13,
       "tourId": 7,
       "departureDatetime": "2026-10-10T07:00:00",
       "maxCapacity": 10,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 14,
       "tourId": 7,
       "departureDatetime": "2026-11-12T07:00:00",
       "maxCapacity": 10,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 15,
       "tourId": 8,
       "departureDatetime": "2026-10-11T07:00:00",
       "maxCapacity": 12,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 16,
       "tourId": 8,
       "departureDatetime": "2026-11-13T07:00:00",
       "maxCapacity": 12,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     }
   ],
   "participants": [
