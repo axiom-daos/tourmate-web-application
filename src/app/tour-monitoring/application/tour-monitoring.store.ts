@@ -4,6 +4,7 @@ import {TourMonitoringApi} from '../infrastructure/tour-monitoring-api';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {retry} from 'rxjs';
 import {TourGuide} from '../domain/model/tour-guide.entity';
+import {TourSchedule} from '../domain/model/tour-schedule.entity';
 
 /**
  * Holds tourMonitoring application state and coordinates activeTour application layer behavior.
@@ -14,11 +15,10 @@ import {TourGuide} from '../domain/model/tour-guide.entity';
 export class TourMonitoringStore {
   private readonly tourMonitoringApi = inject(TourMonitoringApi);
 
-  /**
-   * Computed signal for the count of activeTours.
-   */
+
   readonly activeTourCount = computed(() => this.activeTours().length);
   readonly tourGuideCount = computed(() => this.tourGuides().length);
+  readonly tourScheduleCount = computed(() => this.tourSchedules().length);
 
 
   private readonly activeToursSignal = signal<ActiveTour[]>([]);
@@ -29,6 +29,8 @@ export class TourMonitoringStore {
   readonly activeTours = this.activeToursSignal.asReadonly();
   private readonly tourGuidesSignal = signal<TourGuide[]>([]);
   readonly tourGuides = this.tourGuidesSignal.asReadonly();
+  private readonly tourSchedulesSignal = signal<TourSchedule[]>([]);
+  readonly tourSchedules = this.tourSchedulesSignal.asReadonly();
 
 
 
@@ -55,6 +57,7 @@ export class TourMonitoringStore {
 
     this.loadActiveTours();
     this.loadTourGuides();
+    this.loadTourSchedules();
   }
 
   /**
@@ -151,6 +154,7 @@ export class TourMonitoringStore {
   };
 
 
+
   getTourGuideById = (id: number): Signal<TourGuide | undefined> => {
     return computed(() => id ? this.tourGuides().find(c => c.id === id) : undefined);
   }
@@ -230,6 +234,92 @@ export class TourMonitoringStore {
       },
       error: err => {
         this.errorSignal.set(this.formatError(err, 'Failed to load tourGuides'));
+        this.loadingSignal.set(false);
+      }
+    });
+  };
+
+
+
+  getTourScheduleById = (id: number): Signal<TourSchedule | undefined> => {
+    return computed(() => id ? this.tourSchedules().find(c => c.id === id) : undefined);
+  }
+  /**
+   * adds a new tourSchedule.
+   * @param tourSchedule - The tourSchedule to add.
+   */
+  addTourSchedule = (tourSchedule: TourSchedule): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.createTourSchedule(tourSchedule).pipe(retry(2)).subscribe({
+      next: createdTourSchedule => {
+
+        this.tourSchedulesSignal.update(tourSchedules => [...tourSchedules, createdTourSchedule]);
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to create tourSchedule'));
+        this.loadingSignal.set(false);
+      }
+    });
+  };
+
+  /**
+   * Updates an existing tourSchedule.
+   * @param updatedTourSchedule - The tourSchedule to update.
+   */
+  updateTourSchedule = (updatedTourSchedule: TourSchedule): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.updateTourSchedule(updatedTourSchedule).pipe(retry(2)).subscribe({
+      next: tourSchedule => {
+
+        this.tourSchedulesSignal.update(tourSchedules =>
+          tourSchedules.map(c => c.id === tourSchedule.id ? tourSchedule : c)
+        );
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to update tourSchedule'));
+        this.loadingSignal.set(false);
+      }
+    });
+  }
+
+  /**
+   * Deletes a tourSchedule by ID.
+   * @param id - The ID of the tourSchedule to delete.
+   */
+  deleteTourSchedule = (id: number): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.deleteTourSchedule(id).pipe(retry(2)).subscribe({
+      next: () => {
+        this.tourSchedulesSignal.update(tourSchedules => tourSchedules.filter(c => c.id !== id));
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to delete tourSchedule'));
+        this.loadingSignal.set(false);
+      }
+    });
+  }
+
+  private loadTourSchedules = (): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.getTourSchedules().pipe(takeUntilDestroyed()).subscribe({
+      next: tourSchedules => {
+        console.log(tourSchedules);
+        this.tourSchedulesSignal.set(tourSchedules);
+        this.loadingSignal.set(false);
+        this.errorSignal.set(null);
+
+
+
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to load tourSchedules'));
         this.loadingSignal.set(false);
       }
     });

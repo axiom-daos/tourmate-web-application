@@ -6,6 +6,8 @@ import {Observable} from 'rxjs';
 import {ActiveToursApiEndpoint} from './active-tours-api-endpoint';
 import {TourGuidesApiEndpoint} from './tour-guides-api-endpoint';
 import {TourGuide} from '../domain/model/tour-guide.entity';
+import {TourSchedule} from '../domain/model/tour-schedule.entity';
+import {TourSchedulesApiEndpoint} from './tour-schedules-api-endpoint';
 
 /**
  * Infrastructure facade for active tours endpoint operations.
@@ -15,7 +17,7 @@ export class TourMonitoringApi extends BaseApi {
   private readonly http = inject(HttpClient);
   private readonly activeToursEndpoint = new ActiveToursApiEndpoint(this.http);
   private readonly tourGuidesEndpoint = new TourGuidesApiEndpoint(this.http);
-
+  private readonly tourSchedulesEndpoint = new TourSchedulesApiEndpoint(this.http);
 
   /**
    * Retrieves all active tours.
@@ -101,4 +103,42 @@ export class TourMonitoringApi extends BaseApi {
 
 
 
+  /**
+   * Retrieves all tourSchedules.
+   * @returns Stream with the tourSchedule collection.
+   */
+  getTourSchedules = (): Observable<TourSchedule[]> =>
+    this.tourSchedulesEndpoint.getAll();
+
+  /**
+   * Retrieves a single tourSchedule by ID.
+   * @param id - The ID of the tourSchedule.
+   * @returns An Observable of the TourSchedule object.
+   */
+  getTourSchedule = (id: number): Observable<TourSchedule> =>
+    this.tourSchedulesEndpoint.getById(id);
+
+  /**
+   * Creates a new tourSchedule.
+   * @param tourSchedule - The tourSchedule to create.
+   * @returns An Observable of the created TourSchedule object.
+   */
+  createTourSchedule = (tourSchedule: TourSchedule): Observable<TourSchedule> =>
+    this.tourSchedulesEndpoint.create(tourSchedule);
+
+  /**
+   * Updates an existing tourSchedule.
+   * @param tourSchedule - The tourSchedule to update.
+   * @returns An Observable of the updated TourSchedule object.
+   */
+  updateTourSchedule = (tourSchedule: TourSchedule): Observable<TourSchedule> =>
+    this.tourSchedulesEndpoint.update(tourSchedule, tourSchedule.id);
+
+  /**
+   * Deletes a tourSchedule by ID.
+   * @param id - The ID of the tourSchedule to delete.
+   * @returns An Observable of void.
+   */
+  deleteTourSchedule = (id: number): Observable<void> =>
+    this.tourSchedulesEndpoint.delete(id);
 }
