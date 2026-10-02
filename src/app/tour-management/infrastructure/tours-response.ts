@@ -1,5 +1,6 @@
+import {BaseResource, BaseResponse} from '../../shared/infrastructure/base-response';
 
-export interface TourResponse  {
+export interface TourResource extends BaseResource {
 
   id: number,
   agencyId: number,
@@ -15,4 +16,10 @@ export interface TourResponse  {
     status: string
   }
 
+}
+
+
+export interface ToursResponse extends BaseResponse {
+
+  tours: TourResource[]
 }
