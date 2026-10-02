@@ -9,7 +9,7 @@ const baseTitle = 'Tour Mate';
 export const routes: Routes = [
   { path: 'home',     component:      Home,                         title: `${baseTitle} - Home`  },
   { path: 'about',    loadComponent:  about,                        title: `${baseTitle} - About`  },
-  { path: 'monitoring', loadChildren:  tourMonitoringRoutes},
+  { path: 'tour-monitoring', loadChildren:  tourMonitoringRoutes},
   { path: '',         redirectTo:     '/home', pathMatch: 'full'  },
   { path: '**',       loadComponent:  pageNotFound,                 title: `${baseTitle} - Page Not Found`  },
 ];

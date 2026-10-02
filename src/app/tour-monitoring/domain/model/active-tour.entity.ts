@@ -1,32 +1,32 @@
 import {BaseEntity} from '../../../shared/domain/model/base-entity';
 
-export class ActiveTours implements BaseEntity {
+export class ActiveTour implements BaseEntity {
   #id: number;
-  #tourScheduleId: string;
-  #guideId: string;
+  #tourScheduleId: number;
+  #guideId: number;
   #status: string;
   #currentLatitude: number;
   #currentLongitude: number;
   #startedAt: string;
   #finishedAt: string | null;
 
-  constructor(activeTours:
+  constructor(activeTour:
               { id: number;
-                tourScheduleId: string;
-                guideId: string;
+                tourScheduleId: number;
+                guideId: number;
                 status: string;
                 currentLatitude: number;
                 currentLongitude: number;
                 startedAt: string;
                 finishedAt: string }) {
-    this.#id = activeTours.id;
-    this.#tourScheduleId = activeTours.tourScheduleId;
-    this.#guideId = activeTours.guideId;
-    this.#status = activeTours.status;
-    this.#currentLatitude = activeTours.currentLatitude;
-    this.#currentLongitude = activeTours.currentLongitude;
-    this.#startedAt = activeTours.startedAt;
-    this.#finishedAt = activeTours.finishedAt;
+    this.#id = activeTour.id;
+    this.#tourScheduleId = activeTour.tourScheduleId;
+    this.#guideId = activeTour.guideId;
+    this.#status = activeTour.status;
+    this.#currentLatitude = activeTour.currentLatitude;
+    this.#currentLongitude = activeTour.currentLongitude;
+    this.#startedAt = activeTour.startedAt;
+    this.#finishedAt = activeTour.finishedAt;
   }
 
   get id(): number {
@@ -36,17 +36,17 @@ export class ActiveTours implements BaseEntity {
     this.#id = value;
   }
 
-  get tourScheduleId(): string {
+  get tourScheduleId(): number {
     return this.#tourScheduleId;
   }
-  set tourScheduleId(value: string) {
+  set tourScheduleId(value: number) {
     this.#tourScheduleId = value;
   }
 
-  get guideId(): string {
+  get guideId(): number {
     return this.#guideId;
   }
-  set guideId(value: string) {
+  set guideId(value: number) {
     this.#guideId = value;
   }
 

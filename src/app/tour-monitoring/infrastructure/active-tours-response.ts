@@ -1,10 +1,10 @@
 import {BaseResource, BaseResponse} from '../../shared/infrastructure/base-response';
 
 
-export interface ActiveToursResource extends BaseResource{
+export interface ActiveTourResource extends BaseResource{
   id: number;
-  tourScheduleId: string;
-  guideId: string;
+  tourScheduleId: number;
+  guideId: number;
   status: string;
   currentLatitude: number;
   currentLongitude: number;
@@ -13,5 +13,5 @@ export interface ActiveToursResource extends BaseResource{
 }
 
 export interface ActiveToursResponse extends BaseResponse{
-  activeTours: ActiveToursResource[];
+  activeTours: ActiveTourResource[];
 }

@@ -1,0 +1,24 @@
+<h1 class="status">{{ (isEdit ? 'activeTour.edit-status' : 'activeTour.new-status') | translate }}</h1>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-form-field>
+    <mat-label>{{ 'activeTour.startedAt' | translate }}</mat-label>
+    <input matInput formControlName="startedAt" required>
+    @if (form.get('startedAt')?.touched && form.get('startedAt')!.hasError('required')) {
+      <mat-error>{{ 'activeTour.error.startedAt-required' | translate }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>{{ 'activeTour.status' | translate}}</mat-label>
+    <input matInput formControlName="status" required>
+    @if (form.get('status')?.touched && form.get('status')!.hasError('required')) {
+      <mat-error>{{ 'activeTour.error.status-required' | translate }}</mat-error>
+    }
+  </mat-form-field>
+
+
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+    {{ (isEdit ? 'activeTour.update' : 'activeTour.create') | translate }}
+  </button>
+</form>
