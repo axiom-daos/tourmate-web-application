@@ -210,12 +210,16 @@
     {
       "id": 1,
       "agencyId": 1,
-      "title": "Machu Picchu Clásico",
-      "description": "Visita guiada a la ciudadela inca de Machu Picchu.",
-      "duration": "1 día",
-      "difficulty": "MEDIUM",
-      "priceAmount": 180,
-      "priceCurrency": "USD",
+      "details": {
+        "title": "Machu Picchu Clásico",
+        "description": "Visita guiada a la ciudadela inca de Machu Picchu.",
+        "duration": "1 día",
+        "difficulty": "MEDIUM",
+        "price": {
+          "amount": 180,
+          "currency": "USD"
+        }
+      },
       "status": "PUBLISHED"
     },
     {
@@ -225,74 +229,100 @@
       "description": "Trekking clásico por el Camino Inca hasta Machu Picchu.",
       "duration": "4 días",
       "difficulty": "HARD",
-      "priceAmount": 650,
-      "priceCurrency": "USD",
+      "price": {
+        "amount": 650,
+        "currency": "USD"
+      },
       "status": "PUBLISHED"
     },
     {
       "id": 3,
       "agencyId": 1,
-      "title": "Valle Sagrado Express",
-      "description": "Pisac, Ollantaytambo y Chinchero en un solo día.",
-      "duration": "1 día",
-      "difficulty": "EASY",
-      "priceAmount": 90,
-      "priceCurrency": "USD",
+      "details": {
+        "title": "Valle Sagrado Express",
+        "description": "Pisac, Ollantaytambo y Chinchero en un solo día.",
+        "duration": "1 día",
+        "difficulty": "EASY",
+        "price": {
+          "amount": 90,
+          "currency": "USD"
+        }
+      },
       "status": "PUBLISHED"
     },
     {
       "id": 4,
       "agencyId": 2,
-      "title": "Lima Colonial y Centro Histórico",
-      "description": "Plaza de Armas, Catedral y Convento de San Francisco.",
-      "duration": "4 horas",
-      "difficulty": "EASY",
-      "priceAmount": 45,
-      "priceCurrency": "USD",
+      "details": {
+        "title": "Lima Colonial y Centro Histórico",
+        "description": "Plaza de Armas, Catedral y Convento de San Francisco.",
+        "duration": "4 horas",
+        "difficulty": "EASY",
+        "price": {
+          "amount": 45,
+          "currency": "USD"
+        }
+      },
       "status": "PUBLISHED"
     },
     {
       "id": 5,
       "agencyId": 2,
-      "title": "Tour Gastronómico Miraflores",
-      "description": "Degustación de ceviche, anticuchos y pisco sour.",
-      "duration": "3 horas",
-      "difficulty": "EASY",
-      "priceAmount": 70,
-      "priceCurrency": "USD",
+      "details": {
+        "title": "Tour Gastronómico Miraflores",
+        "description": "Degustación de ceviche, anticuchos y pisco sour.",
+        "duration": "3 horas",
+        "difficulty": "EASY",
+        "price": {
+          "amount": 70,
+          "currency": "USD"
+        }
+      },
       "status": "PUBLISHED"
     },
     {
       "id": 6,
       "agencyId": 2,
-      "title": "Paracas e Islas Ballestas",
-      "description": "Excursión en bote a las Islas Ballestas y Reserva de Paracas.",
-      "duration": "1 día",
-      "difficulty": "EASY",
-      "priceAmount": 120,
-      "priceCurrency": "USD",
+      "details": {
+        "title": "Paracas e Islas Ballestas",
+        "description": "Excursión en bote a las Islas Ballestas y Reserva de Paracas.",
+        "duration": "1 día",
+        "difficulty": "EASY",
+        "price": {
+          "amount": 120,
+          "currency": "USD"
+        }
+      },
       "status": "PUBLISHED"
     },
     {
       "id": 7,
       "agencyId": 3,
-      "title": "Cañón del Colca 2 días",
-      "description": "Mirador Cruz del Cóndor y baños termales de Chivay.",
-      "duration": "2 días",
-      "difficulty": "MEDIUM",
-      "priceAmount": 210,
-      "priceCurrency": "USD",
+      "details": {
+        "title": "Cañón del Colca 2 días",
+        "description": "Mirador Cruz del Cóndor y baños termales de Chivay.",
+        "duration": "2 días",
+        "difficulty": "MEDIUM",
+        "price": {
+          "amount": 210,
+          "currency": "USD"
+        }
+      },
       "status": "PUBLISHED"
     },
     {
       "id": 8,
       "agencyId": 3,
-      "title": "Ascenso al Misti",
-      "description": "Ascenso al volcán Misti (5,822 m).",
-      "duration": "2 días",
-      "difficulty": "HARD",
-      "priceAmount": 320,
-      "priceCurrency": "USD",
+      "details": {
+        "title": "Ascenso al Misti",
+        "description": "Ascenso al volcán Misti (5,822 m).",
+        "duration": "2 días",
+        "difficulty": "HARD",
+        "price": {
+          "amount": 320,
+          "currency": "USD"
+        }
+      },
       "status": "UNAVAILABLE"
     }
   ],
