@@ -13,9 +13,8 @@ export interface TourResource extends BaseResource {
       amount: number,
       currency: string
     },
-    status: string
-  }
-
+  },
+  status: string
 }
 
 
