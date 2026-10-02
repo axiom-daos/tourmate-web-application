@@ -4,6 +4,8 @@ import {ActiveTour} from '../domain/model/active-tour.entity';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ActiveToursApiEndpoint} from './active-tours-api-endpoint';
+import {TourGuidesApiEndpoint} from './tour-guides-api-endpoint';
+import {TourGuide} from '../domain/model/tour-guide.entity';
 
 /**
  * Infrastructure facade for active tours endpoint operations.
@@ -12,6 +14,7 @@ import {ActiveToursApiEndpoint} from './active-tours-api-endpoint';
 export class TourMonitoringApi extends BaseApi {
   private readonly http = inject(HttpClient);
   private readonly activeToursEndpoint = new ActiveToursApiEndpoint(this.http);
+  private readonly tourGuidesEndpoint = new TourGuidesApiEndpoint(this.http);
 
 
   /**
@@ -31,19 +34,19 @@ export class TourMonitoringApi extends BaseApi {
 
   /**
    * Creates a new active tour.
-   * @param course - The active tour to create.
+   * @param activeTour - The active tour to create.
    * @returns An Observable of the created ActiveTour object.
    */
-  createActiveTour = (course: ActiveTour): Observable<ActiveTour> =>
-    this.activeToursEndpoint.create(course);
+  createActiveTour = (activeTour: ActiveTour): Observable<ActiveTour> =>
+    this.activeToursEndpoint.create(activeTour);
 
   /**
    * Updates an existing active tour.
-   * @param course - The active tour to update.
+   * @param activeTour - The active tour to update.
    * @returns An Observable of the updated ActiveTour object.
    */
-  updateActiveTour = (course: ActiveTour): Observable<ActiveTour> =>
-    this.activeToursEndpoint.update(course, course.id);
+  updateActiveTour = (activeTour: ActiveTour): Observable<ActiveTour> =>
+    this.activeToursEndpoint.update(activeTour, activeTour.id);
 
   /**
    * Deletes an active tour by ID.
@@ -52,6 +55,50 @@ export class TourMonitoringApi extends BaseApi {
    */
   deleteActiveTour = (id: number): Observable<void> =>
     this.activeToursEndpoint.delete(id);
+
+
+
+
+
+  /**
+   * Retrieves all tourGuides.
+   * @returns Stream with the tourGuide collection.
+   */
+  getTourGuides = (): Observable<TourGuide[]> =>
+    this.tourGuidesEndpoint.getAll();
+
+  /**
+   * Retrieves a single tourGuide by ID.
+   * @param id - The ID of the tourGuide.
+   * @returns An Observable of the TourGuide object.
+   */
+  getTourGuide = (id: number): Observable<TourGuide> =>
+    this.tourGuidesEndpoint.getById(id);
+
+  /**
+   * Creates a new tourGuide.
+   * @param tourGuide - The tourGuide to create.
+   * @returns An Observable of the created TourGuide object.
+   */
+  createTourGuide = (tourGuide: TourGuide): Observable<TourGuide> =>
+    this.tourGuidesEndpoint.create(tourGuide);
+
+  /**
+   * Updates an existing tourGuide.
+   * @param tourGuide - The tourGuide to update.
+   * @returns An Observable of the updated TourGuide object.
+   */
+  updateTourGuide = (tourGuide: TourGuide): Observable<TourGuide> =>
+    this.tourGuidesEndpoint.update(tourGuide, tourGuide.id);
+
+  /**
+   * Deletes a tourGuide by ID.
+   * @param id - The ID of the tourGuide to delete.
+   * @returns An Observable of void.
+   */
+  deleteTourGuide = (id: number): Observable<void> =>
+    this.tourGuidesEndpoint.delete(id);
+
 
 
 }

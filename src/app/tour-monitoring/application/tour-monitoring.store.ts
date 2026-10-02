@@ -3,6 +3,7 @@ import {ActiveTour} from '../domain/model/active-tour.entity';
 import {TourMonitoringApi} from '../infrastructure/tour-monitoring-api';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {retry} from 'rxjs';
+import {TourGuide} from '../domain/model/tour-guide.entity';
 
 /**
  * Holds tourMonitoring application state and coordinates activeTour application layer behavior.
@@ -17,7 +18,7 @@ export class TourMonitoringStore {
    * Computed signal for the count of activeTours.
    */
   readonly activeTourCount = computed(() => this.activeTours().length);
-
+  readonly tourGuideCount = computed(() => this.tourGuides().length);
 
 
   private readonly activeToursSignal = signal<ActiveTour[]>([]);
@@ -26,6 +27,8 @@ export class TourMonitoringStore {
    * Readonly signal for the list of activeTours.
    */
   readonly activeTours = this.activeToursSignal.asReadonly();
+  private readonly tourGuidesSignal = signal<TourGuide[]>([]);
+  readonly tourGuides = this.tourGuidesSignal.asReadonly();
 
 
 
@@ -51,6 +54,7 @@ export class TourMonitoringStore {
   constructor() {
 
     this.loadActiveTours();
+    this.loadTourGuides();
   }
 
   /**
@@ -147,6 +151,89 @@ export class TourMonitoringStore {
   };
 
 
+  getTourGuideById = (id: number): Signal<TourGuide | undefined> => {
+    return computed(() => id ? this.tourGuides().find(c => c.id === id) : undefined);
+  }
+  /**
+   * adds a new tourGuide.
+   * @param tourGuide - The tourGuide to add.
+   */
+  addTourGuide = (tourGuide: TourGuide): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.createTourGuide(tourGuide).pipe(retry(2)).subscribe({
+      next: createdTourGuide => {
+
+        this.tourGuidesSignal.update(tourGuides => [...tourGuides, createdTourGuide]);
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to create tourGuide'));
+        this.loadingSignal.set(false);
+      }
+    });
+  };
+
+  /**
+   * Updates an existing tourGuide.
+   * @param updatedTourGuide - The tourGuide to update.
+   */
+  updateTourGuide = (updatedTourGuide: TourGuide): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.updateTourGuide(updatedTourGuide).pipe(retry(2)).subscribe({
+      next: tourGuide => {
+
+        this.tourGuidesSignal.update(tourGuides =>
+          tourGuides.map(c => c.id === tourGuide.id ? tourGuide : c)
+        );
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to update tourGuide'));
+        this.loadingSignal.set(false);
+      }
+    });
+  }
+
+  /**
+   * Deletes a tourGuide by ID.
+   * @param id - The ID of the tourGuide to delete.
+   */
+  deleteTourGuide = (id: number): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.deleteTourGuide(id).pipe(retry(2)).subscribe({
+      next: () => {
+        this.tourGuidesSignal.update(tourGuides => tourGuides.filter(c => c.id !== id));
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to delete tourGuide'));
+        this.loadingSignal.set(false);
+      }
+    });
+  }
+
+  private loadTourGuides = (): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.getTourGuides().pipe(takeUntilDestroyed()).subscribe({
+      next: tourGuides => {
+        console.log(tourGuides);
+        this.tourGuidesSignal.set(tourGuides);
+        this.loadingSignal.set(false);
+        this.errorSignal.set(null);
+
+
+
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to load tourGuides'));
+        this.loadingSignal.set(false);
+      }
+    });
+  };
 /**
   private assignCategoriesToActiveTours = (): void => {
     this.activeToursSignal.update(activeTours => activeTours.map(activeTour => this.assignCategoryToActiveTour(activeTour)));
