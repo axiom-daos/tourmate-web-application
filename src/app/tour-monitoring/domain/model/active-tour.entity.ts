@@ -1,4 +1,5 @@
 import {BaseEntity} from '../../../shared/domain/model/base-entity';
+import {TourSchedule} from './tour-schedule.entity';
 
 export class ActiveTour implements BaseEntity {
   #id: number;
@@ -10,6 +11,8 @@ export class ActiveTour implements BaseEntity {
   #startedAt: string;
   #finishedAt: string | null;
 
+  #tourSchedule: TourSchedule | null;
+
   constructor(activeTour:
               { id: number;
                 tourScheduleId: number;
@@ -18,7 +21,8 @@ export class ActiveTour implements BaseEntity {
                 currentLatitude: number;
                 currentLongitude: number;
                 startedAt: string;
-                finishedAt: string }) {
+                finishedAt: string;
+                tourSchedule?: TourSchedule | null;}) {
     this.#id = activeTour.id;
     this.#tourScheduleId = activeTour.tourScheduleId;
     this.#guideId = activeTour.guideId;
@@ -27,8 +31,16 @@ export class ActiveTour implements BaseEntity {
     this.#currentLongitude = activeTour.currentLongitude;
     this.#startedAt = activeTour.startedAt;
     this.#finishedAt = activeTour.finishedAt;
+    this.#tourSchedule = activeTour.tourSchedule?? null;
   }
 
+
+  get tourSchedule(): TourSchedule | null {
+    return this.#tourSchedule;
+  }
+  set tourSchedule(value: TourSchedule | null) {
+    this.#tourSchedule = value;
+  }
   get id(): number {
     return this.#id;
   }

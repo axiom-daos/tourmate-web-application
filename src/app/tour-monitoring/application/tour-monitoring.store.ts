@@ -81,7 +81,7 @@ export class TourMonitoringStore {
     this.errorSignal.set(null);
     this.tourMonitoringApi.createActiveTour(activeTour).pipe(retry(2)).subscribe({
       next: createdActiveTour => {
-
+        createdActiveTour = this.assignTourScheduleToActiveTour(activeTour);
         this.activeToursSignal.update(activeTours => [...activeTours, createdActiveTour]);
         this.loadingSignal.set(false);
       },
@@ -101,7 +101,7 @@ export class TourMonitoringStore {
     this.errorSignal.set(null);
     this.tourMonitoringApi.updateActiveTour(updatedActiveTour).pipe(retry(2)).subscribe({
       next: activeTour => {
-
+        activeTour = this.assignTourScheduleToActiveTour(activeTour);
         this.activeToursSignal.update(activeTours =>
           activeTours.map(c => c.id === activeTour.id ? activeTour : c)
         );
@@ -147,7 +147,7 @@ export class TourMonitoringStore {
         this.activeToursSignal.set(activeTours);
         this.loadingSignal.set(false);
         this.errorSignal.set(null);
-
+        this.assignTourSchedulesToActiveTours();
       },
       error: err => {
         this.errorSignal.set(this.formatError(err, 'Failed to load activeTours'));
@@ -420,6 +420,16 @@ export class TourMonitoringStore {
     const tourScheduleId = participant.tourScheduleId ?? 0;
     participant.tourSchedule = tourScheduleId ? this.getTourScheduleById(tourScheduleId)() ?? null : null;
     return participant;
+  }
+
+  private assignTourSchedulesToActiveTours = (): void => {
+    this.activeToursSignal.update(activeTours => activeTours.map(activeTour => this.assignTourScheduleToActiveTour(activeTour)));
+  };
+
+  private assignTourScheduleToActiveTour = (activeTour: ActiveTour): ActiveTour => {
+    const tourScheduleId = activeTour.tourScheduleId ?? 0;
+    activeTour.tourSchedule = tourScheduleId ? this.getTourScheduleById(tourScheduleId)() ?? null : null;
+    return activeTour;
   }
 
 

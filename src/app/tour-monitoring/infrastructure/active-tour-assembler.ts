@@ -29,7 +29,7 @@ export class ActiveTourAssembler implements BaseAssembler<ActiveTour, ActiveTour
       currentLatitude: resource.currentLatitude,
       currentLongitude: resource.currentLongitude,
       startedAt: resource.startedAt,
-      finishedAt: resource.finishedAt
+      finishedAt: resource.finishedAt,
     });
 
 
