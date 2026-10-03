@@ -34,7 +34,12 @@
     "status": "Status",
     "actions": "Actions",
     "new": "Add Tour Schedule",
-    "toggle_tour_schedules": "Tour Schedules"
+    "toggle_tour_schedules": "Tour Schedules",
+    "new_title": "Create New Tour Schedule",
+    "create": "Create Tour Schedule",
+    "update": "Update Tour Schedule",
+    "edit_title": "Edit Tour Schedule",
+    "edit": "Update Tour Schedule"
   },
   "about": {
     "title": "About us",

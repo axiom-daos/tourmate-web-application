@@ -35,7 +35,12 @@
     "status": "Estado",
     "actions": "Acciones",
     "new": "Agregar Horario de Tour",
-    "toggle_tour_schedules": "Horarios de Tours"
+    "toggle_tour_schedules": "Horarios de Tours",
+    "new_title": "Crear nuevo Horario de Tour",
+    "create": "Crear Horario de Tour",
+    "update": "Actualizar Horario de Tour",
+    "edit_title": "Editar Horario de Tour",
+    "edit": "Actualizar Horario de Tour"
   },
   "about": {
     "title": "Acerca de nosotros",

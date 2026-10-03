@@ -89,6 +89,6 @@ export class TourScheduleList {
   }
 
   protected deleteTourSchedule(id: number): void {
-    this.store.deleteTour(id)
+    this.store.deleteTourSchedule(id)
   }
 }
