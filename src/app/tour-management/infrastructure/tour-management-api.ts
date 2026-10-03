@@ -4,12 +4,15 @@ import {HttpClient} from '@angular/common/http';
 import {ToursApiEndpoint} from './tours-api-endpoint';
 import {Observable, tap} from 'rxjs';
 import {Tour} from '../domain/model/tour.entity';
+import {TourScheduleApiEndpoint} from './tour-schedule-api-endpoint';
+import {TourSchedule} from '../domain/model/tour-schedule.entity';
 
 @Service()
 export class TourManagementApi extends BaseApi {
 
   #http: HttpClient = inject(HttpClient)
   #toursEndpoint: ToursApiEndpoint = new ToursApiEndpoint(this.#http)
+  #tourSchedulesEndpoint: TourScheduleApiEndpoint = new TourScheduleApiEndpoint(this.#http)
 
   getTours = (): Observable<Tour[]> => this.#toursEndpoint.getAll()
 
@@ -20,4 +23,15 @@ export class TourManagementApi extends BaseApi {
   updateTour = (tour: Tour): Observable<Tour> => this.#toursEndpoint.update(tour, tour.id)
 
   deleteTour = (id: number): Observable<void> => this.#toursEndpoint.delete(id)
+
+  getTourSchedules = (): Observable<TourSchedule[]> => this.#tourSchedulesEndpoint.getAll()
+
+  getTourSchedule = (id: number): Observable<TourSchedule> => this.#tourSchedulesEndpoint.getById(id)
+
+  createTourSchedule = (tourSchedule: TourSchedule): Observable<TourSchedule> => this.#tourSchedulesEndpoint.create(tourSchedule)
+
+  updateTourSchedule = (tourSchedule: TourSchedule): Observable<TourSchedule> => this.#tourSchedulesEndpoint.update(tourSchedule, tourSchedule.id)
+
+  deleteTourSchedule = (id: number): Observable<void> => this.#tourSchedulesEndpoint.delete(id)
+
 }
