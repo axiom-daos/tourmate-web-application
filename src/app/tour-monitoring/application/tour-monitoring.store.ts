@@ -56,10 +56,10 @@ export class TourMonitoringStore {
    * Creates an instance of TourMonitoringStore and loads initial data.
    */
   constructor() {
-
+    this.loadTourSchedules();
     this.loadActiveTours();
     this.loadTourGuides();
-    this.loadTourSchedules();
+
     this.loadParticipants();
   }
 
@@ -315,6 +315,8 @@ export class TourMonitoringStore {
       next: tourSchedules => {
         console.log(tourSchedules);
         this.tourSchedulesSignal.set(tourSchedules);
+        //this.assignTourSchedulesToActiveTours();
+        //this.assignTourSchedulesToParticipants();
         this.loadingSignal.set(false);
         this.errorSignal.set(null);
 

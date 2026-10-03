@@ -18,6 +18,12 @@
     <td mat-cell *matCellDef="let activeTour"> {{ activeTour.tourScheduleId }} </td>
   </ng-container>
 
+  <!-- tour ScheduleId maxcapacity Column -->
+  <ng-container matColumnDef="tourScheduleIdMaxCapacity">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'activeTours.tourScheduleIdMaxCapacity' | translate}}</th>
+    <td mat-cell *matCellDef="let activeTour"> {{ activeTour.tourSchedule?.maxCapacity }} </td>
+  </ng-container>
+
   <!-- guide Id Column -->
   <ng-container matColumnDef="guideId">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'activeTours.guideId' | translate}} </th>

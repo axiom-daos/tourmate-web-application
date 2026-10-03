@@ -58,7 +58,7 @@ export class ActiveTourList {
   /**
    * Columns to display in the table.
    */
-  displayedColumns: string[] = ['id', 'tourScheduleId','status', 'actions'];
+  displayedColumns: string[] = ['id', 'tourScheduleId', 'tourScheduleIdMaxCapacity', 'status', 'actions'];
 
   readonly sort = viewChild(MatSort);
   readonly paginator = viewChild(MatPaginator);
