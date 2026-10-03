@@ -22,7 +22,19 @@
     "amount": "Amount",
     "currency": "Currency",
     "create": "Create Tour",
-    "update": "Update Tour"
+    "update": "Update Tour",
+    "toggle_tours": "Tours"
+  },
+  "tour_schedules": {
+    "list_title": "Tour Schedules",
+    "id": "ID",
+    "tour_id": "Tour ID",
+    "departure_date_time": "Departure DateTime",
+    "max_capacity": "Max capacity",
+    "status": "Status",
+    "actions": "Actions",
+    "new": "Add Tour Schedule",
+    "toggle_tour_schedules": "Tour Schedules"
   },
   "about": {
     "title": "About us",

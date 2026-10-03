@@ -22,8 +22,20 @@
     "amount": "Cantidad",
     "currency": "Moneda",
     "create": "Crear Tour",
-    "update": "Actualizar Tour"
+    "update": "Actualizar Tour",
+    "toggle_tours": "Tours"
 
+  },
+  "tour_schedules": {
+    "list_title": "Horarios de Tours",
+    "id": "ID",
+    "tour_id": "ID de Tour",
+    "departure_date_time": "Fecha y hora de salida",
+    "max_capacity": "Capacidad máxima",
+    "status": "Estado",
+    "actions": "Acciones",
+    "new": "Agregar Horario de Tour",
+    "toggle_tour_schedules": "Horarios de Tours"
   },
   "about": {
     "title": "Acerca de nosotros",

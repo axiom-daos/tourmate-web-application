@@ -15,10 +15,9 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {MatIcon} from '@angular/material/icon';
 import {MatSort, MatSortHeader} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
+import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {TourManagementStore} from '../../../application/tour-management-store';
 import {Router} from '@angular/router';
-import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
-
 
 @Component({
   imports: [
@@ -44,30 +43,29 @@ import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-to
     MatButtonToggleGroup,
     MatButtonToggle
   ],
-  selector: 'app-tour-list',
-  styleUrl: './tour-list.css',
-  templateUrl: './tour-list.html',
+  selector: 'app-tour-schedule-list',
+  styleUrl: './tour-schedule-list.css',
+  templateUrl: './tour-schedule-list.html',
 })
-export class TourList {
+export class TourScheduleList {
 
   protected readonly store: TourManagementStore = inject(TourManagementStore)
   #router: Router = inject(Router)
 
-
-  protected readonly displayedColumns: string[] = ['id', 'agencyId', 'title', 'description', 'duration', 'difficulty', 'price', 'status', 'actions']
-  protected readonly currentView = 'tours'
+  protected readonly displayedColumns: string[] = ['id', 'tourId', 'departureDateTime', 'maxCapacity', 'status','actions']
+  protected readonly currentView = 'tour-schedules'
 
   protected readonly sort: Signal<MatSort | undefined> = viewChild(MatSort)
   protected readonly paginator: Signal<MatPaginator | undefined> = viewChild(MatPaginator)
 
   protected onViewChange(view: string): void {
-    if (view === 'tour-schedules') {
-      this.#router.navigate(['/management/tour-schedules']).then()
+    if(view === 'tours') {
+      this.#router.navigate(['/management/tours']).then()
     }
   }
 
   protected readonly dataSource = computed(() => {
-    const source = new MatTableDataSource(this.store.tours())
+    const source = new MatTableDataSource(this.store.tourSchedules())
 
     const sort = this.sort()
     if(sort) {
@@ -82,18 +80,15 @@ export class TourList {
     return source
   })
 
-  protected navigateToNew() {
-    this.#router.navigate(['management/tours/new']).then()
+  protected navigateToNew(): void {
+    this.#router.navigate(['/management/tour-schedules/new']).then()
   }
 
-  protected editTour(id: number) {
-    this.#router.navigate(['management/tours', id, 'edit']).then()
+  protected editTourSchedule(id: number): void {
+    this.#router.navigate(['/management/tour-schedules', id, 'edit']).then()
   }
 
-  protected deleteTour(id: number) {
+  protected deleteTourSchedule(id: number): void {
     this.store.deleteTour(id)
   }
-
-
-
 }
