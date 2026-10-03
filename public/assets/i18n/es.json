@@ -2,7 +2,21 @@
   "option" : {
     "home": "Inicio",
     "about": "Acerca de",
-    "monitoring": "Monitoreo"
+    "monitoring": "Monitoreo",
+    "management": "Gestión"
+  },
+  "tours": {
+    "new": "Agregar Tour",
+    "list_title": "Tours",
+    "id": "ID",
+    "agency_id": "ID de agencia",
+    "title": "Título",
+    "description": "Descripción",
+    "duration": "Duración",
+    "difficulty": "Dificultad",
+    "price": "Precio",
+    "status": "Status",
+    "actions": "Acciones"
   },
   "about": {
     "title": "Acerca de nosotros",

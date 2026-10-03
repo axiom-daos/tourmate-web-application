@@ -9,7 +9,6 @@ export class TourAssembler implements BaseAssembler<Tour, TourResource, ToursRes
 
 
     toEntityFromResource(resource: TourResource): Tour {
-
       return new Tour({
         id: resource.id,
         agencyId: resource.agencyId,

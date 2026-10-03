@@ -2,7 +2,7 @@ import {inject, Service} from '@angular/core';
 import {BaseApi} from '../../shared/infrastructure/base-api';
 import {HttpClient} from '@angular/common/http';
 import {ToursApiEndpoint} from './tours-api-endpoint';
-import {Observable} from 'rxjs';
+import {Observable, tap} from 'rxjs';
 import {Tour} from '../domain/model/tour.entity';
 
 @Service()

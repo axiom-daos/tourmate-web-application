@@ -1,6 +1,5 @@
 export const environment = {
   production: true,
-  tourmateProviderApiBaseUrl: 'http://localhost:3000/api/v1',
-  tourmateProviderTourManagementEndpointPath: '/tour-management',
+  tourmateProviderApiBaseUrl: 'http://localhost:3333/api/v1',
   tourmateProviderToursEndpointPath: '/tours'
 };

@@ -225,13 +225,15 @@
     {
       "id": 2,
       "agencyId": 1,
-      "title": "Camino Inca 4 días",
-      "description": "Trekking clásico por el Camino Inca hasta Machu Picchu.",
-      "duration": "4 días",
-      "difficulty": "HARD",
-      "price": {
-        "amount": 650,
-        "currency": "USD"
+      "details": {
+        "title": "Camino Inca 4 días",
+        "description": "Trekking clásico por el Camino Inca hasta Machu Picchu.",
+        "duration": "4 días",
+        "difficulty": "HARD",
+        "price": {
+          "amount": 650,
+          "currency": "USD"
+        }
       },
       "status": "PUBLISHED"
     },

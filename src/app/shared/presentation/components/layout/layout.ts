@@ -37,7 +37,7 @@ export class Layout {
   options = signal([
     {link: '/home', label: 'option.home'},
     {link: '/about', label: 'option.about'},
-    {link: '/tourmate/monitoring', label: 'option.monitoring'}
-
+    {link: '/tourmate/monitoring', label: 'option.monitoring'},
+    {link: '/management', label: 'option.management'}
   ]);
 }
