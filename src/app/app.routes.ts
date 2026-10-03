@@ -3,25 +3,15 @@ import { Home } from './shared/presentation/views/home/home';
 
 const about = () => import('./shared/presentation/views/about/about').then(m => m.About);
 const pageNotFound = () => import('./shared/presentation/views/page-not-found/page-not-found').then(m => m.PageNotFound);
-const tourMonitoringRoutes = () =>import('./tour-monitoring/presentation/tour-monitoring.routes').then(m => m.tourMonitoringRoutes,);
+const tourMonitoringRoutes = () => import('./tour-monitoring/presentation/tour-monitoring.routes').then(m => m.tourMonitoringRoutes,);
+const safetyIncidentRoutes = () => import('./safety-and-incident-management/safety-incident.routes').then(m => m.safetyIncidentRoutes,);
 const baseTitle = 'Tour Mate';
 
 export const routes: Routes = [
   { path: 'home', component: Home, title: `${baseTitle} - Home` },
   { path: 'about', loadComponent: about, title: `${baseTitle} - About` },
   { path: 'monitoring', loadChildren: tourMonitoringRoutes },
-
-  /**
-   * Safety and Incident Management
-   */
-  {
-    path: 'safety-and-incident-management',
-    loadChildren: () =>
-      import('./safety-and-incident-management/safety-incident.routes').then(
-        (m) => m.safetyIncidentRoutes,
-      ),
-  },
-
+  { path: 'safety-and-incident-management', loadChildren: safetyIncidentRoutes },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', loadComponent: pageNotFound, title: `${baseTitle} - Page Not Found` },
 ];
