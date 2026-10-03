@@ -37,7 +37,7 @@ export class Incident implements BaseEntity {
     this.#status =
       typeof incident.status === 'string'
         ? (IncidentStatus[incident.status as keyof typeof IncidentStatus] ??
-          IncidentStatus.REPORTED)
+          IncidentStatus.OPEN)
         : incident.status;
   }
 
