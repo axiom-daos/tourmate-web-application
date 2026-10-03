@@ -3,5 +3,6 @@ export const environment = {
   tourmateProviderApiBaseUrl: 'http://localhost:3000/api/v1',
   tourmateProviderActiveToursEndpointPath: '/active_tours',
   tourmateProviderTourGuidesEndpointPath: '/tour_guides',
-  tourmateProviderTourSchedulesEndpointPath: '/tour_schedules'
+  tourmateProviderTourSchedulesEndpointPath: '/tour_schedules',
+  tourmateProviderParticipantsEndpointPath: '/participants',
 };

@@ -8,6 +8,8 @@ import {TourGuidesApiEndpoint} from './tour-guides-api-endpoint';
 import {TourGuide} from '../domain/model/tour-guide.entity';
 import {TourSchedule} from '../domain/model/tour-schedule.entity';
 import {TourSchedulesApiEndpoint} from './tour-schedules-api-endpoint';
+import {ParticipantsApiEndpoint} from './participants-api-endpoint';
+import {Participant} from '../domain/model/participant.entity';
 
 /**
  * Infrastructure facade for active tours endpoint operations.
@@ -18,6 +20,7 @@ export class TourMonitoringApi extends BaseApi {
   private readonly activeToursEndpoint = new ActiveToursApiEndpoint(this.http);
   private readonly tourGuidesEndpoint = new TourGuidesApiEndpoint(this.http);
   private readonly tourSchedulesEndpoint = new TourSchedulesApiEndpoint(this.http);
+  private readonly participantsEndpoint = new ParticipantsApiEndpoint(this.http);
 
   /**
    * Retrieves all active tours.
@@ -141,4 +144,43 @@ export class TourMonitoringApi extends BaseApi {
    */
   deleteTourSchedule = (id: number): Observable<void> =>
     this.tourSchedulesEndpoint.delete(id);
+
+  /**
+   * Retrieves all participants.
+   * @returns Stream with the participant collection.
+   */
+  getParticipants = (): Observable<Participant[]> =>
+    this.participantsEndpoint.getAll();
+
+  /**
+   * Retrieves a single participant by ID.
+   * @param id - The ID of the participant.
+   * @returns An Observable of the Participant object.
+   */
+  getParticipant = (id: number): Observable<Participant> =>
+    this.participantsEndpoint.getById(id);
+
+  /**
+   * Creates a new participant.
+   * @param participant - The participant to create.
+   * @returns An Observable of the created Participant object.
+   */
+  createParticipant = (participant: Participant): Observable<Participant> =>
+    this.participantsEndpoint.create(participant);
+
+  /**
+   * Updates an existing participant.
+   * @param participant - The participant to update.
+   * @returns An Observable of the updated Participant object.
+   */
+  updateParticipant = (participant: Participant): Observable<Participant> =>
+    this.participantsEndpoint.update(participant, participant.id);
+
+  /**
+   * Deletes a participant by ID.
+   * @param id - The ID of the participant to delete.
+   * @returns An Observable of void.
+   */
+  deleteParticipant = (id: number): Observable<void> =>
+    this.participantsEndpoint.delete(id);
 }

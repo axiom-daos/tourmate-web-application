@@ -5,6 +5,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {retry} from 'rxjs';
 import {TourGuide} from '../domain/model/tour-guide.entity';
 import {TourSchedule} from '../domain/model/tour-schedule.entity';
+import {Participant} from '../domain/model/participant.entity';
 
 /**
  * Holds tourMonitoring application state and coordinates activeTour application layer behavior.
@@ -19,19 +20,20 @@ export class TourMonitoringStore {
   readonly activeTourCount = computed(() => this.activeTours().length);
   readonly tourGuideCount = computed(() => this.tourGuides().length);
   readonly tourScheduleCount = computed(() => this.tourSchedules().length);
+  readonly participantCount = computed(() => this.participants().length);
 
 
   private readonly activeToursSignal = signal<ActiveTour[]>([]);
-
-  /**
-   * Readonly signal for the list of activeTours.
-   */
   readonly activeTours = this.activeToursSignal.asReadonly();
+
   private readonly tourGuidesSignal = signal<TourGuide[]>([]);
   readonly tourGuides = this.tourGuidesSignal.asReadonly();
+
   private readonly tourSchedulesSignal = signal<TourSchedule[]>([]);
   readonly tourSchedules = this.tourSchedulesSignal.asReadonly();
 
+  private readonly participantsSignal = signal<Participant[]>([]);
+  readonly participants = this.participantsSignal.asReadonly();
 
 
 
@@ -58,6 +60,7 @@ export class TourMonitoringStore {
     this.loadActiveTours();
     this.loadTourGuides();
     this.loadTourSchedules();
+    this.loadParticipants();
   }
 
   /**
@@ -324,17 +327,101 @@ export class TourMonitoringStore {
       }
     });
   };
-/**
-  private assignCategoriesToActiveTours = (): void => {
-    this.activeToursSignal.update(activeTours => activeTours.map(activeTour => this.assignCategoryToActiveTour(activeTour)));
+
+  getParticipantById = (id: number): Signal<Participant | undefined> => {
+    return computed(() => id ? this.participants().find(c => c.id === id) : undefined);
+  }
+
+  /**
+   * adds a new participant.
+   * @param participant - The participant to add.
+   */
+  addParticipant = (participant: Participant): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.createParticipant(participant).pipe(retry(2)).subscribe({
+      next: createdParticipant => {
+        createdParticipant = this.assignTourScheduleToParticipant(participant);
+        this.participantsSignal.update(participants => [...participants, createdParticipant]);
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to create participant'));
+        this.loadingSignal.set(false);
+      }
+    });
   };
 
-  private assignCategoryToActiveTour = (activeTour: ActiveTour): ActiveTour => {
-    const categoryId = activeTour.categoryId ?? 0;
-    activeTour.category = categoryId ? this.getCategoryById(categoryId)() ?? null : null;
-    return activeTour;
+  /**
+   * Updates an existing participant.
+   * @param updatedParticipant - The participant to update.
+   */
+  updateParticipant = (updatedParticipant: Participant): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.updateParticipant(updatedParticipant).pipe(retry(2)).subscribe({
+      next: participant => {
+        participant = this.assignTourScheduleToParticipant(participant);
+        this.participantsSignal.update(participants =>
+          participants.map(c => c.id === participant.id ? participant : c)
+        );
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to update participant'));
+        this.loadingSignal.set(false);
+      }
+    });
   }
- */
+
+  /**
+   * Deletes a participant by ID.
+   * @param id - The ID of the participant to delete.
+   */
+  deleteParticipant = (id: number): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.deleteParticipant(id).pipe(retry(2)).subscribe({
+      next: () => {
+        this.participantsSignal.update(participants => participants.filter(c => c.id !== id));
+        this.loadingSignal.set(false);
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to delete participant'));
+        this.loadingSignal.set(false);
+      }
+    });
+  }
+  private loadParticipants = (): void => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.tourMonitoringApi.getParticipants().pipe(takeUntilDestroyed()).subscribe({
+      next: participants => {
+        console.log(participants);
+        this.participantsSignal.set(participants);
+        this.loadingSignal.set(false);
+        this.errorSignal.set(null);
+        this.assignTourSchedulesToParticipants();
+
+
+      },
+      error: err => {
+        this.errorSignal.set(this.formatError(err, 'Failed to load participants'));
+        this.loadingSignal.set(false);
+      }
+    });
+  };
+
+  private assignTourSchedulesToParticipants = (): void => {
+    this.participantsSignal.update(participants => participants.map(participant => this.assignTourScheduleToParticipant(participant)));
+  };
+
+  private assignTourScheduleToParticipant = (participant: Participant): Participant => {
+    const tourScheduleId = participant.tourScheduleId ?? 0;
+    participant.tourSchedule = tourScheduleId ? this.getTourScheduleById(tourScheduleId)() ?? null : null;
+    return participant;
+  }
+
 
   /**
    * Normalizes unknown errors into a display-friendly message.
