@@ -24,14 +24,23 @@ export class TourAssembler implements BaseAssembler<Tour, TourResource, ToursRes
     }
 
 
-    toResourceFromEntity(entity: Tour): TourResource {
-        return {
-          id: entity.id,
-          agencyId: entity.agencyId,
-          details: entity.details,
-          status: entity.status
+  toResourceFromEntity(entity: Tour): TourResource {
+    return {
+      id: entity.id,
+      agencyId: entity.agencyId,
+      details: {
+        title: entity.details.title,
+        description: entity.details.description,
+        duration: entity.details.duration,
+        difficulty: entity.details.difficulty,
+        price: {
+          amount: entity.details.price.amount,
+          currency: entity.details.price.currency
         }
+      },
+      status: entity.status
     }
+  }
 
 
     toEntitiesFromResponse(response: ToursResponse): Tour[] {

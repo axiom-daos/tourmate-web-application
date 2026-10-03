@@ -48,7 +48,7 @@ import {Router} from '@angular/router';
 export class TourList {
 
   protected readonly store: TourManagementStore = inject(TourManagementStore)
-  protected readonly router: Router = inject(Router)
+  #router: Router = inject(Router)
 
 
   protected readonly displayedColumns: string[] = ['id', 'agencyId', 'title', 'description', 'duration', 'difficulty', 'price', 'status', 'actions']
@@ -72,8 +72,13 @@ export class TourList {
     return source
   })
 
+  protected navigateToNew() {
+    this.#router.navigate(['management/tours/new']).then()
+  }
 
-
+  protected editTour(id: number) {
+    this.#router.navigate(['management/tours', id, 'edit']).then()
+  }
 
   protected deleteTour(id: number) {
     this.store.deleteTour(id)

@@ -15,8 +15,15 @@
     "duration": "Duración",
     "difficulty": "Dificultad",
     "price": "Precio",
-    "status": "Status",
-    "actions": "Acciones"
+    "status": "Estado",
+    "actions": "Acciones",
+    "edit_title": "Editar Tour",
+    "new_title": "Crear nuevo Tour",
+    "amount": "Cantidad",
+    "currency": "Moneda",
+    "create": "Crear Tour",
+    "update": "Actualizar Tour"
+
   },
   "about": {
     "title": "Acerca de nosotros",

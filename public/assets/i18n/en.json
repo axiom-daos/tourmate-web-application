@@ -16,7 +16,13 @@
     "difficulty": "Difficulty",
     "price": "Price",
     "status": "Status",
-    "actions": "Actions"
+    "actions": "Actions",
+    "edit_title": "Edit Tour",
+    "new_title": "Create New Tour",
+    "amount": "Amount",
+    "currency": "Currency",
+    "create": "Create Tour",
+    "update": "Update Tour"
   },
   "about": {
     "title": "About us",

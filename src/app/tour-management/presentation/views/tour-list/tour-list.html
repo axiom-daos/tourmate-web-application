@@ -1,7 +1,7 @@
 
 <div class="list-header">
   <h1 class="title">{{ 'tours.list_title' | translate }}</h1>
-  <button mat-raised-button color="primary">{{ 'tours.new' | translate }}</button>
+  <button mat-raised-button color="primary" (click)="navigateToNew()">{{ 'tours.new' | translate }}</button>
 </div>
 
 @if (store.loading()) {
@@ -58,7 +58,7 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef> {{ 'tours.actions' | translate }} </th>
     <td mat-cell *matCellDef="let tour" >
-      <button mat-icon-button aria-label=" {{ 'tours.edit' | translate }} " > <mat-icon>edit</mat-icon> </button>
+      <button mat-icon-button aria-label=" {{ 'tours.edit' | translate }} " (click)="editTour(tour.id)"> <mat-icon>edit</mat-icon> </button>
       <button mat-icon-button aria-label=" {{ 'tours.delete' | translate }} " (click)="deleteTour(tour.id)"> <mat-icon>delete</mat-icon> </button>
     </td>
   </ng-container>
