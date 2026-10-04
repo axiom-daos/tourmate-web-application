@@ -71,6 +71,6 @@ export class IncidentList {
   }
 
   navigateToNew() {
-    this.router.navigate(['safety-and-incident-management/incidents/new']).then();
+    this.router.navigate(['safety-and-incident-management/incidents/new-incident']).then();
   }
 }
