@@ -23,7 +23,7 @@
   }
 
   @if (store.error()) {
-    <mat-error>{{ store.error() }}</mat-error>
+    <div class="error-banner">{{ store.error() }}</div>
   }
 
   <!-- Current Plan Section -->

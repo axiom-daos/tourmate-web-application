@@ -276,6 +276,16 @@ tr.mat-row:last-child td {
   padding: 24px;
 }
 
+.error-banner {
+  background: #fdf3f0;
+  color: #933827;
+  border: 1px solid #f9e2db;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
 @media (max-width: 800px) {
   .header-section {
     flex-direction: column;
