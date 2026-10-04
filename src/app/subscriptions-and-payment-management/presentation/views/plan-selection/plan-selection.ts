@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SubscriptionStore } from '../../../application/subscription.store';
 import { Plan } from '../../../domain/model/plan.entity';
@@ -18,7 +17,6 @@ import { Plan } from '../../../domain/model/plan.entity';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatFormFieldModule,
     TranslatePipe,
   ],
   templateUrl: './plan-selection.html',

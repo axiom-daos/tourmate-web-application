@@ -1,5 +1,5 @@
 import { Component, computed, inject, viewChild } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { DatePipe, LowerCasePipe } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,7 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SubscriptionStore } from '../../../application/subscription.store';
 import { Payment } from '../../../domain/model/payment.entity';
@@ -25,7 +24,6 @@ import { Payment } from '../../../domain/model/payment.entity';
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
-    MatFormFieldModule,
     DatePipe,
     LowerCasePipe,
     TranslatePipe,
