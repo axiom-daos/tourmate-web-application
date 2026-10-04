@@ -1,0 +1,11 @@
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 16px;
+}
+
+mat-form-field {
+  flex: 1 1 calc(50% - 8px);
+  min-width: 250px;
+}

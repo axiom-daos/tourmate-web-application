@@ -210,90 +210,122 @@
     {
       "id": 1,
       "agencyId": 1,
-      "title": "Machu Picchu Clásico",
-      "description": "Visita guiada a la ciudadela inca de Machu Picchu.",
-      "duration": "1 día",
-      "difficulty": "MEDIUM",
-      "priceAmount": 180,
-      "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "details": {
+        "title": "Machu Picchu Clásico",
+        "description": "Visita guiada a la ciudadela inca de Machu Picchu.",
+        "duration": "1 día",
+        "difficulty": "MEDIUM",
+        "price": {
+          "amount": 180,
+          "currency": "USD"
+        }
+      },
+      "status": "PUBLISHED"
     },
     {
       "id": 2,
       "agencyId": 1,
-      "title": "Camino Inca 4 días",
-      "description": "Trekking clásico por el Camino Inca hasta Machu Picchu.",
-      "duration": "4 días",
-      "difficulty": "HARD",
-      "priceAmount": 650,
-      "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "details": {
+        "title": "Camino Inca 4 días",
+        "description": "Trekking clásico por el Camino Inca hasta Machu Picchu.",
+        "duration": "4 días",
+        "difficulty": "HARD",
+        "price": {
+          "amount": 650,
+          "currency": "USD"
+        }
+      },
+      "status": "PUBLISHED"
     },
     {
       "id": 3,
       "agencyId": 1,
-      "title": "Valle Sagrado Express",
-      "description": "Pisac, Ollantaytambo y Chinchero en un solo día.",
-      "duration": "1 día",
-      "difficulty": "EASY",
-      "priceAmount": 90,
-      "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "details": {
+        "title": "Valle Sagrado Express",
+        "description": "Pisac, Ollantaytambo y Chinchero en un solo día.",
+        "duration": "1 día",
+        "difficulty": "EASY",
+        "price": {
+          "amount": 90,
+          "currency": "USD"
+        }
+      },
+      "status": "PUBLISHED"
     },
     {
       "id": 4,
       "agencyId": 2,
-      "title": "Lima Colonial y Centro Histórico",
-      "description": "Plaza de Armas, Catedral y Convento de San Francisco.",
-      "duration": "4 horas",
-      "difficulty": "EASY",
-      "priceAmount": 45,
-      "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "details": {
+        "title": "Lima Colonial y Centro Histórico",
+        "description": "Plaza de Armas, Catedral y Convento de San Francisco.",
+        "duration": "4 horas",
+        "difficulty": "EASY",
+        "price": {
+          "amount": 45,
+          "currency": "USD"
+        }
+      },
+      "status": "PUBLISHED"
     },
     {
       "id": 5,
       "agencyId": 2,
-      "title": "Tour Gastronómico Miraflores",
-      "description": "Degustación de ceviche, anticuchos y pisco sour.",
-      "duration": "3 horas",
-      "difficulty": "EASY",
-      "priceAmount": 70,
-      "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "details": {
+        "title": "Tour Gastronómico Miraflores",
+        "description": "Degustación de ceviche, anticuchos y pisco sour.",
+        "duration": "3 horas",
+        "difficulty": "EASY",
+        "price": {
+          "amount": 70,
+          "currency": "USD"
+        }
+      },
+      "status": "PUBLISHED"
     },
     {
       "id": 6,
       "agencyId": 2,
-      "title": "Paracas e Islas Ballestas",
-      "description": "Excursión en bote a las Islas Ballestas y Reserva de Paracas.",
-      "duration": "1 día",
-      "difficulty": "EASY",
-      "priceAmount": 120,
-      "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "details": {
+        "title": "Paracas e Islas Ballestas",
+        "description": "Excursión en bote a las Islas Ballestas y Reserva de Paracas.",
+        "duration": "1 día",
+        "difficulty": "EASY",
+        "price": {
+          "amount": 120,
+          "currency": "USD"
+        }
+      },
+      "status": "PUBLISHED"
     },
     {
       "id": 7,
       "agencyId": 3,
-      "title": "Cañón del Colca 2 días",
-      "description": "Mirador Cruz del Cóndor y baños termales de Chivay.",
-      "duration": "2 días",
-      "difficulty": "MEDIUM",
-      "priceAmount": 210,
-      "priceCurrency": "USD",
-      "status": "ACTIVE"
+      "details": {
+        "title": "Cañón del Colca 2 días",
+        "description": "Mirador Cruz del Cóndor y baños termales de Chivay.",
+        "duration": "2 días",
+        "difficulty": "MEDIUM",
+        "price": {
+          "amount": 210,
+          "currency": "USD"
+        }
+      },
+      "status": "PUBLISHED"
     },
     {
       "id": 8,
       "agencyId": 3,
-      "title": "Ascenso al Misti",
-      "description": "Ascenso al volcán Misti (5,822 m).",
-      "duration": "2 días",
-      "difficulty": "HARD",
-      "priceAmount": 320,
-      "priceCurrency": "USD",
-      "status": "INACTIVE"
+      "details": {
+        "title": "Ascenso al Misti",
+        "description": "Ascenso al volcán Misti (5,822 m).",
+        "duration": "2 días",
+        "difficulty": "HARD",
+        "price": {
+          "amount": 320,
+          "currency": "USD"
+        }
+      },
+      "status": "UNAVAILABLE"
     }
   ],
   "checkpoints": [
@@ -538,112 +570,112 @@
       "tourId": 1,
       "departureDatetime": "2026-10-01T06:30:00",
       "maxCapacity": 10,
-      "status": "IN_PROGRESS"
+      "status": "CLOSED"
     },
     {
       "id": 2,
       "tourId": 1,
       "departureDatetime": "2026-11-06T07:00:00",
       "maxCapacity": 20,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 3,
       "tourId": 2,
       "departureDatetime": "2026-10-05T07:00:00",
       "maxCapacity": 10,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 4,
       "tourId": 2,
       "departureDatetime": "2026-09-20T07:00:00",
       "maxCapacity": 10,
-      "status": "COMPLETED"
+      "status": "OPENED"
     },
     {
       "id": 5,
       "tourId": 3,
       "departureDatetime": "2026-10-06T07:00:00",
       "maxCapacity": 10,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 6,
       "tourId": 3,
       "departureDatetime": "2026-11-08T07:00:00",
       "maxCapacity": 20,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 7,
       "tourId": 4,
       "departureDatetime": "2026-10-01T07:00:00",
       "maxCapacity": 12,
-      "status": "IN_PROGRESS"
+      "status": "CLOSED"
     },
     {
       "id": 8,
       "tourId": 4,
       "departureDatetime": "2026-11-09T07:00:00",
       "maxCapacity": 20,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 9,
       "tourId": 5,
       "departureDatetime": "2026-10-01T08:00:00",
       "maxCapacity": 15,
-      "status": "IN_PROGRESS"
+      "status": "CLOSED"
     },
     {
       "id": 10,
       "tourId": 5,
       "departureDatetime": "2026-11-10T07:00:00",
       "maxCapacity": 10,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 11,
       "tourId": 6,
       "departureDatetime": "2026-10-09T07:00:00",
       "maxCapacity": 15,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 12,
       "tourId": 6,
       "departureDatetime": "2026-11-11T07:00:00",
       "maxCapacity": 12,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 13,
       "tourId": 7,
       "departureDatetime": "2026-10-10T07:00:00",
       "maxCapacity": 10,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 14,
       "tourId": 7,
       "departureDatetime": "2026-11-12T07:00:00",
       "maxCapacity": 10,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 15,
       "tourId": 8,
       "departureDatetime": "2026-10-11T07:00:00",
       "maxCapacity": 12,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     },
     {
       "id": 16,
       "tourId": 8,
       "departureDatetime": "2026-11-13T07:00:00",
       "maxCapacity": 12,
-      "status": "SCHEDULED"
+      "status": "OPENED"
     }
   ],
   "participants": [
@@ -1002,19 +1034,19 @@
     {
       "id": 1,
       "name": "Básico",
-      "priceAmount": 29.0,
+      "priceAmount": 29,
       "priceCurrency": "USD"
     },
     {
       "id": 2,
       "name": "Profesional",
-      "priceAmount": 79.0,
+      "priceAmount": 79,
       "priceCurrency": "USD"
     },
     {
       "id": 3,
       "name": "Empresarial",
-      "priceAmount": 149.0,
+      "priceAmount": 149,
       "priceCurrency": "USD"
     }
   ],
@@ -1102,7 +1134,7 @@
       "id": 1,
       "agencyId": 1,
       "planId": 2,
-      "amount": 79.0,
+      "amount": 79,
       "currency": "USD",
       "status": "PAID",
       "requestedAt": "2026-08-01T09:55:00"
@@ -1111,7 +1143,7 @@
       "id": 2,
       "agencyId": 2,
       "planId": 1,
-      "amount": 29.0,
+      "amount": 29,
       "currency": "USD",
       "status": "PAID",
       "requestedAt": "2026-08-15T09:20:00"
@@ -1120,7 +1152,7 @@
       "id": 3,
       "agencyId": 3,
       "planId": 3,
-      "amount": 149.0,
+      "amount": 149,
       "currency": "USD",
       "status": "PENDING",
       "requestedAt": "2026-09-28T16:00:00"

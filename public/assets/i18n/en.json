@@ -2,7 +2,44 @@
   "option": {
     "home": "Home",
     "about": "About Us",
-    "monitoring": "Monitoring"
+    "monitoring": "Monitoring",
+    "management": "Management"
+  },
+  "tours": {
+    "new": "Add Tour",
+    "list_title": "Tours",
+    "id": "ID",
+    "agency_id": "Agency ID",
+    "title": "Title",
+    "description": "Description",
+    "duration": "Duration",
+    "difficulty": "Difficulty",
+    "price": "Price",
+    "status": "Status",
+    "actions": "Actions",
+    "edit_title": "Edit Tour",
+    "new_title": "Create New Tour",
+    "amount": "Amount",
+    "currency": "Currency",
+    "create": "Create Tour",
+    "update": "Update Tour",
+    "toggle_tours": "Tours"
+  },
+  "tour_schedules": {
+    "list_title": "Tour Schedules",
+    "id": "ID",
+    "tour_id": "Tour ID",
+    "departure_date_time": "Departure DateTime",
+    "max_capacity": "Max capacity",
+    "status": "Status",
+    "actions": "Actions",
+    "new": "Add Tour Schedule",
+    "toggle_tour_schedules": "Tour Schedules",
+    "new_title": "Create New Tour Schedule",
+    "create": "Create Tour Schedule",
+    "update": "Update Tour Schedule",
+    "edit_title": "Edit Tour Schedule",
+    "edit": "Update Tour Schedule"
   },
   "about": {
     "title": "About us",

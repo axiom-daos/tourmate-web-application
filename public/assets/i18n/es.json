@@ -2,7 +2,45 @@
   "option" : {
     "home": "Inicio",
     "about": "Acerca de",
-    "monitoring": "Monitoreo"
+    "monitoring": "Monitoreo",
+    "management": "Gestión"
+  },
+  "tours": {
+    "new": "Agregar Tour",
+    "list_title": "Tours",
+    "id": "ID",
+    "agency_id": "ID de agencia",
+    "title": "Título",
+    "description": "Descripción",
+    "duration": "Duración",
+    "difficulty": "Dificultad",
+    "price": "Precio",
+    "status": "Estado",
+    "actions": "Acciones",
+    "edit_title": "Editar Tour",
+    "new_title": "Crear nuevo Tour",
+    "amount": "Cantidad",
+    "currency": "Moneda",
+    "create": "Crear Tour",
+    "update": "Actualizar Tour",
+    "toggle_tours": "Tours"
+
+  },
+  "tour_schedules": {
+    "list_title": "Horarios de Tours",
+    "id": "ID",
+    "tour_id": "ID de Tour",
+    "departure_date_time": "Fecha y hora de salida",
+    "max_capacity": "Capacidad máxima",
+    "status": "Estado",
+    "actions": "Acciones",
+    "new": "Agregar Horario de Tour",
+    "toggle_tour_schedules": "Horarios de Tours",
+    "new_title": "Crear nuevo Horario de Tour",
+    "create": "Crear Horario de Tour",
+    "update": "Actualizar Horario de Tour",
+    "edit_title": "Editar Horario de Tour",
+    "edit": "Actualizar Horario de Tour"
   },
   "about": {
     "title": "Acerca de nosotros",

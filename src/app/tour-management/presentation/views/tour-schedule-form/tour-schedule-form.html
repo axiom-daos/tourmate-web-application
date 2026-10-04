@@ -1,0 +1,41 @@
+<h1>{{ (isEdit ? 'tour_schedules.edit_title' : 'tour_schedules.new_title') | translate }}</h1>
+<form [formGroup]="form" (ngSubmit)="submit()">
+
+  <mat-form-field>
+    <mat-label>{{ 'tour_schedules.tour_id' | translate }}</mat-label>
+    <input matInput formControlName="tourId" required>
+    @if (form.get('tourId')?.touched && form.get('tourId')!.hasError('required')) {
+      <mat-error>{{ 'tour_schedule.error.tour_id_required' | translate }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>{{ 'tour_schedules.departure_date_time' | translate }}</mat-label>
+    <input matInput type="datetime-local" formControlName="departureDateTime" required>
+    @if (form.get('departureDateTime')?.touched && form.get('departureDateTime')!.hasError('required')) {
+      <mat-error>{{ 'tour_schedule.error.departure_date_time_required' | translate }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>{{ 'tour_schedules.max_capacity' | translate }}</mat-label>
+    <input matInput formControlName="maxCapacity" required>
+    @if (form.get('maxCapacity')?.touched && form.get('maxCapacity')!.hasError('required')) {
+      <mat-error>{{ 'tour_schedule.error.max_capacity_required' | translate }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>{{ 'tour_schedules.status' | translate }}</mat-label>
+    <mat-select formControlName="status">
+      <mat-option [value]="null">None</mat-option>
+      @for (state of status; track state) {
+        <mat-option [value]="state" >{{ state }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid" >
+    {{ (isEdit ? 'tour_schedules.edit' : 'tour_schedules.create') | translate }}
+  </button>
+</form>
