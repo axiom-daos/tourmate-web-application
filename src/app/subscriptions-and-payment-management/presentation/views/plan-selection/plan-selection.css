@@ -2,18 +2,22 @@
   display: block;
   background: #f8f7f2;
   min-height: calc(100vh - 64px);
-  padding: 32px 28px 48px;
+  padding: 32px 24px 64px;
   box-sizing: border-box;
-  font-family: 'Geist', 'Segoe UI', sans-serif;
+  font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
   color: #29433a;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .plans-container {
-  width: min(1200px, 100%);
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 32px;
+  box-sizing: border-box;
 }
 
 /* Header */
@@ -23,16 +27,18 @@
   justify-content: space-between;
   background: #fffefb;
   border: 1px solid #d9ded5;
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 20px 28px;
+  box-sizing: border-box;
 }
 
 .header-title-group h2 {
   margin: 0;
   font-size: clamp(1.8rem, 2.2vw, 2.4rem);
-  font-weight: 800;
+  font-weight: 700;
   color: #29433a;
-  letter-spacing: -0.04em;
+  letter-spacing: normal;
+  line-height: 1.2;
 }
 
 .header-title-group p {
@@ -65,7 +71,7 @@
 .plan-card {
   background: #fffefb;
   border: 1px solid #d9ded5;
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 32px 28px;
   display: flex;
   flex-direction: column;
@@ -73,6 +79,7 @@
   box-shadow: 0 4px 16px rgba(41, 67, 58, 0.04);
   transition: all 0.2s ease;
   position: relative;
+  box-sizing: border-box;
 }
 
 .plan-card:hover {
@@ -92,8 +99,8 @@
   background: #29433a;
   color: #f8f7f2;
   font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 4px 14px;
   border-radius: 999px;
@@ -107,8 +114,9 @@
 .plan-header h3 {
   margin: 0;
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 700;
   color: #29433a;
+  letter-spacing: normal;
 }
 
 .price-box {
@@ -120,7 +128,7 @@
 
 .price-box .amount {
   font-size: 2.6rem;
-  font-weight: 900;
+  font-weight: 800;
   color: #29433a;
   line-height: 1;
 }
@@ -172,9 +180,9 @@
   width: 100% !important;
   background: #29433a !important;
   color: #f8f7f2 !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   height: 48px !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   font-size: 1rem !important;
   border: none !important;
   transition: all 0.2s ease !important;
@@ -189,9 +197,9 @@
   width: 100% !important;
   background: #e3ede8 !important;
   color: #29433a !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   height: 48px !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   font-size: 0.95rem !important;
 }
 

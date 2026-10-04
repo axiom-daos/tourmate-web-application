@@ -1,3 +1,14 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
 .mat-spacer {
   flex: 1 1 auto;
+}
+
+router-outlet + * {
+  flex: 1 0 auto;
 }

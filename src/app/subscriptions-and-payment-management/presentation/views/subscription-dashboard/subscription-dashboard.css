@@ -2,18 +2,22 @@
   display: block;
   background: #f8f7f2;
   min-height: calc(100vh - 64px);
-  padding: 32px 28px 48px;
+  padding: 32px 24px 64px;
   box-sizing: border-box;
-  font-family: 'Geist', 'Segoe UI', sans-serif;
+  font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
   color: #29433a;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .dashboard-container {
-  width: min(1200px, 100%);
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 28px;
+  box-sizing: border-box;
 }
 
 /* Header */
@@ -23,17 +27,18 @@
   justify-content: space-between;
   background: #fffefb;
   border: 1px solid #d9ded5;
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 22px 28px;
   box-sizing: border-box;
 }
 
 .header-info h2 {
   margin: 0;
-  font-size: clamp(1.8rem, 2.2vw, 2.6rem);
-  font-weight: 800;
+  font-size: clamp(1.8rem, 2.2vw, 2.4rem);
+  font-weight: 700;
   color: #29433a;
-  letter-spacing: -0.04em;
+  letter-spacing: normal;
+  line-height: 1.2;
 }
 
 .header-info p {
@@ -64,7 +69,7 @@
 .current-plan-card {
   background: #fffefb;
   border: 1px solid #d9ded5;
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 28px;
   box-sizing: border-box;
   box-shadow: 0 4px 16px rgba(41, 67, 58, 0.04);
@@ -83,6 +88,7 @@
   font-size: 1.35rem;
   font-weight: 700;
   color: #29433a;
+  letter-spacing: normal;
 }
 
 .plan-content-grid {
@@ -97,15 +103,16 @@
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   color: #62786f;
   margin-bottom: 4px;
 }
 
 .plan-metric .plan-name {
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: 700;
   color: #29433a;
+  letter-spacing: normal;
 }
 
 .plan-metric .plan-price {
@@ -166,7 +173,7 @@
 .btn-primary {
   background: #29433a !important;
   color: #f8f7f2 !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   padding: 0 20px !important;
   height: 44px !important;
   font-weight: 700 !important;
@@ -181,7 +188,7 @@
 
 .btn-secondary {
   border: 1px solid #d9ded5 !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   color: #29433a !important;
   height: 44px !important;
   font-weight: 700 !important;
@@ -195,7 +202,7 @@
 .btn-danger {
   color: #a95d3d !important;
   border: 1px solid rgba(169, 93, 61, 0.3) !important;
-  border-radius: 14px !important;
+  border-radius: 12px !important;
   height: 44px !important;
   font-weight: 700 !important;
   padding: 0 16px !important;
@@ -209,9 +216,10 @@
 .table-section {
   background: #fffefb;
   border: 1px solid #d9ded5;
-  border-radius: 24px;
-  overflow: hidden;
+  border-radius: 20px;
+  overflow-x: auto;
   box-shadow: 0 4px 16px rgba(41, 67, 58, 0.04);
+  box-sizing: border-box;
 }
 
 .table-header-bar {
@@ -224,11 +232,13 @@
   font-size: 1.25rem;
   font-weight: 700;
   color: #29433a;
+  letter-spacing: normal;
 }
 
 .mat-table {
   width: 100%;
   background: transparent;
+  min-width: 600px;
 }
 
 th.mat-header-cell {
