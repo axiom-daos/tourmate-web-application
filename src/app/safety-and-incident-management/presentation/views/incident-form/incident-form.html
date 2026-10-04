@@ -1,110 +1,67 @@
-<div class="incident-page">
-  <aside class="sidebar">
-    <div class="brand">TourMate</div>
-
-    <nav class="sidebar-nav" aria-label="Menú principal">
-      <button class="nav-item" type="button">Dashboard</button>
-      <button class="nav-item" type="button">Tours</button>
-      <button class="nav-item" type="button">Monitoreo en Vivo</button>
-      <button class="nav-item active" type="button">Incidentes</button>
-      <button class="nav-item" type="button">Reportes</button>
-      <button class="nav-item" type="button">Configuración</button>
-    </nav>
-
-    <div class="user-box">
-      <div class="user-avatar">AL</div>
-      <div>
-        <div class="user-name">Ana Lucia Quispe</div>
-        <div class="user-role">Administrador de Operación</div>
+<div class="incident-shell">
+  <section class="incident-card">
+    <div class="card-header">
+      <div class="title-block">
+        <button mat-stroked-button type="button" class="back-btn" [routerLink]="['/safety-and-incident-management/incidents']">
+          back
+        </button>
+        <h3>Incident Case Opening</h3>
       </div>
     </div>
-  </aside>
 
-  <main class="main-panel">
-    <header class="topbar">
-      <div class="breadcrumb">GESTIÓN DE EMERGENCIAS / Declarar Nuevo Incidente en Campo</div>
-      <div class="topbar-meta">
-        <span class="meta-label">MODO ALERTA TREMENDA</span>
-        <span class="meta-value">// Canal: Satellite: LoRa-CH2 (UHF 433.92 MHz)</span>
-      </div>
-    </header>
-
-    <section class="incident-card">
-      <div class="card-header">
-        <div class="title-block">
-          <h3>Apertura de Expediente de Incidente</h3>
-          <p>Protocolo de escalamiento operativo para eventos no programados y contingencias de salud en campo.</p>
-        </div>
-
-        <div class="card-meta">
-          <div class="meta-line">
-            <span>EXPEDICIÓN EN RUTA</span>
-            <strong>FOLIO: INC-2024-CUS-089</strong>
-          </div>
-          <div class="meta-line last">
-            <span>GUÍA: CARLOS SOTO (LIC.</span>
-            <strong>4412)</strong>
-          </div>
-        </div>
-      </div>
-
-      <form [formGroup]="form" (ngSubmit)="submit()" class="incident-form">
-        <div class="form-row two-columns">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Expedición Asignada</mat-label>
-            <input matInput type="number" formControlName="activeTourId" placeholder="Ej. 1">
-            <mat-error *ngIf="form.get('activeTourId')?.hasError('required')">El ID del tour activo es requerido</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Participante Afectado</mat-label>
-            <input matInput type="number" formControlName="reportedByUserId" placeholder="Ej. 10">
-            <mat-error *ngIf="form.get('reportedByUserId')?.hasError('required')">El ID del usuario es requerido</mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="form-row two-columns">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Tipo de Incidente</mat-label>
-            <mat-select formControlName="status">
-              @for (status of statuses; track status) {
-                <mat-option [value]="status">{{ status }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Nivel de Prioridad</mat-label>
-            <mat-select formControlName="status">
-              @for (status of statuses; track status) {
-                <mat-option [value]="status">{{ status }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div class="field-label">Detalles del Incidente</div>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="incident-form">
+      <div class="form-row two-columns">
         <mat-form-field appearance="outline" class="full-width">
-          <textarea matInput formControlName="description" rows="3" placeholder="Describa el incidente o datos del wearable..."></textarea>
-          <mat-error *ngIf="form.get('description')?.hasError('required')">La descripción es requerida</mat-error>
+          <mat-label>Assigned expedition</mat-label>
+          <input matInput type="number" formControlName="activeTourId" placeholder="Ex. 1">
+          @if (form.get('activeTourId')?.hasError('required')) {
+            <mat-error> The active tour ID is required </mat-error>
+          }
         </mat-form-field>
 
-        <div class="info-box">
-          <div class="info-title">Instrucciones del protocolo sugerido</div>
-          <div class="info-content">
-            Emitir aviso radial de radio VHF frecuencia 144.200 MHz.<br>
-            Solicitar al guía de la cola la aplicación inmediata de reposo e hidratación.<br>
-            Mantener monitoreo de saturación de oxígeno por encima del 85%.
-          </div>
-        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Affected participant</mat-label>
+          <input matInput type="number" formControlName="reportedByUserId" placeholder="Ex. 10">
+          @if (form.get('reportedByUserId')?.hasError('required')) {
+            <mat-error> The user ID is required </mat-error>
+          }
+        </mat-form-field>
+      </div>
 
-        <div class="footer-actions">
-          <button mat-stroked-button type="button" class="secondary-btn">Guardar en Borrador</button>
-          <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="form.invalid">
-            Publicar Alerta Inmediata
-          </button>
-        </div>
-      </form>
-    </section>
-  </main>
+      <div class="form-row two-columns">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Incident type</mat-label>
+          <mat-select formControlName="status">
+            @for (status of statuses; track status) {
+              <mat-option [value]="status">{{ status }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Priority level</mat-label>
+          <mat-select formControlName="status">
+            @for (status of statuses; track status) {
+              <mat-option [value]="status">{{ status }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="field-label">Incident details</div>
+      <mat-form-field appearance="outline" class="full-width textarea-field">
+        <textarea matInput formControlName="description" rows="3" placeholder="Describe the incident or wearable data..."></textarea>
+        @if (form.get('description')?.hasError('required')) {
+          <mat-error> The description is required </mat-error>
+        }
+      </mat-form-field>
+
+      <div class="footer-actions">
+        <button mat-stroked-button type="button" class="secondary-btn">Save as draft</button>
+        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="form.invalid">
+          Publish immediate alert
+        </button>
+      </div>
+    </form>
+  </section>
 </div>
