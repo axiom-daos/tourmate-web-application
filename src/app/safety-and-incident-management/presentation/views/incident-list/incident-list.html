@@ -1,0 +1,66 @@
+<div class="local-nav">
+  <button mat-button type="button">Back to Home</button>
+  <button mat-button type="button">New Incident</button>
+</div>
+
+<div class="incident-container">
+  <div class="header-section">
+    <h2>Incident Management</h2>
+    <button mat-flat-button color="primary" class="new-incident-btn" (click)="navigateToNew()">
+      <mat-icon>add</mat-icon> Declare New Incident
+    </button>
+  </div>
+
+  <div class="table-container mat-elevation-z1">
+    <table mat-table [dataSource]="dataSource()" matSort>
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let element"> #{{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="activeTourId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Active Tour </th>
+        <td mat-cell *matCellDef="let element"> {{element.activeTourId}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="reportedByUserId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Reported By </th>
+        <td mat-cell *matCellDef="let element"> User #{{element.reportedByUserId}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="reportedAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.reportedAt | date:'medium'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <td mat-cell *matCellDef="let element">
+          <span class="status-badge {{element.status | lowercase}}">{{element.status}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element" class="action-buttons">
+          <button mat-stroked-button color="accent" (click)="editIncident(element.id!)">Edit</button>
+          @if (element.status !== 'RESOLVED' && element.status !== 'CLOSED') {
+            <button mat-flat-button color="warn" (click)="resolveIncident(element)">Resolve</button>
+          }
+          <button mat-button color="warn" (click)="deleteIncident(element.id!)">Delete</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"></mat-paginator>
+  </div>
+</div>
