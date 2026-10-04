@@ -1,0 +1,65 @@
+<div class="plans-container">
+  <!-- Top Navigation Bar -->
+  <header class="header-bar">
+    <div class="header-title-group">
+      <h2>{{ 'subscription.plans_catalog_title' | translate }}</h2>
+      <p>{{ 'subscription.plans_catalog_subtitle' | translate }}</p>
+    </div>
+    <button mat-stroked-button class="btn-back" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> {{ 'subscription.back_to_dashboard' | translate }}
+    </button>
+  </header>
+
+  @if (store.loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  }
+
+  @if (store.error()) {
+    <mat-error>{{ store.error() }}</mat-error>
+  }
+
+  <!-- Plans Grid -->
+  <div class="plans-grid">
+    @for (plan of store.plans(); track plan.id) {
+      <div class="plan-card" [class.featured]="plan.id === 2">
+        @if (plan.id === 2) {
+          <div class="plan-badge-ribbon">{{ 'subscription.recommended' | translate }}</div>
+        }
+
+        <div>
+          <div class="plan-header">
+            <h3>{{ plan.name }}</h3>
+            <div class="price-box">
+              <span class="amount">${{ plan.priceAmount }}</span>
+              <span class="currency">{{ plan.priceCurrency }}</span>
+              <span class="period">/ {{ 'subscription.month' | translate }}</span>
+            </div>
+          </div>
+
+          <ul class="plan-features-list">
+            @for (feature of getFeaturesForPlan(plan.id); track feature) {
+              <li>
+                <mat-icon>check_circle</mat-icon>
+                <span>{{ feature }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <div class="plan-card-cta">
+          @if (isCurrentPlan(plan.id)) {
+            <button mat-flat-button disabled class="btn-current-plan">
+              <mat-icon>verified</mat-icon> {{ 'subscription.current_plan_badge' | translate }}
+            </button>
+          } @else {
+            <button mat-flat-button class="btn-select-plan" (click)="selectPlan(plan)">
+              {{ 'subscription.select_plan_btn' | translate }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
