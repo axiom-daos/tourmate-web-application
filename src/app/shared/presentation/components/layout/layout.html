@@ -1,13 +1,35 @@
-<mat-toolbar>
-  <mat-toolbar-row>
-    <h1>TourMate</h1>
-    <div class="mat-spacer"></div>
-    @for (option of options(); track option.label) {
-      <a mat-button [routerLink]="option.link" routerLinkActive="active">{{ option.label | translate }}</a>
-    }
+<mat-sidenav-container class="app-container">
 
-    <app-language-switcher/>
-  </mat-toolbar-row>
-</mat-toolbar>
-<router-outlet/>
-<app-footer-content/>
+  <mat-sidenav mode="side" opened class="sidebar">
+
+    <div class="sidebar-header">
+      <h1 class="brand-title">TourMate</h1>
+    </div>
+
+    <nav class="sidebar-nav">
+      @for (option of options(); track option.label) {
+        <a mat-button
+           [routerLink]="option.link"
+           routerLinkActive="active-link"
+           class="nav-item">
+          {{ option.label | translate }}
+        </a>
+      }
+    </nav>
+
+
+
+    <div class="sidebar-footer">
+      <app-language-switcher />
+    </div>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main-wrapper">
+    <main class="main-content">
+      <router-outlet />
+    </main>
+    <app-footer-content />
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

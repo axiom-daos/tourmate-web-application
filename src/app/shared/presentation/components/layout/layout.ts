@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { FooterContent } from '../footer-content/footer-content';
+import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
 /*
 import {
   AuthenticationSection
@@ -25,6 +26,9 @@ import {
     TranslatePipe,
     LanguageSwitcher,
     FooterContent,
+    MatSidenavContent,
+    MatSidenav,
+    MatSidenavContainer,
     // AuthenticationSection
   ],
   templateUrl: './layout.html',
@@ -39,6 +43,7 @@ export class Layout {
     { link: '/about', label: 'option.about' },
     { link: '/tourmate/monitoring', label: 'option.monitoring' },
     { link: '/management', label: 'option.management' },
+    { link: '/safety-and-incident-management', label: 'option.safety_and_incident' },
     { link: '/subscriptions', label: 'option.subscriptions' },
   ]);
 }

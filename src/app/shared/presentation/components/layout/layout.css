@@ -1,14 +1,95 @@
-:host {
+.app-container {
+  height: 100vh;
+  width: 100vw;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #62786f;
+  border-right: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100%;
+  justify-content: space-between;
+  padding: 1.5rem 1rem;
+  border-radius: 0;
+}
+
+.sidebar ::ng-deep .mat-drawer-inner-container {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  height: 100% !important;
   box-sizing: border-box;
 }
 
-.mat-spacer {
+.sidebar-header {
+  margin-bottom: 2rem;
+  padding: 0 0.5rem;
+}
+
+.brand-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: white;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background-color: #62786f;
+  color: black;
+}
+
+.active-link {
+  background-color: #d9ded5;
+  color: black;
+  font-weight: 600;
+}
+
+.spacer {
   flex: 1 1 auto;
 }
 
-router-outlet + * {
-  flex: 1 0 auto;
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  justify-content: center;
+}
+
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }

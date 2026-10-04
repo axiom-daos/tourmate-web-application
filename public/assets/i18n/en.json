@@ -4,6 +4,7 @@
     "about": "About Us",
     "monitoring": "Monitoring",
     "management": "Management",
+    "safety_and_incident": "Safety and Incident Management",
     "subscriptions": "Subscriptions & Billing"
   },
   "subscription": {
@@ -79,7 +80,6 @@
     "title": "Welcome",
     "content": "Welcome to Tourmate."
   },
-
   "page-not-found": {
     "title": "Page not found",
     "content": "The path <strong>{{ invalid_path }}</strong> is not valid.",
