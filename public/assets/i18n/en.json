@@ -4,7 +4,37 @@
     "about": "About Us",
     "monitoring": "Monitoring",
     "management": "Management",
-    "safety_and_incident": "Safety and Incident Management"
+    "safety_and_incident": "Safety and Incident Management",
+    "subscriptions": "Subscriptions & Billing"
+  },
+  "subscription": {
+    "dashboard_title": "Subscription & Billing",
+    "dashboard_subtitle": "Manage your agency membership plan and view transaction history",
+    "agency": "Agency",
+    "explore_plans": "View Plans",
+    "current_plan_heading": "Active Membership Plan",
+    "no_active_subscription": "No Active Subscription",
+    "plan_name": "Plan Name",
+    "monthly_cost": "Cost",
+    "activated_date": "Activated On",
+    "not_available": "N/A",
+    "cancel_btn": "Cancel Plan",
+    "change_plan_btn": "Change / Upgrade Plan",
+    "no_plan_selected": "Your agency currently has no active subscription.",
+    "choose_plan_btn": "Choose a Subscription Plan",
+    "payment_history_heading": "Billing & Payment History",
+    "plan": "Plan",
+    "amount": "Amount",
+    "date": "Date & Time",
+    "status": "Status",
+    "no_payments_found": "No billing records found for this agency.",
+    "plans_catalog_title": "Subscription Plans",
+    "plans_catalog_subtitle": "Select the ideal tier for your adventure agency operations",
+    "back_to_dashboard": "Back to Dashboard",
+    "recommended": "Recommended",
+    "month": "month",
+    "current_plan_badge": "Current Plan",
+    "select_plan_btn": "Subscribe / Upgrade"
   },
   "tours": {
     "new": "Add Tour",
@@ -50,7 +80,6 @@
     "title": "Welcome",
     "content": "Welcome to Tourmate."
   },
-
   "page-not-found": {
     "title": "Page not found",
     "content": "The path <strong>{{ invalid_path }}</strong> is not valid.",

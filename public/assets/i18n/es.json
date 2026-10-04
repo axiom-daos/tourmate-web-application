@@ -1,10 +1,40 @@
 {
-  "option" : {
+  "option": {
     "home": "Inicio",
     "about": "Acerca de",
     "monitoring": "Monitoreo",
     "management": "Gestión",
-    "safety_and_incident": "Gestión de Seguridad y de Incidentes"
+    "safety_and_incident": "Gestión de Seguridad y de Incidentes",
+    "subscriptions": "Suscripciones y Facturación"
+  },
+  "subscription": {
+    "dashboard_title": "Suscripción y Facturación",
+    "dashboard_subtitle": "Administre el plan de su agencia y consulte su historial de transacciones",
+    "agency": "Agencia",
+    "explore_plans": "Ver Planes",
+    "current_plan_heading": "Plan de Membresía Activo",
+    "no_active_subscription": "Sin Suscripción Activa",
+    "plan_name": "Nombre del Plan",
+    "monthly_cost": "Costo",
+    "activated_date": "Activado el",
+    "not_available": "N/D",
+    "cancel_btn": "Cancelar Plan",
+    "change_plan_btn": "Cambiar / Mejorar Plan",
+    "no_plan_selected": "Su agencia no cuenta con una suscripción activa actualmente.",
+    "choose_plan_btn": "Elegir un Plan de Suscripción",
+    "payment_history_heading": "Historial de Pagos y Facturación",
+    "plan": "Plan",
+    "amount": "Monto",
+    "date": "Fecha y Hora",
+    "status": "Estado",
+    "no_payments_found": "No se encontraron registros de pago para esta agencia.",
+    "plans_catalog_title": "Planes de Suscripción",
+    "plans_catalog_subtitle": "Seleccione el nivel ideal para las operaciones de su agencia de aventura",
+    "back_to_dashboard": "Volver al Panel",
+    "recommended": "Recomendado",
+    "month": "mes",
+    "current_plan_badge": "Plan Actual",
+    "select_plan_btn": "Suscribirse / Mejorar"
   },
   "tours": {
     "new": "Agregar Tour",
@@ -25,7 +55,6 @@
     "create": "Crear Tour",
     "update": "Actualizar Tour",
     "toggle_tours": "Tours"
-
   },
   "tour_schedules": {
     "list_title": "Horarios de Tours",
