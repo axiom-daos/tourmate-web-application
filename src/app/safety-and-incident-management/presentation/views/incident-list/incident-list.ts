@@ -22,8 +22,7 @@ import { Incident } from '../../../domain/model/aggregates/incident.entity';
     MatPaginatorModule,
     MatSortModule,
     DatePipe,
-    LowerCasePipe,
-    NgIf,
+    LowerCasePipe
   ],
   templateUrl: './incident-list.html',
   styleUrl: './incident-list.css',

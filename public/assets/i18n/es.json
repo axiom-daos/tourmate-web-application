@@ -3,7 +3,8 @@
     "home": "Inicio",
     "about": "Acerca de",
     "monitoring": "Monitoreo",
-    "management": "Gestión"
+    "management": "Gestión",
+    "safety_and_incident": "Gestión de Seguridad y de Incidentes"
   },
   "tours": {
     "new": "Agregar Tour",

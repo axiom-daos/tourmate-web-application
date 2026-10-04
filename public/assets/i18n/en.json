@@ -3,7 +3,8 @@
     "home": "Home",
     "about": "About Us",
     "monitoring": "Monitoring",
-    "management": "Management"
+    "management": "Management",
+    "safety_and_incident": "Safety and Incident Management"
   },
   "tours": {
     "new": "Add Tour",
