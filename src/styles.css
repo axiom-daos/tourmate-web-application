@@ -1,7 +1,70 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --tm-forest: #1f382f;
+  --tm-forest-soft: #29483d;
+  --tm-canvas: #f7f6f1;
+  --tm-surface: #fffefb;
+  --tm-border: #dfe3da;
+  --tm-muted: #708078;
+  --tm-accent: #bd7657;
+  --tm-success: #dfe9dc;
+  --tm-warning: #f6eadc;
+  color-scheme: light;
+  font-family: Roboto, "Segoe UI", sans-serif;
+  color: #263e35;
+  background: var(--tm-canvas);
+}
 
-.mat-mdc-cell, .mat-mdc-header-cell, th, td {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--tm-canvas);
+  color: #263e35;
+  font: 400 0.94rem/1.5 Roboto, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #789783;
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--tm-forest);
+}
+
+.mat-mdc-card,
+.mat-mdc-table {
+  color: inherit;
+}
+
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-container-shape: 9px;
+}
+
+::selection {
+  color: var(--tm-forest);
+  background: #dce7dc;
 }

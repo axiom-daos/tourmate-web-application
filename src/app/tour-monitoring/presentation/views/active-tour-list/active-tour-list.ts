@@ -1,7 +1,6 @@
 import {Component, computed, inject, viewChild} from '@angular/core';
 import {TourMonitoringStore} from '../../../application/tour-monitoring.store';
 import {Router} from '@angular/router';
-import {MatError} from '@angular/material/form-field';
 import {
   MatCell,
   MatCellDef,
@@ -21,6 +20,7 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {MatIcon} from '@angular/material/icon';
 import {MatSort, MatSortHeader} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 /**
  * Displays the activeTour collection with table actions.
@@ -28,7 +28,6 @@ import {MatPaginator} from '@angular/material/paginator';
 @Component({
   selector: 'app-active-tour-list',
   imports: [
-    MatError,
     MatTable,
     MatHeaderCellDef,
     MatCellDef,

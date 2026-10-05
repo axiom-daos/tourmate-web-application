@@ -1,8 +1,142 @@
-.title {
-  margin: 16px;
+:host {
+  display: block;
 }
 
-.mat-table {
+.page-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  color: var(--tm-muted);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.page-heading h2 {
+  margin: 5px 0 3px;
+  font-size: clamp(1.65rem, 3vw, 2.15rem);
+  letter-spacing: -0.045em;
+}
+
+.page-heading p {
+  margin: 0;
+  color: var(--tm-muted);
+}
+
+.primary-action {
+  min-height: 42px;
+  border-radius: 9px;
+  color: white !important;
+  background: var(--tm-forest) !important;
+}
+
+.primary-action mat-icon {
+  margin-right: 6px;
+}
+
+.table-card {
+  overflow: hidden;
+  border: 1px solid var(--tm-border);
+  border-radius: 14px;
+  background: var(--tm-surface);
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
   width: 100%;
-  margin-bottom: 16px;
+  min-width: 700px;
+  background: transparent;
+}
+
+th.mat-mdc-header-cell {
+  height: 48px;
+  color: #61746a;
+  background: #f0f2ec;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+td.mat-mdc-cell {
+  height: 62px;
+  color: #31483e;
+  border-bottom-color: #edf0ea;
+}
+
+.status-tag {
+  display: inline-flex;
+  min-height: 25px;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: #345344;
+  background: #e0ebdf;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.actions-cell button {
+  color: var(--tm-forest-soft);
+}
+
+.feedback-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--tm-border);
+  border-radius: 10px;
+  color: var(--tm-muted);
+  background: var(--tm-surface);
+}
+
+.error-panel {
+  color: #8e422f;
+  background: #fff5f0;
+}
+
+.empty-state {
+  display: flex;
+  min-height: 210px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--tm-muted);
+  text-align: center;
+}
+
+.empty-state mat-icon {
+  color: #91a294;
+}
+
+.empty-state strong {
+  color: var(--tm-forest);
+}
+
+.mat-mdc-paginator {
+  border-top: 1px solid var(--tm-border);
+  background: transparent;
+}
+
+@media (max-width: 600px) {
+  .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .primary-action {
+    width: 100%;
+  }
 }

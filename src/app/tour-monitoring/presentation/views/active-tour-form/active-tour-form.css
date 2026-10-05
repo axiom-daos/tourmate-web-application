@@ -1,11 +1,79 @@
-.status {
-  margin: 16px;
+:host {
+  display: block;
 }
 
-form {
+.form-page {
+  width: min(100%, 940px);
+  margin: 0 auto;
+}
+
+.form-heading {
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  color: var(--tm-muted);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.form-heading h2 {
+  margin: 5px 0 3px;
+  font-size: clamp(1.65rem, 3vw, 2.15rem);
+  letter-spacing: -0.045em;
+}
+
+.form-heading p {
+  margin: 0;
+  color: var(--tm-muted);
+}
+
+.form-card {
+  padding: clamp(18px, 3vw, 30px);
+  border: 1px solid var(--tm-border);
+  border-radius: 14px;
+  background: var(--tm-surface);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+}
+
+.form-grid mat-form-field {
+  width: 100%;
+}
+
+.form-actions {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 600px;
-  margin: 16px;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 18px;
+  border-top: 1px solid var(--tm-border);
+}
+
+.form-actions button:last-child {
+  min-height: 42px;
+  padding-inline: 22px;
+  border-radius: 9px;
+  color: white !important;
+  background: var(--tm-forest) !important;
+}
+
+@media (max-width: 620px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
 }

@@ -1,6 +1,6 @@
 <mat-button-toggle-group [value]="currentLang"
                          appearance="standard"
-                         aria-label="Preferred language"
+                         [attr.aria-label]="'shell.preferred_language' | translate"
                          name="language">
 
   @for (language of languages; track language) {
