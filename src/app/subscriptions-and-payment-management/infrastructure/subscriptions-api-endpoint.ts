@@ -3,7 +3,8 @@ import { Subscription } from '../domain/model/subscription.entity';
 import { SubscriptionResource, SubscriptionsResponse } from './subscription-response';
 import { SubscriptionAssembler } from './subscription-assembler';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
+
 
 /**
  * Endpoint client for Subscription CRUD operations.

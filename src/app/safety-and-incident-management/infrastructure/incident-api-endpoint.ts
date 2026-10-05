@@ -3,7 +3,8 @@ import { Incident } from '../domain/model/aggregates/incident.entity';
 import { IncidentResource, IncidentsResponse } from './incident-response';
 import { IncidentAssembler } from './incident-assembler';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
+
 
 /**
  * Endpoint client for incident CRUD operations.
