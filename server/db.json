@@ -965,13 +965,14 @@
   "incidents": [
     {
       "id": 1,
+      "uuid": "",
       "activeTourId": 1,
       "reportedByUserId": 9,
       "description": "Un participante se torció el tobillo en el sendero.",
       "latitude": -13.156,
       "longitude": -72.526,
       "reportedAt": "2026-10-01T09:20:00",
-      "status": "OPEN"
+      "status": "RESOLVED"
     },
     {
       "id": 2,
