@@ -1,11 +1,21 @@
 {
   "option": {
     "home": "Home",
-    "about": "About Us",
-    "monitoring": "Monitoring",
-    "management": "Management",
-    "safety_and_incident": "Safety and Incident Management",
-    "subscriptions": "Subscriptions & Billing"
+    "about": "About TourMate",
+    "monitoring": "Live monitoring",
+    "management": "Tour management",
+    "safety_and_incident": "Incidents",
+    "subscriptions": "Plans & billing"
+  },
+  "shell": {
+    "brand_caption": "EXPEDITION OPERATIONS",
+    "main_navigation": "Main navigation",
+    "workspace": "WORKSPACE",
+    "language": "LANGUAGE",
+    "preferred_language": "Preferred language",
+    "title": "Operations center",
+    "platform": "Tour operations",
+    "open_navigation": "Open navigation menu"
   },
   "subscription": {
     "dashboard_title": "Subscription & Billing",
@@ -54,7 +64,22 @@
     "currency": "Currency",
     "create": "Create Tour",
     "update": "Update Tour",
-    "toggle_tours": "Tours"
+    "toggle_tours": "Tours",
+    "page_description": "Manage your agency's route catalog and tour details.",
+    "view_switch": "Choose tours or schedules",
+    "table_scroll": "Tours table; scroll horizontally to see all columns",
+    "empty_title": "No tours yet",
+    "empty_description": "Create your first tour to start building your catalog.",
+    "edit": "Edit tour",
+    "delete": "Delete tour",
+    "form_description": "Add the route information, difficulty and pricing for this experience.",
+    "error": {
+      "agency_id_required": "Agency ID is required.",
+      "title_required": "Tour title is required.",
+      "description_required": "Description is required.",
+      "duration_required": "Duration is required.",
+      "price_amount_required": "Price is required."
+    }
   },
   "tour_schedules": {
     "list_title": "Tour Schedules",
@@ -70,7 +95,18 @@
     "create": "Create Tour Schedule",
     "update": "Update Tour Schedule",
     "edit_title": "Edit Tour Schedule",
-    "edit": "Update Tour Schedule"
+    "edit": "Update Tour Schedule",
+    "page_description": "Plan departures, set passenger capacity and track schedule status.",
+    "table_scroll": "Tour schedules table; scroll horizontally to see all columns",
+    "empty_title": "No schedules yet",
+    "empty_description": "Create a departure schedule for one of your tours.",
+    "form_description": "Set the tour, departure time, available capacity and schedule status.",
+    "delete": "Delete tour schedule",
+    "error": {
+      "tour_id_required": "Tour ID is required.",
+      "departure_date_time_required": "Departure date and time are required.",
+      "max_capacity_required": "Maximum capacity is required."
+    }
   },
   "activeTours": {
     "list_title": "Active Tours",
@@ -81,20 +117,89 @@
     "status": "Status",
     "actions": "Actions",
     "new": "Add Active Tour",
+    "list-title": "Active tours",
     "tourScheduleId": "Tour Schedule ID",
-    "tourScheduleIdMaxCapacity": "Tour Schedule Max Capacity"
+    "tourScheduleIdMaxCapacity": "Tour Schedule Max Capacity",
+    "list-description": "Review the expeditions currently being tracked by your agency.",
+    "table-scroll": "Active tours table; scroll horizontally to see all columns",
+    "empty-title": "No active tours",
+    "empty-description": "Active expeditions will appear here when they are available.",
+    "edit": "Edit active tour",
+    "delete": "Delete active tour"
+  },
+  "activeTour": {
+    "form-description": "Connect the active expedition with its schedule and guide, then record its status and location.",
+    "tourScheduleId": "Tour schedule ID",
+    "guideId": "Guide ID",
+    "startedAt": "Started at",
+    "status": "Status",
+    "finishedAt": "Finished at (optional)",
+    "currentLatitude": "Current latitude",
+    "currentLongitude": "Current longitude",
+    "create": "Create active tour",
+    "update": "Save changes",
+    "error": {
+      "startedAt-required": "Start time is required.",
+      "status-required": "Status is required."
+    }
   },
   "about": {
     "title": "About us",
     "content": "Tourmate , part of AXIOM Corporation."
   },
   "home": {
-    "title": "Welcome",
-    "content": "Welcome to Tourmate."
+    "title": "Your operations, in one place",
+    "content": "Coordinate tours, follow active expeditions and keep your teams informed from a single workspace.",
+    "workspace_title": "Choose a workspace",
+    "workspace_hint": "Open a module to continue managing your operations.",
+    "tours_title": "Tour management",
+    "tours_description": "Create tour routes and manage departure schedules.",
+    "monitoring_title": "Live monitoring",
+    "monitoring_description": "Review active tours and their current status.",
+    "incidents_title": "Safety & incidents",
+    "incidents_description": "Record, review and resolve expedition incidents.",
+    "billing_title": "Plans & billing",
+    "billing_description": "Manage your agency subscription and payment history.",
+    "open_module": "Open module"
+  },
+  "common": {
+    "loading": "Loading...",
+    "cancel": "Cancel"
+  },
+  "incidents": {
+    "list_title": "Incident response",
+    "list_description": "Review reported incidents and follow up on expedition safety.",
+    "new": "Report an incident",
+    "id": "Case",
+    "active_tour": "Active tour",
+    "reported_by": "Reported by",
+    "description": "Incident details",
+    "reported_at": "Reported at",
+    "status": "Status",
+    "actions": "Actions",
+    "edit": "Edit",
+    "resolve": "Resolve",
+    "delete": "Delete incident",
+    "empty_title": "No incidents reported",
+    "empty_description": "New reports will appear here for your team to review.",
+    "table_scroll": "Incidents table; scroll horizontally to see all columns",
+    "form_title": "Open an incident case",
+    "edit_title": "Update incident case",
+    "form_description": "Capture the report details and location so the operations team can respond.",
+    "priority_notice": "Safety report",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "description_hint": "Describe what happened and include any relevant field observations.",
+    "protocol_note": "Follow your agency's field safety procedures and contact local emergency services when needed.",
+    "active_tour_required": "An active tour ID is required.",
+    "reported_by_required": "A reporter ID is required.",
+    "description_required": "Incident details are required.",
+    "publish": "Publish incident report",
+    "update": "Save changes"
   },
   "page-not-found": {
     "title": "Page not found",
-    "content": "The path <strong>{{ invalid_path }}</strong> is not valid.",
+    "content": "The path “{{ invalid_path }}” is not valid.",
     "go-home": "Go Home"
   },
   "footer": {

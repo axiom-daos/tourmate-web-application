@@ -1,11 +1,21 @@
 {
   "option": {
     "home": "Inicio",
-    "about": "Acerca de",
-    "monitoring": "Monitoreo",
-    "management": "Gestión",
-    "safety_and_incident": "Gestión de Seguridad y de Incidentes",
-    "subscriptions": "Suscripciones y Facturación"
+    "about": "Acerca de TourMate",
+    "monitoring": "Monitoreo en vivo",
+    "management": "Gestión de tours",
+    "safety_and_incident": "Incidentes",
+    "subscriptions": "Planes y facturación"
+  },
+  "shell": {
+    "brand_caption": "OPERACIONES DE EXPEDICIÓN",
+    "main_navigation": "Navegación principal",
+    "workspace": "ESPACIO DE TRABAJO",
+    "language": "IDIOMA",
+    "preferred_language": "Idioma preferido",
+    "title": "Centro de operaciones",
+    "platform": "Operaciones de tours",
+    "open_navigation": "Abrir menú de navegación"
   },
   "subscription": {
     "dashboard_title": "Suscripción y Facturación",
@@ -54,7 +64,22 @@
     "currency": "Moneda",
     "create": "Crear Tour",
     "update": "Actualizar Tour",
-    "toggle_tours": "Tours"
+    "toggle_tours": "Tours",
+    "page_description": "Administra el catálogo de rutas y los detalles de tus tours.",
+    "view_switch": "Elegir tours u horarios",
+    "table_scroll": "Tabla de tours; desplázate horizontalmente para ver todas las columnas",
+    "empty_title": "Aún no hay tours",
+    "empty_description": "Crea tu primer tour para comenzar a armar el catálogo.",
+    "edit": "Editar tour",
+    "delete": "Eliminar tour",
+    "form_description": "Agrega la información de la ruta, la dificultad y el precio de esta experiencia.",
+    "error": {
+      "agency_id_required": "El ID de la agencia es obligatorio.",
+      "title_required": "El título del tour es obligatorio.",
+      "description_required": "La descripción es obligatoria.",
+      "duration_required": "La duración es obligatoria.",
+      "price_amount_required": "El precio es obligatorio."
+    }
   },
   "tour_schedules": {
     "list_title": "Horarios de Tours",
@@ -70,7 +95,18 @@
     "create": "Crear Horario de Tour",
     "update": "Actualizar Horario de Tour",
     "edit_title": "Editar Horario de Tour",
-    "edit": "Actualizar Horario de Tour"
+    "edit": "Actualizar Horario de Tour",
+    "page_description": "Programa salidas, define la capacidad y consulta el estado de cada horario.",
+    "table_scroll": "Tabla de horarios; desplázate horizontalmente para ver todas las columnas",
+    "empty_title": "Aún no hay horarios",
+    "empty_description": "Crea un horario de salida para uno de tus tours.",
+    "form_description": "Define el tour, la hora de salida, la capacidad y el estado del horario.",
+    "delete": "Eliminar horario de tour",
+    "error": {
+      "tour_id_required": "El ID del tour es obligatorio.",
+      "departure_date_time_required": "La fecha y hora de salida son obligatorias.",
+      "max_capacity_required": "La capacidad máxima es obligatoria."
+    }
   },
   "activeTours": {
     "list_title": "Tours Activos",
@@ -81,20 +117,89 @@
     "status": "Estado",
     "actions": "Acciones",
     "new": "Agregar Tour Activo",
+    "list-title": "Tours activos",
     "tourScheduleId": "ID del Horario de Tour",
-    "tourScheduleIdMaxCapacity": "Capacidad Máxima del Horario de Tour"
+    "tourScheduleIdMaxCapacity": "Capacidad Máxima del Horario de Tour",
+    "list-description": "Consulta las expediciones que tu agencia está monitoreando.",
+    "table-scroll": "Tabla de tours activos; desplázate horizontalmente para ver todas las columnas",
+    "empty-title": "No hay tours activos",
+    "empty-description": "Las expediciones activas aparecerán aquí cuando estén disponibles.",
+    "edit": "Editar tour activo",
+    "delete": "Eliminar tour activo"
+  },
+  "activeTour": {
+    "form-description": "Vincula la expedición activa con su horario y guía, y registra su estado y ubicación.",
+    "tourScheduleId": "ID del horario del tour",
+    "guideId": "ID del guía",
+    "startedAt": "Iniciado",
+    "status": "Estado",
+    "finishedAt": "Finalizado (opcional)",
+    "currentLatitude": "Latitud actual",
+    "currentLongitude": "Longitud actual",
+    "create": "Crear tour activo",
+    "update": "Guardar cambios",
+    "error": {
+      "startedAt-required": "La hora de inicio es obligatoria.",
+      "status-required": "El estado es obligatorio."
+    }
   },
   "about": {
     "title": "Acerca de nosotros",
     "content": "Tourmate , parte de AXIOM Corporation."
   },
   "home": {
-    "title": "Bienvenido",
-    "content": "Bienvenido a Tourmate."
+    "title": "Tus operaciones, en un solo lugar",
+    "content": "Coordina tours, sigue expediciones activas y mantén a tus equipos informados desde un único espacio de trabajo.",
+    "workspace_title": "Elige un espacio de trabajo",
+    "workspace_hint": "Abre un módulo para continuar gestionando tus operaciones.",
+    "tours_title": "Gestión de tours",
+    "tours_description": "Crea rutas y administra los horarios de salida.",
+    "monitoring_title": "Monitoreo en vivo",
+    "monitoring_description": "Consulta los tours activos y su estado actual.",
+    "incidents_title": "Seguridad e incidentes",
+    "incidents_description": "Registra, revisa y resuelve incidentes de expedición.",
+    "billing_title": "Planes y facturación",
+    "billing_description": "Administra la suscripción de tu agencia y el historial de pagos.",
+    "open_module": "Abrir módulo"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "cancel": "Cancelar"
+  },
+  "incidents": {
+    "list_title": "Atención de incidentes",
+    "list_description": "Revisa los incidentes reportados y da seguimiento a la seguridad de las expediciones.",
+    "new": "Reportar incidente",
+    "id": "Caso",
+    "active_tour": "Tour activo",
+    "reported_by": "Reportado por",
+    "description": "Detalles del incidente",
+    "reported_at": "Fecha del reporte",
+    "status": "Estado",
+    "actions": "Acciones",
+    "edit": "Editar",
+    "resolve": "Resolver",
+    "delete": "Eliminar incidente",
+    "empty_title": "No hay incidentes reportados",
+    "empty_description": "Los nuevos reportes aparecerán aquí para que el equipo pueda revisarlos.",
+    "table_scroll": "Tabla de incidentes; desplázate horizontalmente para ver todas las columnas",
+    "form_title": "Abrir un caso de incidente",
+    "edit_title": "Actualizar caso de incidente",
+    "form_description": "Registra los detalles y la ubicación para que el equipo de operaciones pueda responder.",
+    "priority_notice": "Reporte de seguridad",
+    "latitude": "Latitud",
+    "longitude": "Longitud",
+    "description_hint": "Describe lo ocurrido e incluye observaciones relevantes en campo.",
+    "protocol_note": "Sigue los procedimientos de seguridad en campo de tu agencia y contacta a los servicios de emergencia locales cuando sea necesario.",
+    "active_tour_required": "El ID del tour activo es obligatorio.",
+    "reported_by_required": "El ID de quien reporta es obligatorio.",
+    "description_required": "Los detalles del incidente son obligatorios.",
+    "publish": "Publicar reporte",
+    "update": "Guardar cambios"
   },
   "page-not-found": {
     "title": "Página no encontrada",
-    "content": "La ruta <strong>{{ invalidPath }}</strong> es inválida.",
+    "content": "La ruta “{{ invalid_path }}” no es válida.",
     "go-home": "Ir a Inicio"
   },
   "footer": {
