@@ -1,5 +1,6 @@
 import {BaseEntity} from '../../../shared/domain/model/base-entity';
-import {TourSchedule} from './tour-schedule.entity';
+import {TourSchedule} from '../../../tour-management/domain/model/tour-schedule.entity';
+
 
 export class ActiveTour implements BaseEntity {
   #id: number;

@@ -3,7 +3,8 @@ import { Plan } from '../domain/model/plan.entity';
 import { PlanResource, PlansResponse } from './plan-response';
 import { PlanAssembler } from './plan-assembler';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
+
 
 /**
  * Endpoint client for Plan CRUD operations.

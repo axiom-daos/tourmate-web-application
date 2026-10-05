@@ -13,11 +13,14 @@ export class TourAssembler implements BaseAssembler<Tour, TourResource, ToursRes
         id: resource.id,
         agencyId: resource.agencyId,
         details: new TourDetails({
-          title: resource.details.title,
-          description: resource.details.description,
-          duration: resource.details.duration,
-          difficulty: resource.details.difficulty,
-          price: new Price(resource.details.price)
+          title: resource.title,
+          description: resource.description,
+          duration: resource.duration,
+          difficulty: resource.difficulty,
+          price: new Price({
+            amount: resource.priceAmount,
+            currency: resource.priceCurrency
+          })
         }),
         status: resource.status
       })
@@ -28,16 +31,12 @@ export class TourAssembler implements BaseAssembler<Tour, TourResource, ToursRes
     return {
       id: entity.id,
       agencyId: entity.agencyId,
-      details: {
-        title: entity.details.title,
-        description: entity.details.description,
-        duration: entity.details.duration,
-        difficulty: entity.details.difficulty,
-        price: {
-          amount: entity.details.price.amount,
-          currency: entity.details.price.currency
-        }
-      },
+      title: entity.details.title,
+      description: entity.details.description,
+      duration: entity.details.duration,
+      difficulty: entity.details.difficulty,
+      priceAmount: entity.details.price.amount,
+      priceCurrency: entity.details.price.currency,
       status: entity.status
     }
   }

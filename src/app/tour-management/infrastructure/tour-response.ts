@@ -4,16 +4,12 @@ export interface TourResource extends BaseResource {
 
   id: number,
   agencyId: number,
-  details: {
-    title: string,
-    description: string,
-    duration: string,
-    difficulty: string,
-    price: {
-      amount: number,
-      currency: string
-    },
-  },
+  title: string,
+  description: string,
+  duration: string,
+  difficulty: string,
+  priceAmount: number,
+  priceCurrency: string,
   status: string
 }
 

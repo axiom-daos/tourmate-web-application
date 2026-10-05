@@ -4,8 +4,9 @@ import {TourMonitoringApi} from '../infrastructure/tour-monitoring-api';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {retry} from 'rxjs';
 import {TourGuide} from '../domain/model/tour-guide.entity';
-import {TourSchedule} from '../domain/model/tour-schedule.entity';
+
 import {Participant} from '../domain/model/participant.entity';
+import {TourSchedule} from '../../tour-management/domain/model/tour-schedule.entity';
 
 /**
  * Holds tourMonitoring application state and coordinates activeTour application layer behavior.

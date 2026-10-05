@@ -72,6 +72,18 @@
     "edit_title": "Edit Tour Schedule",
     "edit": "Update Tour Schedule"
   },
+  "activeTours": {
+    "list_title": "Active Tours",
+    "id": "ID",
+    "tour_id": "Tour ID",
+    "departure_date_time": "Departure DateTime",
+    "max_capacity": "Max capacity",
+    "status": "Status",
+    "actions": "Actions",
+    "new": "Add Active Tour",
+    "tourScheduleId": "Tour Schedule ID",
+    "tourScheduleIdMaxCapacity": "Tour Schedule Max Capacity"
+  },
   "about": {
     "title": "About us",
     "content": "Tourmate , part of AXIOM Corporation."

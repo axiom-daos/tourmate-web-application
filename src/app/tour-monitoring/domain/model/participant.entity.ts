@@ -1,4 +1,5 @@
-import {TourSchedule} from './tour-schedule.entity';
+import {TourSchedule} from '../../../tour-management/domain/model/tour-schedule.entity';
+
 
 /**
  * Represents a participant aggregate in the learning domain model.

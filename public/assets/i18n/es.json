@@ -72,6 +72,18 @@
     "edit_title": "Editar Horario de Tour",
     "edit": "Actualizar Horario de Tour"
   },
+  "activeTours": {
+    "list_title": "Tours Activos",
+    "id": "ID",
+    "tour_id": "ID de Tour",
+    "departure_date_time": "Fecha y hora de salida",
+    "max_capacity": "Capacidad máxima",
+    "status": "Estado",
+    "actions": "Acciones",
+    "new": "Agregar Tour Activo",
+    "tourScheduleId": "ID del Horario de Tour",
+    "tourScheduleIdMaxCapacity": "Capacidad Máxima del Horario de Tour"
+  },
   "about": {
     "title": "Acerca de nosotros",
     "content": "Tourmate , parte de AXIOM Corporation."

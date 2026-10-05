@@ -6,10 +6,13 @@ import {Observable} from 'rxjs';
 import {ActiveToursApiEndpoint} from './active-tours-api-endpoint';
 import {TourGuidesApiEndpoint} from './tour-guides-api-endpoint';
 import {TourGuide} from '../domain/model/tour-guide.entity';
-import {TourSchedule} from '../domain/model/tour-schedule.entity';
-import {TourSchedulesApiEndpoint} from './tour-schedules-api-endpoint';
+
+
 import {ParticipantsApiEndpoint} from './participants-api-endpoint';
 import {Participant} from '../domain/model/participant.entity';
+import {TourSchedule} from '../../tour-management/domain/model/tour-schedule.entity';
+import {TourSchedulesApiEndpoint} from './tour-schedules-api-endpoint';
+import {TourScheduleApiEndpoint} from '../../tour-management/infrastructure/tour-schedule-api-endpoint';
 
 /**
  * Infrastructure facade for active tours endpoint operations.
@@ -19,7 +22,7 @@ export class TourMonitoringApi extends BaseApi {
   private readonly http = inject(HttpClient);
   private readonly activeToursEndpoint = new ActiveToursApiEndpoint(this.http);
   private readonly tourGuidesEndpoint = new TourGuidesApiEndpoint(this.http);
-  private readonly tourSchedulesEndpoint = new TourSchedulesApiEndpoint(this.http);
+  private readonly tourSchedulesEndpoint = new TourScheduleApiEndpoint(this.http);
   private readonly participantsEndpoint = new ParticipantsApiEndpoint(this.http);
 
   /**
