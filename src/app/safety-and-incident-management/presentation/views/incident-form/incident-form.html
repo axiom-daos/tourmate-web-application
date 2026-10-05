@@ -3,34 +3,34 @@
     <div class="card-header">
       <div class="title-block">
         <button mat-stroked-button type="button" class="back-btn" [routerLink]="['/safety-and-incident-management/incidents']">
-          back
+          {{ 'incident.back' | translate }}
         </button>
-        <h3>Incident Case Opening</h3>
+        <h3>{{ 'incident.case_opening' | translate }}</h3>
       </div>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="incident-form">
       <div class="form-row two-columns">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Assigned expedition</mat-label>
-          <input matInput type="number" formControlName="activeTourId" placeholder="Ex. 1">
+          <mat-label>{{ 'incident.assigned_expedition' | translate }}</mat-label>
+          <input matInput type="number" formControlName="activeTourId" [placeholder]="'incident.placeholder_id' | translate">
           @if (form.get('activeTourId')?.hasError('required')) {
-            <mat-error> The active tour ID is required </mat-error>
+            <mat-error>{{ 'incident.active_tour_id_required' | translate }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Affected participant</mat-label>
-          <input matInput type="number" formControlName="reportedByUserId" placeholder="Ex. 10">
+          <mat-label>{{ 'incident.affected_participant' | translate }}</mat-label>
+          <input matInput type="number" formControlName="reportedByUserId" [placeholder]="'incident.placeholder_user_id' | translate">
           @if (form.get('reportedByUserId')?.hasError('required')) {
-            <mat-error> The user ID is required </mat-error>
+            <mat-error>{{ 'incident.user_id_required' | translate }}</mat-error>
           }
         </mat-form-field>
       </div>
 
       <div class="form-row two-columns">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Incident type</mat-label>
+          <mat-label>{{ 'incident.incident_type' | translate }}</mat-label>
           <mat-select formControlName="status">
             @for (status of statuses; track status) {
               <mat-option [value]="status">{{ status }}</mat-option>
@@ -39,7 +39,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Priority level</mat-label>
+          <mat-label>{{ 'incident.priority_level' | translate }}</mat-label>
           <mat-select formControlName="status">
             @for (status of statuses; track status) {
               <mat-option [value]="status">{{ status }}</mat-option>
@@ -48,18 +48,18 @@
         </mat-form-field>
       </div>
 
-      <div class="field-label">Incident details</div>
+      <div class="field-label">{{ 'incident.incident_details' | translate }}</div>
       <mat-form-field appearance="outline" class="full-width textarea-field">
-        <textarea matInput formControlName="description" rows="3" placeholder="Describe the incident or wearable data..."></textarea>
+        <textarea matInput formControlName="description" rows="3" [placeholder]="'incident.describe_incident' | translate"></textarea>
         @if (form.get('description')?.hasError('required')) {
-          <mat-error> The description is required </mat-error>
+          <mat-error>{{ 'incident.description_required' | translate }}</mat-error>
         }
       </mat-form-field>
 
       <div class="footer-actions">
-        <button mat-stroked-button type="button" class="secondary-btn">Save as draft</button>
+        <button mat-stroked-button type="button" class="secondary-btn">{{ 'incident.save_draft' | translate }}</button>
         <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="form.invalid">
-          Publish immediate alert
+          {{ 'incident.publish_alert' | translate }}
         </button>
       </div>
     </form>
