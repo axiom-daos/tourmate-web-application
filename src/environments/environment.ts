@@ -1,6 +1,9 @@
 export const environment = {
   production: true,
   tourmateProviderApiBaseUrl: 'http://localhost:3000/api/v1',
+  tourmateProviderUsersEndpointPath: '/users',
+  tourmateProviderAgenciesEndpointPath: '/agencies',
+  tourmateProviderCheckpointsEndpointPath: '/checkpoints',
   tourmateProviderActiveToursEndpointPath: '/active_tours',
   tourmateProviderTourGuidesEndpointPath: '/tour_guides',
   tourmateProviderTourSchedulesEndpointPath: '/tour_schedules',

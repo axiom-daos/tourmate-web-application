@@ -648,18 +648,6 @@
   ],
   "participants": [
     {
-      "id": 1,
-      "tourScheduleId": 1,
-      "userId": 14,
-      "joinedAt": "2026-09-28T10:45:00"
-    },
-    {
-      "id": 2,
-      "tourScheduleId": 1,
-      "userId": 13,
-      "joinedAt": "2026-09-20T12:00:00"
-    },
-    {
       "id": 3,
       "tourScheduleId": 2,
       "userId": 14,
@@ -772,12 +760,6 @@
       "tourScheduleId": 7,
       "userId": 10,
       "joinedAt": "2026-09-03T17:30:00"
-    },
-    {
-      "id": 22,
-      "tourScheduleId": 7,
-      "userId": 16,
-      "joinedAt": "2026-09-24T16:15:00"
     },
     {
       "id": 23,
@@ -922,6 +904,30 @@
       "tourScheduleId": 16,
       "userId": 15,
       "joinedAt": "2026-09-02T20:45:00"
+    },
+    {
+      "id": 47,
+      "userId": 13,
+      "joinedAt": "2026-10-05T04:30:32.368Z",
+      "tourScheduleId": 7
+    },
+    {
+      "id": 48,
+      "userId": 9,
+      "joinedAt": "2026-10-05T04:30:45.888Z",
+      "tourScheduleId": 1
+    },
+    {
+      "id": 49,
+      "userId": 16,
+      "joinedAt": "2026-10-05T04:32:35.888Z",
+      "tourScheduleId": 1
+    },
+    {
+      "id": 50,
+      "userId": 11,
+      "joinedAt": "2026-10-05T04:33:01.489Z",
+      "tourScheduleId": 1
     }
   ],
   "active_tours": [
@@ -1002,19 +1008,19 @@
     {
       "id": 1,
       "name": "Básico",
-      "priceAmount": 29.0,
+      "priceAmount": 29,
       "priceCurrency": "USD"
     },
     {
       "id": 2,
       "name": "Profesional",
-      "priceAmount": 79.0,
+      "priceAmount": 79,
       "priceCurrency": "USD"
     },
     {
       "id": 3,
       "name": "Empresarial",
-      "priceAmount": 149.0,
+      "priceAmount": 149,
       "priceCurrency": "USD"
     }
   ],
@@ -1102,7 +1108,7 @@
       "id": 1,
       "agencyId": 1,
       "planId": 2,
-      "amount": 79.0,
+      "amount": 79,
       "currency": "USD",
       "status": "PAID",
       "requestedAt": "2026-08-01T09:55:00"
@@ -1111,7 +1117,7 @@
       "id": 2,
       "agencyId": 2,
       "planId": 1,
-      "amount": 29.0,
+      "amount": 29,
       "currency": "USD",
       "status": "PAID",
       "requestedAt": "2026-08-15T09:20:00"
@@ -1120,7 +1126,7 @@
       "id": 3,
       "agencyId": 3,
       "planId": 3,
-      "amount": 149.0,
+      "amount": 149,
       "currency": "USD",
       "status": "PENDING",
       "requestedAt": "2026-09-28T16:00:00"
