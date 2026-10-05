@@ -1,0 +1,57 @@
+<div class="incident-shell">
+  <section class="incident-card">
+    <div class="card-header">
+      <div class="title-block">
+        <h3>Gestión de Reseñas y Feedback</h3>
+      </div>
+      <button mat-flat-button class="submit-btn" routerLink="/feedback-and-tour-reviews/reviews/new">
+        + Añadir Nueva Reseña
+      </button>
+    </div>
+
+    <table mat-table [dataSource]="reviews" class="full-width">
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let element"> #{{element.id}} </td>
+      </ng-container>
+
+      <!-- Tour ID Column -->
+      <ng-container matColumnDef="tourId">
+        <th mat-header-cell *matHeaderCellDef> Tour ID </th>
+        <td mat-cell *matCellDef="let element"> Tour #{{element.tourId}} </td>
+      </ng-container>
+
+      <!-- User ID Column -->
+      <ng-container matColumnDef="userId">
+        <th mat-header-cell *matHeaderCellDef> Usuario </th>
+        <td mat-cell *matCellDef="let element"> Usuario #{{element.userId}} </td>
+      </ng-container>
+
+      <!-- Rating Column -->
+      <ng-container matColumnDef="rating">
+        <th mat-header-cell *matHeaderCellDef> Calificación </th>
+        <td mat-cell *matCellDef="let element"> <strong>{{element.rating}} / 5 ⭐</strong> </td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef> Fecha </th>
+        <td mat-cell *matCellDef="let element"> {{element.createdAt | date:'short'}} </td>
+      </ng-container>
+
+      <!-- Actions Column (CRUD) -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-stroked-button color="primary" class="action-btn" (click)="editReview(element.id)">Editar</button>
+          <button mat-stroked-button color="warn" class="action-btn delete-btn" (click)="deleteReview(element.id)">Eliminar</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </section>
+</div>

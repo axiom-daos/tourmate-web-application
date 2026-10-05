@@ -1,0 +1,51 @@
+<div class="incident-shell">
+  <section class="incident-card">
+    <div class="card-header">
+      <div class="title-block">
+        <button mat-stroked-button type="button" class="back-btn" routerLink="/feedback-and-tour-reviews/reviews">
+          Volver
+        </button>
+        <h3>Publicar Nueva Reseña</h3>
+      </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="incident-form">
+      <div class="form-row two-columns">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>ID del Tour</mat-label>
+          <input matInput type="number" formControlName="tourId" placeholder="Ej. 1">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>ID del Usuario</mat-label>
+          <input matInput type="number" formControlName="userId" placeholder="Ej. 10">
+        </mat-form-field>
+      </div>
+
+      <div class="form-row two-columns">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Calificación (Rating)</mat-label>
+          <mat-select formControlName="rating">
+            <mat-option [value]="5">5 - Excelente</mat-option>
+            <mat-option [value]="4">4 - Muy Bueno</mat-option>
+            <mat-option [value]="3">3 - Regular</mat-option>
+            <mat-option [value]="2">2 - Malo</mat-option>
+            <mat-option [value]="1">1 - Pésimo</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="field-label">Comentarios de la experiencia</div>
+      <mat-form-field appearance="outline" class="full-width textarea-field">
+        <textarea matInput formControlName="comment" rows="3" placeholder="Describe qué tal estuvo el tour..."></textarea>
+      </mat-form-field>
+
+      <div class="footer-actions">
+        <button mat-stroked-button type="button" class="secondary-btn" routerLink="/feedback-and-tour-reviews/reviews">Cancelar</button>
+        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="form.invalid">
+          Publicar Reseña
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

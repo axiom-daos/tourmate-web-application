@@ -43,6 +43,7 @@ export class Layout {
     {link: '/about', label: 'option.about'},
     {link: '/tourmate/monitoring', label: 'option.monitoring'},
     {link: '/management', label: 'option.management'},
-    {link: '/safety-and-incident-management', label: 'option.safety_and_incident'}
+    {link: '/safety-and-incident-management', label: 'option.safety_and_incident'},
+    {link: '/feedback-and-tour-reviews/reviews', label: 'Feedback & Reviews'}
   ]);
 }
