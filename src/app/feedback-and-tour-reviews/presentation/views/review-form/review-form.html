@@ -1,0 +1,68 @@
+<div class="review-shell">
+  <section class="review-card">
+    <div class="card-header">
+      <div class="title-block">
+        <button mat-stroked-button type="button" class="back-btn" routerLink="/feedback-and-tour-reviews/reviews">
+          {{ 'reviews.back' | translate }}
+        </button>
+        <h3>{{ isEditMode ? ('reviews.edit_title' | translate) : ('reviews.new_title' | translate) }}</h3>
+      </div>
+    </div>
+
+    <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="review-form">
+
+      <!-- Fila 1: Tour ID y User ID -->
+      <div class="form-row two-columns">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'reviews.tour_id_label' | translate }}</mat-label>
+          <input matInput formControlName="tourId" placeholder="Ej. 1" required>
+          @if (reviewForm.get('tourId')?.hasError('required')) {
+          <mat-error>Tour ID requerido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'reviews.user_id_label' | translate }}</mat-label>
+          <input matInput formControlName="userId" placeholder="Ej. 9" required>
+          @if (reviewForm.get('userId')?.hasError('required')) {
+          <mat-error>User ID requerido</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Fila 2: Rating (Calificación) -->
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'reviews.rating_label' | translate }}</mat-label>
+          <mat-select formControlName="rating" required>
+            <mat-option [value]="5">5 - Excelente</mat-option>
+            <mat-option [value]="4">4 - Muy bueno</mat-option>
+            <mat-option [value]="3">3 - Bueno</mat-option>
+            <mat-option [value]="2">2 - Regular</mat-option>
+            <mat-option [value]="1">1 - Malo</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Fila 3: Comentario -->
+      <div class="field-label">{{ 'reviews.comment_label' | translate }}</div>
+      <mat-form-field appearance="outline" class="full-width textarea-field">
+        <textarea matInput formControlName="comment" rows="3" placeholder="Escribe tu experiencia..." required></textarea>
+        @if (reviewForm.get('comment')?.hasError('required')) {
+        <mat-error>Comentario requerido</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Botones del pie -->
+      <div class="footer-actions">
+        <button mat-stroked-button type="button" class="secondary-btn" routerLink="/feedback-and-tour-reviews/reviews">
+          {{ 'reviews.cancel' | translate }}
+        </button>
+        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="reviewForm.invalid">
+          {{ isEditMode ? ('reviews.update' | translate) : ('reviews.submit' | translate) }}
+        </button>
+      </div>
+
+    </form>
+  </section>
+</div>

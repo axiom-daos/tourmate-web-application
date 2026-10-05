@@ -20,6 +20,9 @@ const subscriptionsRoutes = () =>
   import('./subscriptions-and-payment-management/subscriptions.routes').then(
     (m) => m.subscriptionsRoutes,
   );
+const feedbackReviewRoutes = () =>
+  import('./feedback-and-tour-reviews/feedback-review.routes').then((m) => m.FEEDBACK_REVIEW_ROUTES);
+
 const baseTitle = 'Tour Mate';
 
 export const routes: Routes = [
@@ -33,6 +36,7 @@ export const routes: Routes = [
     loadChildren: subscriptionsRoutes,
     title: `${baseTitle} - Subscriptions & Payments`,
   },
+  { path: 'feedback-and-tour-reviews', loadChildren: feedbackReviewRoutes },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', loadComponent: pageNotFound, title: `${baseTitle} - Page Not Found` },
 ];

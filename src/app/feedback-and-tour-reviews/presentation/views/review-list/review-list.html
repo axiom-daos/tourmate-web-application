@@ -1,0 +1,63 @@
+<div class="review-container">
+  <!-- Tarjeta superior: Título y Botón de Añadir -->
+  <div class="header-section">
+    <h3>{{ 'reviews.list_title' | translate }}</h3>
+    <button mat-flat-button class="submit-btn" routerLink="new">
+      {{ 'reviews.add_new' | translate }}
+    </button>
+  </div>
+
+  <!-- Tarjeta inferior: Tabla de registros -->
+  <div class="table-container">
+    <table mat-table [dataSource]="reviews()">
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> {{ 'reviews.id' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> #{{element.id}} </td>
+      </ng-container>
+
+      <!-- Tour ID Column -->
+      <ng-container matColumnDef="tourId">
+        <th mat-header-cell *matHeaderCellDef> {{ 'reviews.tour_id' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> Tour #{{element.tourId}} </td>
+      </ng-container>
+
+      <!-- User ID Column -->
+      <ng-container matColumnDef="userId">
+        <th mat-header-cell *matHeaderCellDef> {{ 'reviews.user' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> Usuario #{{element.userId}} </td>
+      </ng-container>
+
+      <!-- Rating Column (Sin estrella) -->
+      <ng-container matColumnDef="rating">
+        <th mat-header-cell *matHeaderCellDef> {{ 'reviews.rating' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> <strong>{{element.rating}} / 5</strong> </td>
+      </ng-container>
+
+      <!-- Comment Column -->
+      <ng-container matColumnDef="comment">
+        <th mat-header-cell *matHeaderCellDef> {{ 'reviews.comment' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element.comment || 'Sin comentario'}} </td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef> {{ 'reviews.date' | translate }} </th>
+        <td mat-cell *matCellDef="let element"> {{element.createdAt | date:'short'}} </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> {{ 'reviews.actions' | translate }} </th>
+        <td mat-cell *matCellDef="let element" class="action-buttons">
+          <button mat-stroked-button color="accent" class="action-btn" (click)="editReview(element.id)">{{ 'reviews.edit' | translate }}</button>
+          <button mat-flat-button color="warn" class="delete-btn" (click)="deleteReview(element.id)">{{ 'reviews.delete' | translate }}</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
