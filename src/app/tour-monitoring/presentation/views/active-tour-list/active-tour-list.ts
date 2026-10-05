@@ -84,7 +84,7 @@ export class ActiveTourList {
    * @param id - The ID of the activeTour to edit.
    */
   editActiveTour(id: number) {
-    this.router.navigate(['tour-monitoring/active-tours', id, 'edit']).then();
+    this.router.navigate(['monitoring/active-tours', id, 'edit']).then();
   }
 
   /**
@@ -99,6 +99,6 @@ export class ActiveTourList {
    * Navigates to the new activeTour form.
    */
   navigateToNew() {
-    this.router.navigate(['tour-monitoring/active-tours/new']).then();
+    this.router.navigate(['monitoring/active-tours/new']).then();
   }
 }

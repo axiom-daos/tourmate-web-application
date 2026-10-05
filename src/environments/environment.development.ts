@@ -5,4 +5,9 @@ export const environment = {
   tourmateProviderTourGuidesEndpointPath: '/tour_guides',
   tourmateProviderTourSchedulesEndpointPath: '/tour_schedules',
   tourmateProviderParticipantsEndpointPath: '/participants',
+  tourmateProviderToursEndpointPath: '/tours',
+  tourmateProviderPlansEndpointPath: '/plans',
+  tourmateProviderSubscriptionsEndpointPath: '/subscriptions',
+  tourmateProviderActiveToursEndpointPathEndpointPath: '/active_tours',
+  tourmateProviderPaymentsEndpointPath: '/payments',
 };

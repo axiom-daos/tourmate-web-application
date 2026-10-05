@@ -11,5 +11,5 @@ export const tourMonitoringRoutes: Routes = [
   { path: 'active-tours',              loadComponent: activeTourList },
   { path: 'active-tours/new',          loadComponent: activeTourForm },
   { path: 'active-tours/:id/edit',     loadComponent: activeTourForm },
-
+  { path: '', redirectTo: '/monitoring/active-tours', pathMatch: 'full'}
 ];
