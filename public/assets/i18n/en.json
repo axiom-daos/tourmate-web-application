@@ -5,7 +5,8 @@
     "monitoring": "Monitoring",
     "management": "Management",
     "safety_and_incident": "Safety and Incident Management",
-    "subscriptions": "Subscriptions & Billing"
+    "subscriptions": "Subscriptions & Billing",
+    "feedback_and_reviews": "Feedback & Reviews"
   },
   "subscription": {
     "dashboard_title": "Subscription & Billing",
@@ -83,6 +84,30 @@
     "new": "Add Active Tour",
     "tourScheduleId": "Tour Schedule ID",
     "tourScheduleIdMaxCapacity": "Tour Schedule Max Capacity"
+  },
+  "reviews": {
+    "list_title": "Review & Feedback Management",
+    "add_new": "+ Add New Review",
+    "id": "ID",
+    "tour_id": "Tour ID",
+    "user": "User",
+    "rating": "Rating",
+    "comment": "Comment",
+    "date": "Date",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "edit_title": "Edit Review",
+    "new_title": "Publish New Review",
+    "back": "Back",
+    "cancel": "Cancel",
+    "submit": "Publish Review",
+    "update": "Update Review",
+    "tour_id_label": "Tour ID",
+    "user_id_label": "User ID",
+    "rating_label": "Rating (Rating)",
+    "comment_label": "Experience Comments",
+    "delete_confirm": "Are you sure you want to delete this review?"
   },
   "about": {
     "title": "About us",

@@ -38,21 +38,23 @@ export class ReviewForm implements OnInit {
       tourId: ['', Validators.required],
       userId: ['', Validators.required],
       rating: [5, Validators.required],
-      comment: ['']
+      comment: ['', Validators.required]
     });
+
+    this.reviewStore.loadData();
 
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.isEditMode = true;
       this.reviewId = Number(idParam);
 
-      const existingReview: any = this.reviewStore.getReviewById(this.reviewId)();
+      const existingReview = this.reviewStore.getReviewById(this.reviewId)();
       if (existingReview) {
         this.reviewForm.patchValue({
           tourId: existingReview.tourId,
           userId: existingReview.userId,
           rating: existingReview.rating,
-          comment: existingReview.comment || ''
+          comment: existingReview.comment
         });
       }
     }
@@ -64,7 +66,7 @@ export class ReviewForm implements OnInit {
     const formValues = this.reviewForm.value;
 
     if (this.isEditMode && this.reviewId !== null) {
-      const updatedReview: any = {
+      const updatedReview = {
         id: this.reviewId,
         tourId: Number(formValues.tourId),
         userId: Number(formValues.userId),
@@ -74,7 +76,7 @@ export class ReviewForm implements OnInit {
       };
       this.reviewStore.updateReview(updatedReview);
     } else {
-      const newReview: any = {
+      const newReview = {
         id: Date.now(),
         tourId: Number(formValues.tourId),
         userId: Number(formValues.userId),

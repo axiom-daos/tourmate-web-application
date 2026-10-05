@@ -1,5 +1,5 @@
 <div class="incident-shell">
-  <!-- Tarjeta superior: Título y Botón de Añadir (Idéntico a Incident Management) -->
+  <!-- Tarjeta superior: Título y Botón de Añadir -->
   <div class="incident-card header-card">
     <h3>Gestión de Reseñas y Feedback</h3>
     <button mat-flat-button class="submit-btn" routerLink="/feedback-and-tour-reviews/reviews/new">
@@ -7,7 +7,7 @@
     </button>
   </div>
 
-  <!-- Tarjeta inferior: Tabla de datos -->
+  <!-- Tarjeta inferior: Tabla de registros -->
   <div class="incident-card table-card">
     <table mat-table [dataSource]="reviews()">
 
@@ -33,6 +33,12 @@
       <ng-container matColumnDef="rating">
         <th mat-header-cell *matHeaderCellDef> Calificación </th>
         <td mat-cell *matCellDef="let element"> <strong>{{element.rating}} / 5</strong> ⭐ </td>
+      </ng-container>
+
+      <!-- Comment Column -->
+      <ng-container matColumnDef="comment">
+        <th mat-header-cell *matHeaderCellDef> Comentario </th>
+        <td mat-cell *matCellDef="let element"> {{element.comment || 'Sin comentario'}} </td>
       </ng-container>
 
       <!-- Date Column -->

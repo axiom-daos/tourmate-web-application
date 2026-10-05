@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
@@ -17,16 +17,18 @@ import { ReviewStore } from '../../../application/review.store';
   templateUrl: './review-list.html',
   styleUrls: ['./review-list.css']
 })
-export class ReviewList {
+export class ReviewList implements OnInit {
   readonly reviewStore = inject(ReviewStore);
   private router = inject(Router);
 
-  // Columnas de la tabla
-  displayedColumns: string[] = ['id', 'tourId', 'userId', 'rating', 'createdAt', 'actions'];
+  displayedColumns: string[] = ['id', 'tourId', 'userId', 'rating', 'comment', 'createdAt', 'actions'];
 
-  // Vinculamos la señal de reseñas del store
   get reviews() {
     return this.reviewStore.reviews;
+  }
+
+  ngOnInit(): void {
+    this.reviewStore.loadData();
   }
 
   editReview(id: number): void {

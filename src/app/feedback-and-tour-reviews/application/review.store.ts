@@ -1,83 +1,95 @@
-import { computed, inject, Injectable, Signal, signal } from '@angular/core';
-import { Review } from '../domain/model/aggregates/review.entity';
-import { ReviewApi } from '../infrastructure/review-api';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { retry } from 'rxjs';
+import { Injectable, signal, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ReviewStore {
-  private readonly reviewApi = inject(ReviewApi);
+  private http = inject(HttpClient);
 
-  readonly reviewCount = computed(() => this.reviews().length);
-  private readonly reviewsSignal = signal<Review[]>([]);
-  readonly reviews = this.reviewsSignal.asReadonly();
+  // Señales de estado privadas
+  private _reviewsSignal = signal<any[]>([]);
+  private _loadingSignal = signal<boolean>(false);
 
-  private readonly loadingSignal = signal<boolean>(false);
-  readonly loading = this.loadingSignal.asReadonly();
-
-  private readonly errorSignal = signal<string | null>(null);
-  readonly error = this.errorSignal.asReadonly();
-
-  constructor() {
-    this.loadReviews();
+  // Getters públicos para consumir las señales
+  get reviews() {
+    return this._reviewsSignal;
   }
 
-  getReviewById = (id: number): Signal<Review | undefined> =>
-    computed(() => (id ? this.reviews().find((r) => r.id === id) : undefined));
+  get loading() {
+    return this._loadingSignal;
+  }
 
-  addReview = (review: Review): void => {
-    this.loadingSignal.set(true);
-    this.reviewApi.createReview(review).pipe(retry(2)).subscribe({
-      next: (createdReview) => {
-        this.reviewsSignal.update((reviews) => [...reviews, createdReview]);
-        this.loadingSignal.set(false);
-      },
-      error: (err) => {
-        this.errorSignal.set(err.message);
-        this.loadingSignal.set(false);
-      },
-    });
-  };
+  // Carga y fusiona /reviews con /comments del json-server
+  loadData(): void {
+    this._loadingSignal.set(true);
 
-  updateReview = (updatedReview: Review): void => {
-    this.loadingSignal.set(true);
-    this.reviewApi.updateReview(updatedReview).pipe(retry(2)).subscribe({
-      next: (review) => {
-        this.reviewsSignal.update((reviews) => reviews.map((r) => (r.id === review.id ? review : r)));
-        this.loadingSignal.set(false);
-      },
-      error: (err) => {
-        this.errorSignal.set(err.message);
-        this.loadingSignal.set(false);
-      },
+    forkJoin({
+      reviews: this.http.get<any[]>('http://localhost:3000/reviews'),
+      comments: this.http.get<any[]>('http://localhost:3000/comments')
+    }).subscribe(({ reviews, comments }) => {
+      const merged = reviews.map((rev: any) => {
+        const found = comments.find((c: any) => c.reviewId === rev.id || c.id === rev.id);
+        return {
+          ...rev,
+          comment: found ? found.content : (rev.comment || 'Sin comentario')
+        };
+      });
+      this._reviewsSignal.set(merged);
+      this._loadingSignal.set(false);
     });
-  };
+  }
 
-  deleteReview = (id: number): void => {
-    this.loadingSignal.set(true);
-    this.reviewApi.deleteReview(id).pipe(retry(2)).subscribe({
-      next: () => {
-        this.reviewsSignal.update((reviews) => reviews.filter((r) => r.id !== id));
-        this.loadingSignal.set(false);
-      },
-      error: (err) => {
-        this.errorSignal.set(err.message);
-        this.loadingSignal.set(false);
-      },
-    });
-  };
+  getReviewById(id: number) {
+    return () => this._reviewsSignal().find((r: any) => r.id === id);
+  }
 
-  private loadReviews = (): void => {
-    this.loadingSignal.set(true);
-    this.reviewApi.getReviews().pipe(takeUntilDestroyed()).subscribe({
-      next: (reviews) => {
-        this.reviewsSignal.set(reviews);
-        this.loadingSignal.set(false);
-      },
-      error: (err) => {
-        this.errorSignal.set(err.message);
-        this.loadingSignal.set(false);
-      },
+  addReview(newReview: any): void {
+    this.http.post('http://localhost:3000/reviews', {
+      id: newReview.id,
+      userId: newReview.userId,
+      tourId: newReview.tourId,
+      rating: newReview.rating,
+      createdAt: newReview.createdAt
+    }).subscribe(() => {
+      this.http.post('http://localhost:3000/comments', {
+        id: newReview.id,
+        reviewId: newReview.id,
+        content: newReview.comment,
+        createdAt: newReview.createdAt
+      }).subscribe(() => {
+        this._reviewsSignal.set([...this._reviewsSignal(), newReview]);
+      });
     });
-  };
+  }
+
+  updateReview(updated: any): void {
+    this.http.put(`http://localhost:3000/reviews/${updated.id}`, {
+      id: updated.id,
+      userId: updated.userId,
+      tourId: updated.tourId,
+      rating: updated.rating,
+      createdAt: updated.createdAt
+    }).subscribe(() => {
+      this.http.put(`http://localhost:3000/comments/${updated.id}`, {
+        id: updated.id,
+        reviewId: updated.id,
+        content: updated.comment,
+        createdAt: updated.createdAt
+      }).subscribe(() => {
+        const updatedList = this._reviewsSignal().map((r: any) => r.id === updated.id ? updated : r);
+        this._reviewsSignal.set(updatedList);
+      });
+    });
+  }
+
+  deleteReview(id: number): void {
+    this.http.delete(`http://localhost:3000/reviews/${id}`).subscribe(() => {
+      this.http.delete(`http://localhost:3000/comments/${id}`).subscribe(() => {
+        const filtered = this._reviewsSignal().filter((r: any) => r.id !== id);
+        this._reviewsSignal.set(filtered);
+      });
+    });
+  }
 }
