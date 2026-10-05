@@ -1,21 +1,117 @@
-.list-container {
-  padding: 20px;
+:host {
+  display: block;
+  min-height: calc(100vh - 64px);
+  background-color: #f4f1ea;
+  font-family: "Geist", "Segoe UI", sans-serif;
+  color: #1f3831;
 }
-.btn-primary {
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 20px;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-.review-grid {
-  display: grid;
-  gap: 15px;
+
+.incident-shell {
+  padding: 32px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
-.review-card {
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+
+.incident-card {
+  background: #ffffff;
+  border: 1px solid #e2ded4;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  padding: 24px 32px;
+}
+
+.header-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f3831;
+    letter-spacing: -0.03em;
+  }
+}
+
+.submit-btn {
+  background-color: #1f3831 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  padding: 0 24px !important;
+  height: 46px !important;
+  box-shadow: 0 4px 12px rgba(31, 56, 49, 0.2);
+}
+
+.submit-btn:hover {
+  background-color: #2c4d44 !important;
+}
+
+/* Tabla Material */
+table {
+  width: 100%;
+  background: transparent !important;
+}
+
+mat-header-cell {
+  font-weight: 700 !important;
+  color: #52635e !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.05em;
+}
+
+mat-cell {
+  color: #1f3831 !important;
+  font-size: 0.95rem !important;
+  padding: 16px 8px !important;
+  border-bottom-color: #f0ece3 !important;
+}
+
+.action-btn {
+  margin-right: 8px;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  border: 1px solid #dcd6cb !important;
+  color: #1f3831 !important;
+  background-color: #ffffff !important;
+  height: 38px !important;
+  padding: 0 16px !important;
+
+  &:hover {
+    background-color: #f8f6f0 !important;
+  }
+}
+
+.delete-btn {
+  background-color: #1f3831 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  height: 38px !important;
+  padding: 0 16px !important;
+
+  &:hover {
+    background-color: #2c4d44 !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .header-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
 }
