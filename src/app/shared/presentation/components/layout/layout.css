@@ -12,9 +12,7 @@
   height: 100%;
   justify-content: space-between;
   padding: 1.5rem 1rem;
-
   border-radius: 0;
-
 }
 
 .sidebar ::ng-deep .mat-drawer-inner-container {
@@ -86,7 +84,6 @@
   flex-direction: column;
   min-height: 100vh;
   overflow-x: hidden;
-
 }
 
 .main-content {
@@ -96,5 +93,3 @@
   width: 100%;
   max-width: 100%;
 }
-
-

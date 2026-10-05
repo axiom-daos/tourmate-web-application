@@ -6,6 +6,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import { Observable } from "rxjs";
 import {environment} from '../../../environments/environment';
 
+
 export class TourScheduleApiEndpoint extends BaseApiEndpoint<TourSchedule, TourScheduleResource, TourSchedulesResponse, TourScheduleAssembler> {
 
     constructor(http: HttpClient) {

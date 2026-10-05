@@ -1,0 +1,153 @@
+<div class="dashboard-container">
+  <!-- Top Bar / Header -->
+  <header class="header-section">
+    <div class="header-info">
+      <h2>{{ 'subscription.dashboard_title' | translate }}</h2>
+      <p>{{ 'subscription.dashboard_subtitle' | translate }}</p>
+    </div>
+    <div class="header-actions">
+      <div class="agency-badge">
+        <mat-icon>business</mat-icon>
+        <span>{{ 'subscription.agency' | translate }}: #{{ store.currentAgencyId() }}</span>
+      </div>
+      <button mat-flat-button class="btn-primary" (click)="navigateToPlans()">
+        <mat-icon>upgrade</mat-icon> {{ 'subscription.explore_plans' | translate }}
+      </button>
+    </div>
+  </header>
+
+  @if (store.loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  }
+
+  @if (store.error()) {
+    <div class="error-banner">{{ store.error() }}</div>
+  }
+
+  <!-- Current Plan Section -->
+  <section class="current-plan-card">
+    <div class="card-title-row">
+      <h3>{{ 'subscription.current_plan_heading' | translate }}</h3>
+      @if (store.currentSubscription(); as sub) {
+        <span class="status-badge {{ sub.status | lowercase }}">
+          {{ sub.status }}
+        </span>
+      } @else {
+        <span class="status-badge pending">{{
+          'subscription.no_active_subscription' | translate
+        }}</span>
+      }
+    </div>
+
+    @if (store.currentPlan(); as plan) {
+      <div class="plan-content-grid">
+        <div class="plan-metric">
+          <div class="metric-label">{{ 'subscription.plan_name' | translate }}</div>
+          <div class="plan-name">{{ plan.name }}</div>
+        </div>
+
+        <div class="plan-metric">
+          <div class="metric-label">{{ 'subscription.monthly_cost' | translate }}</div>
+          <div class="plan-price">
+            ${{ plan.priceAmount }} <span>{{ plan.priceCurrency }} / mo</span>
+          </div>
+        </div>
+
+        <div class="plan-metric">
+          <div class="metric-label">{{ 'subscription.activated_date' | translate }}</div>
+          <div>
+            {{
+              store.currentSubscription()?.activatedAt
+                ? (store.currentSubscription()?.activatedAt | date: 'mediumDate')
+                : ('subscription.not_available' | translate)
+            }}
+          </div>
+        </div>
+      </div>
+
+      <div class="plan-actions-row">
+        @if (store.currentSubscription()?.status === 'ACTIVE') {
+          <button mat-stroked-button class="btn-danger" (click)="cancelCurrentSubscription()">
+            <mat-icon>cancel</mat-icon> {{ 'subscription.cancel_btn' | translate }}
+          </button>
+        }
+        <button mat-flat-button class="btn-primary" (click)="navigateToPlans()">
+          <mat-icon>sync_alt</mat-icon> {{ 'subscription.change_plan_btn' | translate }}
+        </button>
+      </div>
+    } @else {
+      <div class="no-data">
+        <p>{{ 'subscription.no_plan_selected' | translate }}</p>
+        <button mat-flat-button class="btn-primary" (click)="navigateToPlans()">
+          {{ 'subscription.choose_plan_btn' | translate }}
+        </button>
+      </div>
+    }
+  </section>
+
+  <!-- Payment History Section -->
+  <section class="table-section">
+    <div class="table-header-bar">
+      <h3>{{ 'subscription.payment_history_heading' | translate }}</h3>
+    </div>
+
+    <table mat-table [dataSource]="dataSource()" matSort class="mat-table">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+        <td mat-cell *matCellDef="let payment">{{ payment.id }}</td>
+      </ng-container>
+
+      <!-- Plan Column -->
+      <ng-container matColumnDef="planId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'subscription.plan' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let payment">{{ getPlanName(payment.planId) }}</td>
+      </ng-container>
+
+      <!-- Amount Column -->
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'subscription.amount' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let payment">
+          <strong>${{ payment.amount }} {{ payment.currency }}</strong>
+        </td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="requestedAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'subscription.date' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let payment">{{ payment.requestedAt | date: 'medium' }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'subscription.status' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let payment">
+          <span class="status-badge {{ payment.status | lowercase }}">
+            {{ payment.status }}
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    @if (store.currentAgencyPayments().length === 0) {
+      <div class="no-data">
+        {{ 'subscription.no_payments_found' | translate }}
+      </div>
+    }
+
+    <mat-paginator [pageSizeOptions]="[5, 10]" [showFirstLastButtons]="true"></mat-paginator>
+  </section>
+</div>

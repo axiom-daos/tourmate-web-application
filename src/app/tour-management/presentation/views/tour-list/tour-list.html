@@ -5,11 +5,11 @@
 </div>
 
 @if (store.loading()) {
-  <mat-spinner diameter="40"></mat-spinner>
+<mat-spinner diameter="40"></mat-spinner>
 }
 
 @if (store.error()) {
-  <mat-error>{{ store.error() }}</mat-error>
+<mat-error>{{ store.error() }}</mat-error>
 }
 
 <mat-button-toggle-group [value]="currentView" (change)="onViewChange($event.value)">
@@ -76,5 +76,4 @@
 </table>
 
 <mat-paginator [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
-
 
