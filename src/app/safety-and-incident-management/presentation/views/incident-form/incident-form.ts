@@ -8,6 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { IncidentStore } from '../../../application/incident.store';
 import { Incident } from '../../../domain/model/aggregates/incident.entity';
 import { IncidentStatus } from '../../../domain/model/value-object/incident-status';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatIconModule } from '@angular/material/icon';
 
 /**
  * Creates and edits incident entities.
@@ -21,6 +23,8 @@ import { IncidentStatus } from '../../../domain/model/value-object/incident-stat
     MatSelectModule,
     MatButtonModule,
     MatInputModule,
+    MatIconModule,
+    TranslatePipe,
     RouterLink,
   ],
   templateUrl: './incident-form.html',
@@ -47,7 +51,7 @@ export class IncidentForm {
     }),
     latitude: new FormControl<number>(0, { nonNullable: true, validators: [Validators.required] }),
     longitude: new FormControl<number>(0, { nonNullable: true, validators: [Validators.required] }),
-    reportedAt: new FormControl<string>(new Date().toISOString(), {
+    reportedAt: new FormControl<string>(this.toLocalDateTime(new Date().toISOString()), {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -75,7 +79,7 @@ export class IncidentForm {
             description: incident.description,
             latitude: incident.latitude,
             longitude: incident.longitude,
-            reportedAt: incident.reportedAt,
+            reportedAt: this.toLocalDateTime(incident.reportedAt),
             status: incident.status,
           });
         }
@@ -85,6 +89,7 @@ export class IncidentForm {
 
   submit() {
     if (this.form.invalid) return;
+    const reportedAt = this.form.value.reportedAt!;
     const incident: Incident = new Incident({
       id: this.incidentId ?? 0,
       activeTourId: this.form.value.activeTourId!,
@@ -92,7 +97,7 @@ export class IncidentForm {
       description: this.form.value.description!,
       latitude: this.form.value.latitude!,
       longitude: this.form.value.longitude!,
-      reportedAt: this.form.value.reportedAt!,
+      reportedAt: new Date(reportedAt).toISOString(),
       status: this.form.value.status!,
     });
 
@@ -103,5 +108,11 @@ export class IncidentForm {
     }
 
     this.router.navigate(['safety-and-incident-management/incidents']).then();
+  }
+
+  private toLocalDateTime(value: string): string {
+    const date = new Date(value);
+    const offset = date.getTimezoneOffset();
+    return new Date(date.getTime() - offset * 60_000).toISOString().slice(0, 16);
   }
 }

@@ -1,67 +1,84 @@
-<div class="incident-shell">
-  <section class="incident-card">
-    <div class="card-header">
-      <div class="title-block">
-        <button mat-stroked-button type="button" class="back-btn" [routerLink]="['/safety-and-incident-management/incidents']">
-          back
-        </button>
-        <h3>Incident Case Opening</h3>
-      </div>
+<section class="incident-page">
+  <header class="page-heading">
+    <div>
+      <span class="eyebrow">{{ 'option.safety_and_incident' | translate }}</span>
+      <h2>{{ (isEdit ? 'incidents.edit_title' : 'incidents.form_title') | translate }}</h2>
+      <p>{{ 'incidents.form_description' | translate }}</p>
     </div>
+    <span class="priority-chip">
+      <mat-icon aria-hidden="true">warning</mat-icon>{{ 'incidents.priority_notice' | translate }}
+    </span>
+  </header>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="incident-form">
-      <div class="form-row two-columns">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Assigned expedition</mat-label>
-          <input matInput type="number" formControlName="activeTourId" placeholder="Ex. 1">
-          @if (form.get('activeTourId')?.hasError('required')) {
-            <mat-error> The active tour ID is required </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Affected participant</mat-label>
-          <input matInput type="number" formControlName="reportedByUserId" placeholder="Ex. 10">
-          @if (form.get('reportedByUserId')?.hasError('required')) {
-            <mat-error> The user ID is required </mat-error>
-          }
-        </mat-form-field>
-      </div>
-
-      <div class="form-row two-columns">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Incident type</mat-label>
-          <mat-select formControlName="status">
-            @for (status of statuses; track status) {
-              <mat-option [value]="status">{{ status }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Priority level</mat-label>
-          <mat-select formControlName="status">
-            @for (status of statuses; track status) {
-              <mat-option [value]="status">{{ status }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="field-label">Incident details</div>
-      <mat-form-field appearance="outline" class="full-width textarea-field">
-        <textarea matInput formControlName="description" rows="3" placeholder="Describe the incident or wearable data..."></textarea>
-        @if (form.get('description')?.hasError('required')) {
-          <mat-error> The description is required </mat-error>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="incident-form">
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'incidents.active_tour' | translate }}</mat-label>
+        <input matInput type="number" formControlName="activeTourId" required>
+        @if (form.get('activeTourId')?.touched && form.get('activeTourId')?.hasError('required')) {
+          <mat-error>{{ 'incidents.active_tour_required' | translate }}</mat-error>
         }
       </mat-form-field>
 
-      <div class="footer-actions">
-        <button mat-stroked-button type="button" class="secondary-btn">Save as draft</button>
-        <button mat-flat-button color="primary" type="submit" class="submit-btn" [disabled]="form.invalid">
-          Publish immediate alert
-        </button>
-      </div>
-    </form>
-  </section>
-</div>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'incidents.reported_by' | translate }}</mat-label>
+        <input matInput type="number" formControlName="reportedByUserId" required>
+        @if (form.get('reportedByUserId')?.touched && form.get('reportedByUserId')?.hasError('required')) {
+          <mat-error>{{ 'incidents.reported_by_required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'incidents.status' | translate }}</mat-label>
+        <mat-select formControlName="status">
+          @for (status of statuses; track status) {
+            <mat-option [value]="status">{{ status }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'incidents.reported_at' | translate }}</mat-label>
+        <input matInput type="datetime-local" formControlName="reportedAt" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'incidents.latitude' | translate }}</mat-label>
+        <input matInput type="number" step="any" formControlName="latitude" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'incidents.longitude' | translate }}</mat-label>
+        <input matInput type="number" step="any" formControlName="longitude" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="field-wide">
+        <mat-label>{{ 'incidents.description' | translate }}</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          rows="4"
+          [placeholder]="'incidents.description_hint' | translate"
+          required
+        ></textarea>
+        @if (form.get('description')?.touched && form.get('description')?.hasError('required')) {
+          <mat-error>{{ 'incidents.description_required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="protocol-note">
+      <mat-icon aria-hidden="true">health_and_safety</mat-icon>
+      <span>{{ 'incidents.protocol_note' | translate }}</span>
+    </div>
+
+    <div class="form-actions">
+      <a mat-stroked-button [routerLink]="['/safety-and-incident-management/incidents']">
+        {{ 'common.cancel' | translate }}
+      </a>
+      <button mat-flat-button type="submit" class="submit-btn" [disabled]="form.invalid">
+        {{ (isEdit ? 'incidents.update' : 'incidents.publish') | translate }}
+      </button>
+    </div>
+  </form>
+</section>
