@@ -1,13 +1,13 @@
 <div class="local-nav">
-  <button mat-button type="button">Back to Home</button>
-  <button mat-button type="button">New Incident</button>
+  <button mat-button type="button">{{ 'incident.back_to_home' | translate }}</button>
+  <button mat-button type="button">{{ 'incident.new_incident' | translate }}</button>
 </div>
 
 <div class="incident-container">
   <div class="header-section">
-    <h2>Incident Management</h2>
+    <h2>{{ 'incident.management_title' | translate }}</h2>
     <button mat-flat-button color="primary" class="new-incident-btn" (click)="navigateToNew()">
-      <mat-icon>add</mat-icon> Declare New Incident
+      <mat-icon>add</mat-icon> {{ 'incident.declare_new' | translate }}
     </button>
   </div>
 
@@ -15,45 +15,45 @@
     <table mat-table [dataSource]="dataSource()" matSort>
 
       <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'incident.id' | translate }}</th>
         <td mat-cell *matCellDef="let element"> #{{element.id}} </td>
       </ng-container>
 
       <ng-container matColumnDef="activeTourId">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Active Tour </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'incident.active_tour' | translate }}</th>
         <td mat-cell *matCellDef="let element"> {{element.activeTourId}} </td>
       </ng-container>
 
       <ng-container matColumnDef="reportedByUserId">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Reported By </th>
-        <td mat-cell *matCellDef="let element"> User #{{element.reportedByUserId}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'incident.reported_by' | translate }}</th>
+        <td mat-cell *matCellDef="let element"> {{ 'incident.user_prefix' | translate }}{{element.reportedByUserId}} </td>
       </ng-container>
 
       <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'incident.description' | translate }}</th>
         <td mat-cell *matCellDef="let element"> {{element.description}} </td>
       </ng-container>
 
       <ng-container matColumnDef="reportedAt">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'incident.date' | translate }}</th>
         <td mat-cell *matCellDef="let element"> {{element.reportedAt | date:'medium'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'incident.status' | translate }}</th>
         <td mat-cell *matCellDef="let element">
           <span class="status-badge {{element.status | lowercase}}">{{element.status}}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'incident.actions' | translate }}</th>
         <td mat-cell *matCellDef="let element" class="action-buttons">
-          <button mat-stroked-button color="accent" (click)="editIncident(element.id!)">Edit</button>
+          <button mat-stroked-button color="accent" (click)="editIncident(element.id!)">{{ 'incident.edit' | translate }}</button>
           @if (element.status !== 'RESOLVED' && element.status !== 'CLOSED') {
-            <button mat-flat-button color="warn" (click)="resolveIncident(element)">Resolve</button>
+            <button mat-flat-button color="warn" (click)="resolveIncident(element)">{{ 'incident.resolve' | translate }}</button>
           }
-          <button mat-button color="warn" (click)="deleteIncident(element.id!)">Delete</button>
+          <button mat-button color="warn" (click)="deleteIncident(element.id!)">{{ 'incident.delete' | translate }}</button>
         </td>
       </ng-container>
 
