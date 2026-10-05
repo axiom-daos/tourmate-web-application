@@ -17,6 +17,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {TourManagementStore} from '../../../application/tour-management-store';
 import {Router} from '@angular/router';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
+import {MatGridList, MatGridTile} from '@angular/material/grid-list';
+import {TourItem} from '../../components/tour-item/tour-item';
 
 
 @Component({
@@ -40,7 +42,10 @@ import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-to
     MatSortHeader,
     MatPaginator,
     MatButtonToggleGroup,
-    MatButtonToggle
+    MatButtonToggle,
+    MatGridList,
+    MatGridTile,
+    TourItem
   ],
   selector: 'app-tour-list',
   styleUrl: './tour-list.css',

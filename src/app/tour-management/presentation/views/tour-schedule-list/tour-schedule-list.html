@@ -42,7 +42,7 @@
 
       <ng-container matColumnDef="tourId">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tour_schedules.tour_id' | translate }}</th>
-        <td mat-cell *matCellDef="let tourSchedule">{{ tourSchedule.tourId }}</td>
+        <td mat-cell *matCellDef="let tourSchedule" class="tour-id-cell">{{ tourSchedule.tourId }}</td>
       </ng-container>
 
       <ng-container matColumnDef="departureDateTime">

@@ -3,6 +3,8 @@
   height: 100%;
 }
 
+
+
 .app-container {
   width: 100%;
   height: 100vh;
@@ -97,6 +99,9 @@
   color: #d8e0da;
   font-size: 0.88rem;
   text-align: left;
+
+  --mdc-text-button-label-text-color: #d8e0da;
+  --mat-button-text-label-text-color: #d8e0da;
 }
 
 .nav-item mat-icon {
@@ -106,12 +111,18 @@
   color: #a9beb1;
 }
 
+.nav-item .nav-label {
+  color: inherit;
+}
+
 .nav-item:hover {
   background: rgb(255 255 255 / 8%);
 }
 
 .nav-item.active-link {
   color: white;
+  --mdc-text-button-label-text-color: #ffffff;
+  --mat-button-text-label-text-color: #ffffff;
   background: #2c493e;
   font-weight: 650;
 }
