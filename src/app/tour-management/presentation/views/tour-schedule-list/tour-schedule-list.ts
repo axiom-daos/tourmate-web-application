@@ -1,5 +1,4 @@
 import {Component, computed, inject, Signal, viewChild} from '@angular/core';
-import {MatError} from '@angular/material/input';
 import {
   MatCell,
   MatCellDef,
@@ -16,12 +15,12 @@ import {MatIcon} from '@angular/material/icon';
 import {MatSort, MatSortHeader} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
+import {DatePipe} from '@angular/common';
 import {TourManagementStore} from '../../../application/tour-management-store';
 import {Router} from '@angular/router';
 
 @Component({
   imports: [
-    MatError,
     MatTable,
     MatHeaderCellDef,
     MatCellDef,
@@ -41,7 +40,8 @@ import {Router} from '@angular/router';
     MatSortHeader,
     MatPaginator,
     MatButtonToggleGroup,
-    MatButtonToggle
+    MatButtonToggle,
+    DatePipe
   ],
   selector: 'app-tour-schedule-list',
   styleUrl: './tour-schedule-list.css',

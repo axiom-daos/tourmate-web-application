@@ -5,7 +5,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInput} from '@angular/material/input';
 import {TranslatePipe} from '@ngx-translate/core';
-import {ActivatedRoute, Route, Router, Routes} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {TourManagementStore} from '../../../application/tour-management-store';
 import {Tour} from '../../../domain/model/tour.entity';
 import {TourDetails} from '../../../domain/model/tour-details.entity';
@@ -18,7 +18,8 @@ import {Price} from '../../../domain/model/price.entity';
     MatSelectModule,
     MatButtonModule,
     MatInput,
-    TranslatePipe
+    TranslatePipe,
+    RouterLink
   ],
   selector: 'app-tour-form',
   styleUrl: './tour-form.css',
@@ -32,12 +33,12 @@ export class TourForm {
   #store: TourManagementStore = inject(TourManagementStore)
 
   protected form = this.#fb.group({
-    agencyId: new FormControl<number | null>(null),
+    agencyId: new FormControl<number | null>(null, { validators: [Validators.required] }),
     title: new FormControl<string>('', { nonNullable: true, validators: [Validators.required]}),
     description: new FormControl<string>('', { nonNullable: true, validators: [Validators.required]}),
     duration: new FormControl<string>('', { nonNullable: true, validators: [Validators.required]}),
     difficulty: new FormControl<string>('', { nonNullable: true, validators: [Validators.required]}),
-    priceAmount: new FormControl<number | null>(null),
+    priceAmount: new FormControl<number | null>(null, { validators: [Validators.required] }),
     priceCurrency: new FormControl<string>('', { nonNullable: true, validators: [Validators.required]}),
     status: new FormControl<string>('', { nonNullable: true, validators: [Validators.required]}),
   })

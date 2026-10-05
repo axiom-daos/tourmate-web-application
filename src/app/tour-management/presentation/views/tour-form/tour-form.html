@@ -1,79 +1,87 @@
-<h1>{{ (isEdit ? 'tours.edit_title' : 'tours.new_title') | translate }}</h1>
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <mat-form-field>
-    <mat-label>{{ 'tours.agency_id' | translate }}</mat-label>
-    <input matInput formControlName="agencyId" required>
-    @if (form.get('agencyId')?.touched && form.get('agencyId')!.hasError('required')) {
-      <mat-error>{{ 'tours.error.agency_id_required' | translate }}</mat-error>
-    }
-  </mat-form-field>
+<section class="form-page">
+  <header class="form-heading">
+    <span class="eyebrow">{{ 'option.management' | translate }}</span>
+    <h2>{{ (isEdit ? 'tours.edit_title' : 'tours.new_title') | translate }}</h2>
+    <p>{{ 'tours.form_description' | translate }}</p>
+  </header>
 
-  <mat-form-field>
-    <mat-label>{{ 'tours.title' | translate }}</mat-label>
-    <input matInput formControlName="title" required>
-    @if (form.get('title')?.touched && form.get('title')!.hasError('required')) {
-      <mat-error>{{ 'tours.error.title_required' | translate }}</mat-error>
-    }
-  </mat-form-field>
+  <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'tours.agency_id' | translate }}</mat-label>
+        <input matInput type="number" formControlName="agencyId" required>
+        @if (form.get('agencyId')?.touched && form.get('agencyId')!.hasError('required')) {
+          <mat-error>{{ 'tours.error.agency_id_required' | translate }}</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>{{ 'tours.description' | translate }}</mat-label>
-    <input matInput formControlName="description" required>
-    @if (form.get('description')?.touched && form.get('description')!.hasError('required')) {
-      <mat-error>{{ 'tours.error.description_required' | translate }}</mat-error>
-    }
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'tours.title' | translate }}</mat-label>
+        <input matInput formControlName="title" required>
+        @if (form.get('title')?.touched && form.get('title')!.hasError('required')) {
+          <mat-error>{{ 'tours.error.title_required' | translate }}</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>{{ 'tours.duration' | translate }}</mat-label>
-    <input matInput formControlName="duration" required>
-    @if (form.get('duration')?.touched && form.get('duration')!.hasError('required')) {
-      <mat-error>{{ 'tours.error.duration_required' | translate }}</mat-error>
-    }
-  </mat-form-field>
+      <mat-form-field appearance="outline" class="field-wide">
+        <mat-label>{{ 'tours.description' | translate }}</mat-label>
+        <textarea matInput formControlName="description" rows="3" required></textarea>
+        @if (form.get('description')?.touched && form.get('description')!.hasError('required')) {
+          <mat-error>{{ 'tours.error.description_required' | translate }}</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>{{ 'tours.difficulty' | translate }}</mat-label>
-    <mat-select formControlName="difficulty">
-      <mat-option [value]="null">None</mat-option>
-      @for (difficulty of difficulties; track difficulty) {
-        <mat-option [value]="difficulty" >{{ difficulty }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'tours.duration' | translate }}</mat-label>
+        <input matInput formControlName="duration" required>
+        @if (form.get('duration')?.touched && form.get('duration')!.hasError('required')) {
+          <mat-error>{{ 'tours.error.duration_required' | translate }}</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>{{ 'tours.amount' | translate }}</mat-label>
-    <input matInput formControlName="priceAmount" required>
-    @if (form.get('priceAmount')?.touched && form.get('priceAmount')!.hasError('required')) {
-      <mat-error>{{ 'tours.error.price_amount_required' | translate }}</mat-error>
-    }
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'tours.difficulty' | translate }}</mat-label>
+        <mat-select formControlName="difficulty">
+          @for (difficulty of difficulties; track difficulty) {
+            <mat-option [value]="difficulty">{{ difficulty }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'tours.amount' | translate }}</mat-label>
+        <input matInput type="number" formControlName="priceAmount" required>
+        @if (form.get('priceAmount')?.touched && form.get('priceAmount')!.hasError('required')) {
+          <mat-error>{{ 'tours.error.price_amount_required' | translate }}</mat-error>
+        }
+      </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>{{ 'tours.currency' | translate }}</mat-label>
-    <mat-select formControlName="priceCurrency">
-      <mat-option [value]="null">None</mat-option>
-      @for (currency of currencies; track currency) {
-        <mat-option [value]="currency" >{{ currency }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'tours.currency' | translate }}</mat-label>
+        <mat-select formControlName="priceCurrency">
+          @for (currency of currencies; track currency) {
+            <mat-option [value]="currency">{{ currency }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>{{ 'tours.status' | translate }}</mat-label>
-    <mat-select formControlName="status">
-      <mat-option [value]="null">None</mat-option>
-      @for (state of status; track state) {
-        <mat-option [value]="state" >{{ state }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'tours.status' | translate }}</mat-label>
+        <mat-select formControlName="status">
+          @for (state of status; track state) {
+            <mat-option [value]="state">{{ state }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
 
-  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid" >
-    {{ (isEdit ? 'tours.update' : 'tours.create') | translate }}
-  </button>
-
-
-</form>
+    <div class="form-actions">
+      <button mat-button type="button" [routerLink]="['/management/tours']">
+        {{ 'common.cancel' | translate }}
+      </button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        {{ (isEdit ? 'tours.update' : 'tours.create') | translate }}
+      </button>
+    </div>
+  </form>
+</section>

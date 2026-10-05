@@ -1,5 +1,4 @@
 import {Component, computed, inject, Signal, viewChild} from '@angular/core';
-import {MatError} from '@angular/material/input';
 import {
   MatCell,
   MatCellDef,
@@ -22,7 +21,6 @@ import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-to
 
 @Component({
   imports: [
-    MatError,
     MatTable,
     MatHeaderCellDef,
     MatCellDef,
