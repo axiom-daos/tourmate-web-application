@@ -6,12 +6,9 @@ import {Observable} from 'rxjs';
 import {ActiveToursApiEndpoint} from './active-tours-api-endpoint';
 import {TourGuidesApiEndpoint} from './tour-guides-api-endpoint';
 import {TourGuide} from '../domain/model/tour-guide.entity';
-
-
 import {ParticipantsApiEndpoint} from './participants-api-endpoint';
 import {Participant} from '../domain/model/participant.entity';
 import {TourSchedule} from '../../tour-management/domain/model/tour-schedule.entity';
-import {TourSchedulesApiEndpoint} from './tour-schedules-api-endpoint';
 import {TourScheduleApiEndpoint} from '../../tour-management/infrastructure/tour-schedule-api-endpoint';
 
 /**
