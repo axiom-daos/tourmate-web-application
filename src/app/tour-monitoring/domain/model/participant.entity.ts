@@ -1,4 +1,5 @@
 import {TourSchedule} from '../../../tour-management/domain/model/tour-schedule.entity';
+import {User} from '../../../iam/domain/model/user.entity';
 
 
 /**
@@ -30,6 +31,8 @@ export class Participant {
    */
   #tourSchedule: TourSchedule | null;
 
+  #user: User | null;
+
   /**
    * Creates a new instance of the Participant class.
    *
@@ -39,12 +42,13 @@ export class Participant {
    * @param participant.joinedAt - The joinedAt of the participant.
    * @param participant.tourScheduleId - The identifier of the tourSchedule associated with the participant.
    */
-  constructor(participant: { id: number; userId: number; joinedAt: string; tourScheduleId: number; tourSchedule?: TourSchedule | null }) {
+  constructor(participant: { id: number; userId: number; joinedAt: string; tourScheduleId: number; tourSchedule?: TourSchedule | null; user?: User | null }) {
     this.#id = participant.id;
     this.#userId = participant.userId;
     this.#joinedAt = participant.joinedAt;
     this.#tourScheduleId = participant.tourScheduleId;
     this.#tourSchedule = participant.tourSchedule ?? null;
+    this.#user = participant.user ?? null;
   }
 
   /**
@@ -64,7 +68,12 @@ export class Participant {
   set tourSchedule(value: TourSchedule | null) {
     this.#tourSchedule = value;
   }
-
+  get user(): User | null {
+    return this.#user;
+  }
+  set user(value: User | null) {
+    this.#user = value;
+  }
   /**
    * Gets the participant id.
    * @returns The unique identifier for the participant.

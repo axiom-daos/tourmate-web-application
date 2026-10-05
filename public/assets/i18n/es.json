@@ -126,7 +126,7 @@
     "empty-description": "Las expediciones activas aparecerán aquí cuando estén disponibles.",
     "edit": "Editar tour activo",
     "delete": "Eliminar tour activo",
-    "view": "Ver tour activo"
+    "view": "Ver en vivo"
   },
   "activeTour": {
     "form-description": "Vincula la expedición activa con su horario y guía, y registra su estado y ubicación.",

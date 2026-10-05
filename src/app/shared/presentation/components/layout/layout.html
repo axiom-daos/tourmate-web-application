@@ -5,6 +5,7 @@
     [opened]="sidebarOpen()"
     (openedChange)="sidebarOpen.set($event)"
   >
+
     <a class="brand" routerLink="/home" (click)="closeNavigation()">
       <span class="brand-mark" aria-hidden="true">T</span>
       <span class="brand-copy">
@@ -12,7 +13,8 @@
         <span class="brand-caption">{{ 'shell.brand_caption' | translate }}</span>
       </span>
     </a>
-
+    <div class="sidebar-footer-label">{{ 'shell.language' | translate }}</div>
+    <app-language-switcher />
     <nav class="sidebar-nav" [attr.aria-label]="'shell.main_navigation' | translate">
       <span class="nav-caption">{{ 'shell.workspace' | translate }}</span>
       @for (option of options(); track option.link) {
@@ -31,8 +33,7 @@
     </nav>
 
     <div class="sidebar-footer">
-      <div class="sidebar-footer-label">{{ 'shell.language' | translate }}</div>
-      <app-language-switcher />
+
       <span class="sidebar-version">TourMate · 2026</span>
     </div>
   </mat-sidenav>
