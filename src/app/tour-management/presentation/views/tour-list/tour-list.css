@@ -116,6 +116,11 @@ td.mat-mdc-cell {
   background: #e0ebdf;
 }
 
+.status-tag-inactive {
+  color: white;
+  background: #8e422f;
+}
+
 .actions-cell {
   white-space: nowrap;
 }
