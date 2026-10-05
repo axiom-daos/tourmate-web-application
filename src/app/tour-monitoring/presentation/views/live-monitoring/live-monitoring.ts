@@ -1,22 +1,26 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TourMonitoringStore } from '../../../application/tour-monitoring.store';
 import { Participant } from '../../../domain/model/participant.entity';
 import { UserRole } from '../../../../iam/domain/model/value-object/user-role';
 
 @Component({
   selector: 'app-live-monitoring',
-  imports: [DatePipe, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink, TranslatePipe],
+  imports: [DatePipe, FormsModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink, TranslatePipe],
   templateUrl: './live-monitoring.html',
   styleUrl: './live-monitoring.css',
 })
 export class LiveMonitoring {
   protected readonly store = inject(TourMonitoringStore);
+  private readonly route = inject(ActivatedRoute);
   private readonly translate = inject(TranslateService);
   protected readonly search = signal('');
   protected readonly zoom = signal(1);
@@ -28,6 +32,14 @@ export class LiveMonitoring {
     );
   });
 
+  constructor() {
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe(params => {
+      const idParam = params.get('id');
+      const id = idParam === null ? null : Number(idParam);
+      this.store.selectActiveTour(id !== null && Number.isInteger(id) && id > 0 ? id : null);
+    });
+  }
+
   protected readonly filteredParticipants = computed(() => {
     const query = this.search().trim().toLocaleLowerCase();
     if (!query) return this.store.participantCards();
@@ -36,10 +48,10 @@ export class LiveMonitoring {
       .filter((participant) => participant.displayName.toLocaleLowerCase().includes(query));
   });
 
-  protected selectExpedition(event: Event): void {
-    const select = event.target;
-    if (select instanceof HTMLSelectElement && select.value) {
-      this.store.selectActiveTour(Number(select.value));
+  protected selectExpedition(value: number | string): void {
+    const id = Number(value);
+    if (Number.isInteger(id) && id > 0) {
+      this.store.selectActiveTour(id);
     }
   }
 

@@ -100,4 +100,7 @@ export class ActiveTourList {
   navigateToNew() {
     this.router.navigate(['monitoring/active-tours/new']).then();
   }
+  navigateToLive(id: number) {
+    this.router.navigate(['monitoring/live', id]).then();
+  }
 }

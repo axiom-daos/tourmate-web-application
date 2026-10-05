@@ -125,7 +125,8 @@
     "empty-title": "No active tours",
     "empty-description": "Active expeditions will appear here when they are available.",
     "edit": "Edit active tour",
-    "delete": "Delete active tour"
+    "delete": "Delete active tour",
+    "view": "View active tour"
   },
   "activeTour": {
     "form-description": "Connect the active expedition with its schedule and guide, then record its status and location.",

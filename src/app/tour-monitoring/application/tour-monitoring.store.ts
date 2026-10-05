@@ -102,8 +102,10 @@ export class TourMonitoringStore {
   readonly selectedActiveTour = computed(() => {
     const activeTours = this.activeTours();
     const selectedId = this.activeTourId();
-    return activeTours.find(tour => tour.id === selectedId) ??
-      activeTours.find(tour => tour.status === 'IN_PROGRESS') ??
+    if (selectedId !== null) {
+      return activeTours.find(tour => tour.id === selectedId) ?? null;
+    }
+    return activeTours.find(tour => tour.status === 'IN_PROGRESS') ??
       activeTours[0] ??
       null;
   });
@@ -120,7 +122,9 @@ export class TourMonitoringStore {
 
   readonly activeExpeditionOptions = computed(() =>
     this.activeTours()
-      .filter(activeTour => activeTour.status === 'IN_PROGRESS')
+      .filter(activeTour =>
+        activeTour.status === 'IN_PROGRESS' || activeTour.id === this.activeTourId(),
+      )
       .map(activeTour => {
         const schedule = this.tourSchedules().find(
           candidate => candidate.id === activeTour.tourScheduleId,
@@ -260,7 +264,7 @@ export class TourMonitoringStore {
     this.watchRouteCheckpoints();
   }
 
-  selectActiveTour(id: number): void {
+  selectActiveTour(id: number | null): void {
     this.activeTourId.set(id);
   }
 

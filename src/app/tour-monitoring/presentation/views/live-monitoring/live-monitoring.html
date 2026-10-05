@@ -3,9 +3,9 @@
     <label class="route-picker">
       <span>{{ 'liveMonitoring.route_label' | translate }}</span>
       <select
-        [value]="store.selectedActiveTour()?.id ?? ''"
+        [ngModel]="store.selectedActiveTour()?.id ?? ''"
         [attr.aria-label]="'liveMonitoring.select_expedition' | translate"
-        (change)="selectExpedition($event)"
+        (ngModelChange)="selectExpedition($event)"
       >
         @for (option of store.activeExpeditionOptions(); track option.activeTour.id) {
           <option [value]="option.activeTour.id">

@@ -54,6 +54,9 @@
           <button mat-icon-button [attr.aria-label]="'activeTours.delete' | translate" (click)="deleteActiveTour(activeTour.id)">
             <mat-icon>delete</mat-icon>
           </button>
+          <button mat-outlined-button color="primary" class="primary-action" (click)="navigateToLive(activeTour.id)">
+            {{ 'activeTours.view' | translate }}
+          </button>
         </td>
       </ng-container>
 
