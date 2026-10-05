@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
+import {MatIconModule} from '@angular/material/icon';
 
 /**
  * About view for the shared presentation context.
@@ -7,7 +8,8 @@ import {TranslatePipe} from '@ngx-translate/core';
 @Component({
   selector: 'app-about',
   imports: [
-    TranslatePipe
+    TranslatePipe,
+    MatIconModule
   ],
   templateUrl: './about.html',
   styleUrl: './about.css'

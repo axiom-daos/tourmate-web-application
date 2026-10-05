@@ -1,3 +1,51 @@
-.logo {
-  height: 10em;
+:host {
+  display: grid;
+  min-height: 55vh;
+  place-items: center;
+}
+
+.about-card {
+  width: min(100%, 640px);
+  padding: clamp(30px, 6vw, 54px);
+  border: 1px solid var(--tm-border);
+  border-radius: 16px;
+  background: var(--tm-surface);
+  text-align: center;
+}
+
+.about-mark {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 18px;
+  place-items: center;
+  border-radius: 16px;
+  color: var(--tm-forest);
+  background: #e7eee5;
+}
+
+.about-mark mat-icon {
+  width: 30px;
+  height: 30px;
+  font-size: 30px;
+}
+
+.eyebrow {
+  color: var(--tm-muted);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin: 8px 0;
+  font-size: 2rem;
+  letter-spacing: -0.04em;
+}
+
+p {
+  margin: 0;
+  color: var(--tm-muted);
+  line-height: 1.7;
 }

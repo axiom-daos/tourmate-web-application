@@ -1,10 +1,23 @@
 .footer-content {
-  position: relative;
   width: 100%;
   box-sizing: border-box;
-  background-color: slategray;
-  color: white;
-  text-align: center;
+  background: transparent;
+  color: var(--tm-muted);
   margin: 0;
-  padding: 18px 12px;
+  padding: 10px clamp(18px, 3vw, 40px) 16px;
+  font-size: 0.72rem;
+  text-align: right;
+}
+
+.footer-content p {
+  display: inline;
+  margin: 0;
+}
+
+.footer-content p + p {
+  display: none;
+}
+
+.footer-content a {
+  color: inherit;
 }
