@@ -1002,19 +1002,19 @@
     {
       "id": 1,
       "name": "Básico",
-      "priceAmount": 29.0,
+      "priceAmount": 29,
       "priceCurrency": "USD"
     },
     {
       "id": 2,
       "name": "Profesional",
-      "priceAmount": 79.0,
+      "priceAmount": 79,
       "priceCurrency": "USD"
     },
     {
       "id": 3,
       "name": "Empresarial",
-      "priceAmount": 149.0,
+      "priceAmount": 149,
       "priceCurrency": "USD"
     }
   ],
@@ -1102,7 +1102,7 @@
       "id": 1,
       "agencyId": 1,
       "planId": 2,
-      "amount": 79.0,
+      "amount": 79,
       "currency": "USD",
       "status": "PAID",
       "requestedAt": "2026-08-01T09:55:00"
@@ -1111,7 +1111,7 @@
       "id": 2,
       "agencyId": 2,
       "planId": 1,
-      "amount": 29.0,
+      "amount": 29,
       "currency": "USD",
       "status": "PAID",
       "requestedAt": "2026-08-15T09:20:00"
@@ -1120,7 +1120,7 @@
       "id": 3,
       "agencyId": 3,
       "planId": 3,
-      "amount": 149.0,
+      "amount": 149,
       "currency": "USD",
       "status": "PENDING",
       "requestedAt": "2026-09-28T16:00:00"
@@ -1181,7 +1181,7 @@
       "userId": 16,
       "tourId": 7,
       "rating": 5,
-      "createdAt": "2026-09-18T18:00:00"
+      "createdAt": "2026-10-05T23:15:05.791Z"
     }
   ],
   "comments": [
@@ -1231,7 +1231,7 @@
       "id": 8,
       "reviewId": 8,
       "content": "El Colca es espectacular.",
-      "createdAt": "2026-09-18T18:05:00"
+      "createdAt": "2026-10-05T23:15:05.791Z"
     }
   ]
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ReviewStore } from '../../../application/review.store';
 
 @Component({
@@ -12,7 +13,8 @@ import { ReviewStore } from '../../../application/review.store';
     CommonModule,
     RouterModule,
     MatTableModule,
-    MatButtonModule
+    MatButtonModule,
+    TranslatePipe
   ],
   templateUrl: './review-list.html',
   styleUrls: ['./review-list.css']

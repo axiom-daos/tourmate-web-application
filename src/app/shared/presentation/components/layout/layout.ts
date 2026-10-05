@@ -6,15 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageSwitcher } from '../language-switcher/language-switcher';
 import { FooterContent } from '../footer-content/footer-content';
 import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
-/*
-import {
-  AuthenticationSection
-} from '../../../../iam/presentation/components/authentication-section/authentication-section';
-*/
 
-/**
- * Main shell component that hosts top-level navigation and routed content.
- */
 @Component({
   selector: 'app-layout',
   imports: [
@@ -29,14 +21,13 @@ import {
     MatSidenavContent,
     MatSidenav,
     MatSidenavContainer,
-    // AuthenticationSection
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
 export class Layout {
   /**
-   * Array of navigation options for the application's menu.
+   * Array of navigation options using i18n translation keys.
    */
   options = signal([
     { link: '/home', label: 'option.home' },
@@ -45,6 +36,6 @@ export class Layout {
     { link: '/management', label: 'option.management' },
     { link: '/safety-and-incident-management', label: 'option.safety_and_incident' },
     { link: '/subscriptions', label: 'option.subscriptions' },
-    { link: '/feedback-and-tour-reviews/reviews', label: 'Feedback & Reviews' },
+    { link: '/feedback-and-tour-reviews/reviews', label: 'option.feedback_and_reviews' }
   ]);
 }
