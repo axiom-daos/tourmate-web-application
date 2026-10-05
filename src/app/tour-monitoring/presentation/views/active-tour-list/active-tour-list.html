@@ -28,9 +28,19 @@
         <td mat-cell *matCellDef="let activeTour">{{ activeTour.id }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="tourScheduleId">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'activeTours.tourScheduleId' | translate }}</th>
-        <td mat-cell *matCellDef="let activeTour">{{ activeTour.tourScheduleId }}</td>
+      <ng-container matColumnDef="tourTitle">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'activeTours.tourTitle' | translate }}</th>
+        <td mat-cell *matCellDef="let activeTour">
+          {{ activeTour.tourSchedule?.tour?.details?.title ?? '—' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="guideName">
+        <th mat-header-cell *matHeaderCellDef>{{ 'activeTours.guide' | translate }}</th>
+        <td mat-cell *matCellDef="let activeTour">
+          {{ activeTour.guide?.user?.firstName ?? '—' }}
+          {{ activeTour.guide?.user?.lastName ?? '' }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="tourScheduleIdMaxCapacity">

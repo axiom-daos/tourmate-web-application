@@ -119,14 +119,16 @@
     "new": "Agregar Tour Activo",
     "list-title": "Tours activos",
     "tourScheduleId": "ID del Horario de Tour",
-    "tourScheduleIdMaxCapacity": "Capacidad Máxima del Horario de Tour",
+    "guide": "Guía turístico",
+    "tourScheduleIdMaxCapacity": "Capacidad Máxima",
     "list-description": "Consulta las expediciones que tu agencia está monitoreando.",
     "table-scroll": "Tabla de tours activos; desplázate horizontalmente para ver todas las columnas",
     "empty-title": "No hay tours activos",
     "empty-description": "Las expediciones activas aparecerán aquí cuando estén disponibles.",
     "edit": "Editar tour activo",
     "delete": "Eliminar tour activo",
-    "view": "Ver en vivo"
+    "view": "Ver en vivo",
+    "tourTitle": "Nombre del Tour"
   },
   "activeTour": {
     "form-description": "Vincula la expedición activa con su horario y guía, y registra su estado y ubicación.",

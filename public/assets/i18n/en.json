@@ -119,14 +119,16 @@
     "new": "Add Active Tour",
     "list-title": "Active tours",
     "tourScheduleId": "Tour Schedule ID",
-    "tourScheduleIdMaxCapacity": "Tour Schedule Max Capacity",
+    "guide": "Tour guide",
+    "tourScheduleIdMaxCapacity": "Max Capacity",
     "list-description": "Review the expeditions currently being tracked by your agency.",
     "table-scroll": "Active tours table; scroll horizontally to see all columns",
     "empty-title": "No active tours",
     "empty-description": "Active expeditions will appear here when they are available.",
     "edit": "Edit active tour",
     "delete": "Delete active tour",
-    "view": "Watch live"
+    "view": "Watch live",
+    "tourTitle": "Tour Name"
   },
   "activeTour": {
     "form-description": "Connect the active expedition with its schedule and guide, then record its status and location.",

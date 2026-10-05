@@ -40,7 +40,14 @@ export class IamStore {
   }
 
   loadUsers(): void {
-    this.#execute(this.#api.getUsers(), (users) => this.#usersSignal.set(users), 'Failed to load users');
+    this.#execute(
+      this.#api.getUsers(),
+      (users) => {
+        this.#usersSignal.set(users);
+        this.assignUsersToTourGuides();
+      },
+      'Failed to load users',
+    );
   }
 
   loadAgencies(): void {
@@ -54,7 +61,10 @@ export class IamStore {
   loadTourGuides(): void {
     this.#execute(
       this.#api.getTourGuides(),
-      (tourGuides) => this.#tourGuidesSignal.set(tourGuides),
+      (tourGuides) => {
+        this.#tourGuidesSignal.set(tourGuides);
+        this.assignUsersToTourGuides();
+      },
       'Failed to load tour guides',
     );
   }
@@ -139,6 +149,18 @@ export class IamStore {
         ),
       'Failed to update tour guide',
     );
+  }
+
+  private assignUsersToTourGuides = (): void => {
+    this.#tourGuidesSignal.update(tourGuides =>
+      tourGuides.map(tourGuide => this.assignUserToTourGuide(tourGuide)),
+    );
+  };
+
+  private assignUserToTourGuide = (tourGuide: TourGuide): TourGuide => {
+    const userId = tourGuide.userId ?? 0;
+    tourGuide.user = userId ? this.getUserById(userId)() ?? null : null;
+    return tourGuide;
   }
 
   deleteTourGuide(id: number): void {

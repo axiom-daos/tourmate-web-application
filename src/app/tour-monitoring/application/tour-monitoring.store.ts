@@ -273,7 +273,10 @@ export class TourMonitoringStore {
       retry(1),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: users => this.usersSignal.set(users),
+      next: users => {
+        this.usersSignal.set(users);
+        this.assignUsersToTourGuides();
+      },
       error: error => this.errorSignal.set(this.formatError(error, 'Unable to load expedition data')),
     });
   }
@@ -283,7 +286,10 @@ export class TourMonitoringStore {
       retry(1),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
-      next: tours => this.toursSignal.set(tours),
+      next: tours => {
+        this.toursSignal.set(tours);
+        this.assignToursToTourSchedules();
+      },
       error: error => this.errorSignal.set(this.formatError(error, 'Unable to load expedition data')),
     });
   }
@@ -405,6 +411,7 @@ export class TourMonitoringStore {
         this.loadingSignal.set(false);
         this.errorSignal.set(null);
         this.assignTourSchedulesToActiveTours();
+        this.assignTourGuidesToActiveTours();
       },
       error: err => {
         this.errorSignal.set(this.formatError(err, 'Failed to load activeTours'));
@@ -418,6 +425,7 @@ export class TourMonitoringStore {
   getTourGuideById = (id: number): Signal<TourGuide | undefined> => {
     return computed(() => id ? this.tourGuides().find(c => c.id === id) : undefined);
   }
+
   /**
    * adds a new tourGuide.
    * @param tourGuide - The tourGuide to add.
@@ -488,9 +496,8 @@ export class TourMonitoringStore {
         this.tourGuidesSignal.set(tourGuides);
         this.loadingSignal.set(false);
         this.errorSignal.set(null);
-
-
-
+        this.assignUsersToTourGuides();
+        this.assignTourGuidesToActiveTours();
       },
       error: err => {
         this.errorSignal.set(this.formatError(err, 'Failed to load tourGuides'));
@@ -572,6 +579,7 @@ export class TourMonitoringStore {
       next: tourSchedules => {
         console.log(tourSchedules);
         this.tourSchedulesSignal.set(tourSchedules);
+        this.assignToursToTourSchedules();
         this.assignTourSchedulesToActiveTours();
         //this.assignTourSchedulesToParticipants();
         this.loadingSignal.set(false);
@@ -685,9 +693,44 @@ export class TourMonitoringStore {
     this.activeToursSignal.update(activeTours => activeTours.map(activeTour => this.assignTourScheduleToActiveTour(activeTour)));
   };
 
+  private assignToursToTourSchedules = (): void => {
+    this.tourSchedulesSignal.update(tourSchedules =>
+      tourSchedules.map(tourSchedule => {
+        tourSchedule.tour = this.tours().find(tour => tour.id === tourSchedule.tourId) ?? null;
+        return tourSchedule;
+      }),
+    );
+    this.assignTourSchedulesToActiveTours();
+  };
+
   private assignTourScheduleToActiveTour = (activeTour: ActiveTour): ActiveTour => {
     const tourScheduleId = activeTour.tourScheduleId ?? 0;
     activeTour.tourSchedule = tourScheduleId ? this.getTourScheduleById(tourScheduleId)() ?? null : null;
+    return activeTour;
+  }
+
+  private assignTourGuidesToActiveTours = (): void => {
+    this.activeToursSignal.update(activeTours =>
+      activeTours.map(activeTour => this.assignTourGuideToActiveTour(activeTour)),
+    );
+  };
+
+  private assignUsersToTourGuides = (): void => {
+    this.tourGuidesSignal.update(tourGuides =>
+      tourGuides.map(tourGuide => this.assignUserToTourGuide(tourGuide)),
+    );
+    this.assignTourGuidesToActiveTours();
+  };
+
+  private assignUserToTourGuide = (tourGuide: TourGuide): TourGuide => {
+    const user = this.users().find(candidate => candidate.id === tourGuide.userId) ?? null;
+    tourGuide.user = user;
+    return tourGuide;
+  };
+
+  private assignTourGuideToActiveTour = (activeTour: ActiveTour): ActiveTour => {
+    const tourGuideId = activeTour.guideId ?? 0;
+    activeTour.guide = tourGuideId ? this.getTourGuideById(tourGuideId)() ?? null : null;
     return activeTour;
   }
 

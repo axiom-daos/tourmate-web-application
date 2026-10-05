@@ -1,4 +1,5 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
+import {User} from './user.entity';
 
 export class TourGuide implements BaseEntity {
   #id: number;
@@ -7,20 +8,29 @@ export class TourGuide implements BaseEntity {
   #languages: string[];
   #phoneNumber: string;
 
+  #user:User | null;
+
   constructor(tourGuide: {
     id: number;
     userId: number;
     agencyId: number;
     languages: string[];
     phoneNumber: string;
+    user?: User | null;
   }) {
     this.#id = tourGuide.id;
     this.#userId = tourGuide.userId;
     this.#agencyId = tourGuide.agencyId;
     this.#languages = [...tourGuide.languages];
     this.#phoneNumber = tourGuide.phoneNumber;
+    this.#user = tourGuide.user?? null;
   }
-
+  get user(): User | null {
+    return this.#user;
+  }
+  set user(value: User | null) {
+    this.#user = value;
+  }
   get id(): number {
     return this.#id;
   }
