@@ -46,20 +46,26 @@ export class ReviewStore {
   }
 
   addReview(newReview: any): void {
-    this.http.post('http://localhost:3000/reviews', {
-      id: newReview.id,
+    this.http.post<any>('http://localhost:3000/reviews', {
       userId: newReview.userId,
       tourId: newReview.tourId,
       rating: newReview.rating,
       createdAt: newReview.createdAt
-    }).subscribe(() => {
+    }).subscribe((createdReview: any) => {
+      const generatedId = createdReview.id;
       this.http.post('http://localhost:3000/comments', {
-        id: newReview.id,
-        reviewId: newReview.id,
+        reviewId: generatedId,
         content: newReview.comment,
         createdAt: newReview.createdAt
-      }).subscribe(() => {
-        this._reviewsSignal.set([...this._reviewsSignal(), newReview]);
+      }).subscribe({
+        next: () => {
+          const reviewWithId = { ...newReview, id: generatedId };
+          this._reviewsSignal.set([...this._reviewsSignal(), reviewWithId]);
+        },
+        error: () => {
+          const reviewWithId = { ...newReview, id: generatedId };
+          this._reviewsSignal.set([...this._reviewsSignal(), reviewWithId]);
+        }
       });
     });
   }
@@ -77,19 +83,31 @@ export class ReviewStore {
         reviewId: updated.id,
         content: updated.comment,
         createdAt: updated.createdAt
-      }).subscribe(() => {
-        const updatedList = this._reviewsSignal().map((r: any) => r.id === updated.id ? updated : r);
-        this._reviewsSignal.set(updatedList);
+      }).subscribe({
+        next: () => {
+          const updatedList = this._reviewsSignal().map((r: any) => r.id === updated.id ? updated : r);
+          this._reviewsSignal.set(updatedList);
+        },
+        error: () => {
+          const updatedList = this._reviewsSignal().map((r: any) => r.id === updated.id ? updated : r);
+          this._reviewsSignal.set(updatedList);
+        }
       });
     });
   }
 
   deleteReview(id: number): void {
-    this.http.delete(`http://localhost:3000/reviews/${id}`).subscribe(() => {
-      this.http.delete(`http://localhost:3000/comments/${id}`).subscribe(() => {
-        const filtered = this._reviewsSignal().filter((r: any) => r.id !== id);
-        this._reviewsSignal.set(filtered);
-      });
+    // 1. Actualizamos la interfaz de forma inmediata (quita el elemento de la tabla al instante)
+    const filtered = this._reviewsSignal().filter((r: any) => r.id !== id);
+    this._reviewsSignal.set(filtered);
+
+    // 2. Eliminamos en el servidor en segundo plano sin bloquear la vista si falla un recurso
+    this.http.delete(`http://localhost:3000/reviews/${id}`).subscribe({
+      error: (err) => console.error('Error al borrar review en servidor', err)
+    });
+
+    this.http.delete(`http://localhost:3000/comments/${id}`).subscribe({
+      error: (err) => console.log('Comentario no encontrado en servidor', err)
     });
   }
 }
