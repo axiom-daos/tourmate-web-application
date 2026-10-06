@@ -8,6 +8,7 @@ import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 
 
+
 /**
  * Endpoint client for course CRUD operations.
  */
@@ -17,7 +18,7 @@ export class ActiveToursApiEndpoint extends BaseApiEndpoint<ActiveTour, ActiveTo
    * @param http - The HttpClient to be used for making API requests.
    */
   constructor(http: HttpClient) {
-    super(http, `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderActiveToursEndpointPath}`, new ActiveTourAssembler());
+    super(http, `${environment.activeToursApiBaseUrl}${environment.tourmateProviderActiveToursEndpointPath}`, new ActiveTourAssembler());
   }
 
   override create(activeTour: ActiveTour): Observable<ActiveTour> {

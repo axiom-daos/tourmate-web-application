@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ReviewApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:3000/reviews';
+  private readonly baseUrl = 'https://6ac570fc54a61668c5f72d4d.mockapi.io/api/v1/reviews';
 
   getReviews(): Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl);

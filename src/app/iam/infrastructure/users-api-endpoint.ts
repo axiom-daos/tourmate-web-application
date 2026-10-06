@@ -13,7 +13,7 @@ export class UsersApiEndpoint extends BaseApiEndpoint<
   UserAssembler
 > {
   constructor(http: HttpClient) {
-    const url = `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderUsersEndpointPath}`;
+    const url = `${environment.usersApiBaseUrl}${environment.tourmateProviderUsersEndpointPath}`;
     super(http, url, new UserAssembler());
   }
 
