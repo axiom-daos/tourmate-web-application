@@ -1239,6 +1239,11 @@
       "reviewId": 8,
       "content": "El Colca es espectacular.",
       "createdAt": "2026-10-05T23:15:05.791Z"
+    },
+    {
+      "content": "Arequipa hace mucho calor",
+      "createdAt": "2026-10-06T21:53:00.333Z",
+      "id": 10
     }
   ]
 }
