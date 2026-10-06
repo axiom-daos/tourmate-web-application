@@ -195,11 +195,11 @@ td.mat-mdc-cell {
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 440px);
-  grid-auto-rows: 1fr;
-  justify-content: center;
-  gap: 32px;
-  padding: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 440px));
+  grid-auto-rows: minmax(0, 1fr);
+  justify-content: start;
+  gap: clamp(14px, 2vw, 24px);
+  padding: clamp(14px, 2.5vw, 28px);
 }
 
 .tour-enter {
@@ -222,5 +222,12 @@ td.mat-mdc-cell {
 @media (prefers-reduced-motion: reduce) {
   .tour-enter {
     animation: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .cards-grid {
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: 10px;
   }
 }

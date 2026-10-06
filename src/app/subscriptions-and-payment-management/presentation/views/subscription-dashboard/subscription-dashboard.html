@@ -10,8 +10,8 @@
         <mat-icon>business</mat-icon>
         <span>{{ 'subscription.agency' | translate }}: #{{ store.currentAgencyId() }}</span>
       </div>
-      <button mat-flat-button class="btn-primary" (click)="navigateToPlans()">
-        <mat-icon>upgrade</mat-icon> {{ 'subscription.explore_plans' | translate }}
+      <button mat-flat-button type="button" class="btn-primary" (click)="navigateToPlans()">
+        <mat-icon aria-hidden="true">upgrade</mat-icon> {{ 'subscription.explore_plans' | translate }}
       </button>
     </div>
   </header>
@@ -69,18 +69,18 @@
 
       <div class="plan-actions-row">
         @if (store.currentSubscription()?.status === 'ACTIVE') {
-          <button mat-stroked-button class="btn-danger" (click)="cancelCurrentSubscription()">
-            <mat-icon>cancel</mat-icon> {{ 'subscription.cancel_btn' | translate }}
+          <button mat-stroked-button type="button" class="btn-danger" (click)="cancelCurrentSubscription()">
+            <mat-icon aria-hidden="true">cancel</mat-icon> {{ 'subscription.cancel_btn' | translate }}
           </button>
         }
-        <button mat-flat-button class="btn-primary" (click)="navigateToPlans()">
-          <mat-icon>sync_alt</mat-icon> {{ 'subscription.change_plan_btn' | translate }}
+        <button mat-flat-button type="button" class="btn-primary" (click)="navigateToPlans()">
+          <mat-icon aria-hidden="true">sync_alt</mat-icon> {{ 'subscription.change_plan_btn' | translate }}
         </button>
       </div>
     } @else {
       <div class="no-data">
         <p>{{ 'subscription.no_plan_selected' | translate }}</p>
-        <button mat-flat-button class="btn-primary" (click)="navigateToPlans()">
+        <button mat-flat-button type="button" class="btn-primary" (click)="navigateToPlans()">
           {{ 'subscription.choose_plan_btn' | translate }}
         </button>
       </div>
@@ -93,7 +93,8 @@
       <h3>{{ 'subscription.payment_history_heading' | translate }}</h3>
     </div>
 
-    <table mat-table [dataSource]="dataSource()" matSort class="mat-table">
+    <div class="table-scroll" role="region" [attr.aria-label]="'subscription.payment_history_heading' | translate" tabindex="0">
+      <table mat-table [dataSource]="dataSource()" matSort class="mat-table">
       <!-- ID Column -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
@@ -138,9 +139,10 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
 
     @if (store.currentAgencyPayments().length === 0) {
       <div class="no-data">

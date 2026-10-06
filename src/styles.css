@@ -16,11 +16,23 @@
 
 * {
   box-sizing: border-box;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: #aab8ad #eef0ea;
 }
 
 *::-webkit-scrollbar {
-  display: none;
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 2px solid #eef0ea;
+  border-radius: 999px;
+  background: #aab8ad;
+}
+
+*::-webkit-scrollbar-track {
+  background: #eef0ea;
 }
 
 html,
@@ -48,9 +60,16 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
-select:focus-visible {
-  outline: 3px solid #789783;
-  outline-offset: 2px;
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #9a6528;
+  outline-offset: 3px;
+}
+
+@media (forced-colors: active) {
+  :focus-visible {
+    outline-color: Highlight;
+  }
 }
 
 h1,

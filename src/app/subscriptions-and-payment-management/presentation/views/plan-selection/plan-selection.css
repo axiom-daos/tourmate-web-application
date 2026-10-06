@@ -7,7 +7,6 @@
   font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
   color: #29433a;
   width: 100%;
-  overflow-x: hidden;
 }
 
 .plans-container {
@@ -63,8 +62,8 @@
 /* Plans Grid */
 .plans-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: clamp(14px, 2vw, 24px);
   align-items: stretch;
 }
 
@@ -217,4 +216,29 @@
   padding: 12px 16px;
   font-size: 0.9rem;
   font-weight: 500;
+}
+
+@media (max-width: 620px) {
+  :host {
+    padding: 20px 14px 36px;
+  }
+
+  .header-bar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+    padding: 18px;
+  }
+
+  .btn-back {
+    width: 100%;
+  }
+
+  .plans-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plan-card {
+    padding: 26px 20px;
+  }
 }

@@ -5,8 +5,8 @@
       <h2>{{ 'subscription.plans_catalog_title' | translate }}</h2>
       <p>{{ 'subscription.plans_catalog_subtitle' | translate }}</p>
     </div>
-    <button mat-stroked-button class="btn-back" (click)="goBack()">
-      <mat-icon>arrow_back</mat-icon> {{ 'subscription.back_to_dashboard' | translate }}
+    <button mat-stroked-button type="button" class="btn-back" (click)="goBack()">
+      <mat-icon aria-hidden="true">arrow_back</mat-icon> {{ 'subscription.back_to_dashboard' | translate }}
     </button>
   </header>
 
@@ -50,11 +50,11 @@
 
         <div class="plan-card-cta">
           @if (isCurrentPlan(plan.id)) {
-            <button mat-flat-button disabled class="btn-current-plan">
-              <mat-icon>verified</mat-icon> {{ 'subscription.current_plan_badge' | translate }}
+            <button mat-flat-button type="button" disabled class="btn-current-plan">
+              <mat-icon aria-hidden="true">verified</mat-icon> {{ 'subscription.current_plan_badge' | translate }}
             </button>
           } @else {
-            <button mat-flat-button class="btn-select-plan" (click)="selectPlan(plan)">
+            <button mat-flat-button type="button" class="btn-select-plan" (click)="selectPlan(plan)">
               {{ 'subscription.select_plan_btn' | translate }}
             </button>
           }

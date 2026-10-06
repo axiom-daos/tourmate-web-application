@@ -485,9 +485,15 @@
 
 .participant-card-heading {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
+}
+
+.participant-card-heading > div {
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .remove-participant {
@@ -518,7 +524,7 @@
   gap: 5px;
   color: #728078;
   font-size: 0.59rem;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .signal-pending span {

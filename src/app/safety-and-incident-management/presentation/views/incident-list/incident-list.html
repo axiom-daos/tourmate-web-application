@@ -4,8 +4,8 @@
     <h2>{{ 'incidents.list_title' | translate }}</h2>
     <p>{{ 'incidents.list_description' | translate }}</p>
   </div>
-  <button mat-flat-button class="new-incident-btn" (click)="navigateToNew()">
-    <mat-icon>add</mat-icon>{{ 'incidents.new' | translate }}
+  <button mat-flat-button type="button" class="new-incident-btn" (click)="navigateToNew()">
+    <mat-icon aria-hidden="true">add</mat-icon>{{ 'incidents.new' | translate }}
   </button>
 </section>
 
@@ -58,20 +58,21 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>{{ 'incidents.actions' | translate }}</th>
         <td mat-cell *matCellDef="let incident" class="actions-cell">
-          <button mat-stroked-button class="edit-action" (click)="editIncident(incident.id!)">
+          <button mat-stroked-button type="button" class="edit-action" (click)="editIncident(incident.id!)">
             {{ 'incidents.edit' | translate }}
           </button>
           @if (incident.status !== 'RESOLVED' && incident.status !== 'CLOSED') {
-            <button mat-flat-button class="resolve-action" (click)="resolveIncident(incident)">
+            <button mat-flat-button type="button" class="resolve-action" (click)="resolveIncident(incident)">
               {{ 'incidents.resolve' | translate }}
             </button>
           }
           <button
             mat-icon-button
+            type="button"
             [attr.aria-label]="'incidents.delete' | translate"
             (click)="deleteIncident(incident.id!)"
           >
-            <mat-icon>delete</mat-icon>
+            <mat-icon aria-hidden="true">delete</mat-icon>
           </button>
         </td>
       </ng-container>

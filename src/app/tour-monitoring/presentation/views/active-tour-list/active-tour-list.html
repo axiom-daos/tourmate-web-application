@@ -1,4 +1,4 @@
-<main class="dashboard-container">
+<div class="dashboard-container">
   <header class="dashboard-header">
     <div class="header-info">
       <div class="eyebrow-wrapper">
@@ -55,7 +55,12 @@
 
       <div class="tour-card-grid">
         @for (activeTour of visibleTours(); track activeTour.id) {
-          <mat-card appearance="outlined" class="active-tour-card" [attr.aria-label]="'activeTours.card_label' | translate: { id: activeTour.id }">
+          <mat-card
+            appearance="outlined"
+            class="active-tour-card"
+            role="article"
+            [attr.aria-label]="'activeTours.card_label' | translate: { id: activeTour.id }"
+          >
             <mat-card-header>
               <div class="card-leading" aria-hidden="true">
                 {{ guideInitial(activeTour) }}
@@ -129,4 +134,4 @@
       </div>
     }
   </section>
-</main>
+</div>
