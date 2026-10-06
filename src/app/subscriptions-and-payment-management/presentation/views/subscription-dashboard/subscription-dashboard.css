@@ -7,7 +7,6 @@
   font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
   color: #29433a;
   width: 100%;
-  overflow-x: hidden;
 }
 
 .dashboard-container {
@@ -217,9 +216,13 @@
   background: #fffefb;
   border: 1px solid #d9ded5;
   border-radius: 20px;
-  overflow-x: auto;
+  overflow: hidden;
   box-shadow: 0 4px 16px rgba(41, 67, 58, 0.04);
   box-sizing: border-box;
+}
+
+.table-scroll {
+  overflow-x: auto;
 }
 
 .table-header-bar {
@@ -300,5 +303,43 @@ tr.mat-row:last-child td {
 
   .plan-actions-row {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 620px) {
+  :host {
+    padding: 20px 14px 36px;
+  }
+
+  .header-section {
+    align-items: stretch;
+    padding: 18px;
+  }
+
+  .header-actions {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .agency-badge,
+  .header-actions .btn-primary,
+  .plan-actions-row > button {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .current-plan-card {
+    padding: 20px 16px;
+  }
+
+  .card-title-row {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .table-header-bar {
+    padding: 16px;
   }
 }

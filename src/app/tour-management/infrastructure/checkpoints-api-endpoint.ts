@@ -15,7 +15,7 @@ export class CheckpointsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderCheckpointsEndpointPath}`,
+      `${environment.checkpointsApiBaseUrl}${environment.tourmateProviderCheckpointsEndpointPath}`,
       new CheckpointAssembler(),
     );
   }

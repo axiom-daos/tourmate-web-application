@@ -14,7 +14,7 @@ export class AgenciesApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderAgenciesEndpointPath}`,
+      `${environment.agenciesApiBaseUrl}${environment.tourmateProviderAgenciesEndpointPath}`,
       new AgencyAssembler(),
     );
   }

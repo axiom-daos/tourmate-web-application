@@ -1,13 +1,15 @@
+<a class="skip-link" href="#main-content">{{ 'shell.skip_to_content' | translate }}</a>
 <mat-sidenav-container class="app-container">
   <mat-sidenav
     class="sidebar"
     [mode]="isMobile() ? 'over' : 'side'"
     [opened]="sidebarOpen()"
+    [attr.aria-label]="'shell.main_navigation' | translate"
     (openedChange)="sidebarOpen.set($event)"
   >
 
     <a class="brand" routerLink="/home" (click)="closeNavigation()">
-      <span class="brand-mark" aria-hidden="true">T</span>
+      <img class="brand-mark" src="/assets/Logo_Tourmate.jpeg" alt="" width="44" height="44">
       <span class="brand-copy">
         <span class="brand-title">TourMate</span>
         <span class="brand-caption">{{ 'shell.brand_caption' | translate }}</span>
@@ -68,7 +70,7 @@
       </div>
     </header>
 
-    <main class="main-content" id="main-content">
+    <main class="main-content" id="main-content" tabindex="-1">
       <router-outlet />
     </main>
     <app-footer-content />

@@ -14,7 +14,7 @@ export class TourGuidesApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderTourGuidesEndpointPath}`,
+      `${environment.tourGuidesApiBaseUrl}${environment.tourmateProviderTourGuidesEndpointPath}`,
       new TourGuideAssembler(),
     );
   }

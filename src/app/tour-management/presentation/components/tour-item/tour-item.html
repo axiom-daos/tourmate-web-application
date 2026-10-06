@@ -38,13 +38,18 @@
 
   <mat-card-actions class="footer-card">
 
-    <button mat-stroked-button class="btn-edit" (click)="editTour.emit()">
-      <mat-icon>edit</mat-icon>
+    <button mat-stroked-button type="button" class="btn-edit" (click)="editTour.emit()">
+      <mat-icon aria-hidden="true">edit</mat-icon>
       {{ 'tours.edit' | translate }}
     </button>
 
-    <button mat-icon-button (click)="deleteTour.emit()">
-      <mat-icon>delete_outline</mat-icon>
+    <button
+      mat-icon-button
+      type="button"
+      [attr.aria-label]="'tours.delete' | translate"
+      (click)="deleteTour.emit()"
+    >
+      <mat-icon aria-hidden="true">delete_outline</mat-icon>
     </button>
   </mat-card-actions>
 </mat-card>

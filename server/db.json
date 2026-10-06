@@ -960,6 +960,16 @@
       "currentLongitude": -77.0273,
       "startedAt": "2026-09-20T07:00:00",
       "finishedAt": "2026-09-20T11:10:00"
+    },
+    {
+      "tourScheduleId": 3,
+      "guideId": 3,
+      "status": "IN_PROGRESS",
+      "currentLatitude": -13.2486,
+      "currentLongitude": -72.3639,
+      "startedAt": "2026-10-06T04:32:00.000Z",
+      "finishedAt": "",
+      "id": 4
     }
   ],
   "incidents": [

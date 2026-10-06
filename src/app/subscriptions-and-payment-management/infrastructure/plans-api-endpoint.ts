@@ -18,7 +18,7 @@ export class PlansApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderPlansEndpointPath}`,
+      `${environment.plansApiBaseUrl}${environment.tourmateProviderPlansEndpointPath}`,
       new PlanAssembler(),
     );
   }

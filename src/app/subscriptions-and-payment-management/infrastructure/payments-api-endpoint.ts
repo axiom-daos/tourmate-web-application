@@ -18,7 +18,7 @@ export class PaymentsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderPaymentsEndpointPath}`,
+      `${environment.paymentsApiBaseUrl}${environment.tourmateProviderPaymentsEndpointPath}`,
       new PaymentAssembler(),
     );
   }

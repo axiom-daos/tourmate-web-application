@@ -8,6 +8,7 @@
 .app-container {
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   background: var(--tm-canvas);
 }
 
@@ -24,6 +25,24 @@
 .sidebar ::ng-deep .mat-drawer-inner-container {
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 10;
+  top: 8px;
+  left: 8px;
+  transform: translateY(-150%);
+  padding: 11px 14px;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--tm-forest);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
 }
 
 .brand {
@@ -38,15 +57,12 @@
 }
 
 .brand-mark {
-  display: grid;
-  width: 38px;
-  height: 38px;
-  place-items: center;
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  object-fit: cover;
   border-radius: 12px;
-  color: var(--tm-forest);
-  background: #dce7dc;
-  font-size: 1.2rem;
-  font-weight: 800;
 }
 
 .brand-copy {
@@ -259,6 +275,11 @@
 
   .main-content {
     padding: 20px 14px 28px;
+  }
+
+  .topbar-start,
+  .topbar-meta {
+    gap: 8px;
   }
 }
 

@@ -1,4 +1,9 @@
 .footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
   width: 100%;
   box-sizing: border-box;
   background: transparent;
@@ -6,18 +11,35 @@
   margin: 0;
   padding: 10px clamp(18px, 3vw, 40px) 16px;
   font-size: 0.72rem;
-  text-align: right;
+  text-align: left;
 }
 
 .footer-content p {
-  display: inline;
   margin: 0;
 }
 
 .footer-content p + p {
-  display: none;
+  text-align: right;
 }
 
 .footer-content a {
   color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.footer-content a:hover {
+  color: var(--tm-forest);
+}
+
+@media (max-width: 560px) {
+  .footer-content {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-inline: 14px;
+  }
+
+  .footer-content p + p {
+    text-align: left;
+  }
 }

@@ -1,59 +1,101 @@
 <section class="form-page">
   <header class="form-heading">
     <span class="eyebrow">{{ 'option.monitoring' | translate }}</span>
-    <h2>{{ (isEdit ? 'activeTour.edit-status' : 'activeTour.new-status') | translate }}</h2>
+    <h2>{{ (isEdit ? 'activeTours.edit' : 'activeTours.new') | translate }}</h2>
     <p>{{ 'activeTour.form-description' | translate }}</p>
   </header>
 
   <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
     <div class="form-grid">
       <mat-form-field appearance="outline">
-        <mat-label>{{ 'activeTour.tourScheduleId' | translate }}</mat-label>
-        <input matInput type="number" formControlName="tourScheduleId" required>
+        <mat-label>{{ 'activeTour.schedule' | translate }}</mat-label>
+        <mat-select
+          formControlName="tourScheduleId"
+          required
+          (selectionChange)="onScheduleChange($event.value)"
+        >
+          @if (scheduleOptions().length === 0) {
+            <mat-option disabled>{{ 'activeTour.no-schedules' | translate }}</mat-option>
+          }
+          @for (option of scheduleOptions(); track option.schedule.id) {
+            <mat-option [value]="option.schedule.id">
+              {{ option.tourTitle }} · {{ option.schedule.departureDateTime | date: 'short' }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (form.controls.tourScheduleId.touched && form.controls.tourScheduleId.hasError('required')) {
+          <mat-error>{{ 'activeTour.error.schedule-required' | translate }}</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>{{ 'activeTour.guideId' | translate }}</mat-label>
-        <input matInput type="number" formControlName="guideId" required>
+        <mat-label>{{ 'activeTour.guide' | translate }}</mat-label>
+        <mat-select formControlName="guideId" required>
+          @if (store.tourGuides().length === 0) {
+            <mat-option disabled>{{ 'activeTour.no-guides' | translate }}</mat-option>
+          }
+          @for (guide of store.tourGuides(); track guide.id) {
+            <mat-option [value]="guide.id">
+              {{ guide.user ? guide.user.firstName + ' ' + guide.user.lastName : '#' + guide.userId }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (form.controls.guideId.touched && form.controls.guideId.hasError('required')) {
+          <mat-error>{{ 'activeTour.error.guide-required' | translate }}</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>{{ 'activeTour.startedAt' | translate }}</mat-label>
-        <input matInput formControlName="startedAt" required>
-        @if (form.get('startedAt')?.touched && form.get('startedAt')!.hasError('required')) {
+        <input matInput type="datetime-local" formControlName="startedAt" required>
+        @if (form.controls.startedAt.touched && form.controls.startedAt.hasError('required')) {
           <mat-error>{{ 'activeTour.error.startedAt-required' | translate }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>{{ 'activeTour.finishedAt' | translate }}</mat-label>
-        <input matInput formControlName="finishedAt">
+        <input matInput type="datetime-local" formControlName="finishedAt">
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>{{ 'activeTour.currentLatitude' | translate }}</mat-label>
         <input matInput type="number" step="any" formControlName="currentLatitude">
+        @if (form.controls.currentLatitude.touched && form.controls.currentLatitude.hasError('required')) {
+          <mat-error>{{ 'activeTour.error.coordinates-required' | translate }}</mat-error>
+        } @else if (form.controls.currentLatitude.hasError('min') || form.controls.currentLatitude.hasError('max')) {
+          <mat-error>{{ 'activeTour.error.latitude-range' | translate }}</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>{{ 'activeTour.currentLongitude' | translate }}</mat-label>
         <input matInput type="number" step="any" formControlName="currentLongitude">
+        @if (form.controls.currentLongitude.touched && form.controls.currentLongitude.hasError('required')) {
+          <mat-error>{{ 'activeTour.error.coordinates-required' | translate }}</mat-error>
+        } @else if (form.controls.currentLongitude.hasError('min') || form.controls.currentLongitude.hasError('max')) {
+          <mat-error>{{ 'activeTour.error.longitude-range' | translate }}</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>{{ 'activeTour.status' | translate }}</mat-label>
-        <input matInput formControlName="status" required>
-        @if (form.get('status')?.touched && form.get('status')!.hasError('required')) {
-          <mat-error>{{ 'activeTour.error.status-required' | translate }}</mat-error>
-        }
+        <input matInput formControlName="status" readonly>
       </mat-form-field>
     </div>
+
+    @if (!isEdit) {
+      <p class="coordinate-hint">{{ 'activeTour.coordinates-hint' | translate }}</p>
+    }
+    @if (store.error()) {
+      <p class="form-error" role="alert">{{ store.error() }}</p>
+    }
 
     <div class="form-actions">
       <button mat-button type="button" [routerLink]="['/monitoring/active-tours']">
         {{ 'common.cancel' | translate }}
       </button>
-      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || store.loading()">
         {{ (isEdit ? 'activeTour.update' : 'activeTour.create') | translate }}
       </button>
     </div>

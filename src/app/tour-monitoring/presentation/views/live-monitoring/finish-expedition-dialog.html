@@ -1,0 +1,39 @@
+<div class="confirmation-dialog">
+  <div class="dialog-icon" aria-hidden="true">
+    <mat-icon>{{ step() === 1 ? 'warning_amber' : 'flag' }}</mat-icon>
+  </div>
+
+  @if (step() === 1) {
+    <h2 id="finish-expedition-title">{{ 'liveMonitoring.finish_dialog_title' | translate }}</h2>
+    <p>{{ 'liveMonitoring.finish_dialog_intro' | translate: { tour: data.tourTitle } }}</p>
+    <dl class="guide-summary">
+      <dt>{{ 'liveMonitoring.guide' | translate }}</dt>
+      <dd>{{ data.guideName || ('liveMonitoring.guide_unassigned' | translate) }}</dd>
+    </dl>
+    <p class="dialog-warning">{{ 'liveMonitoring.finish_dialog_warning' | translate }}</p>
+    <div class="dialog-actions">
+      <button mat-button type="button" (click)="cancel()">
+        {{ 'liveMonitoring.cancel' | translate }}
+      </button>
+      <button mat-flat-button type="button" (click)="continueToFinalConfirmation()">
+        {{ 'liveMonitoring.continue' | translate }}
+      </button>
+    </div>
+  } @else {
+    <h2 id="finish-expedition-title">{{ 'liveMonitoring.finish_final_title' | translate }}</h2>
+    <p>{{ 'liveMonitoring.finish_final_message' | translate: { tour: data.tourTitle } }}</p>
+    <label class="final-acknowledgement">
+      <input type="checkbox" [checked]="acknowledged()" (change)="updateAcknowledgement($event)">
+      <span>{{ 'liveMonitoring.finish_acknowledgement' | translate }}</span>
+    </label>
+    <div class="dialog-actions">
+      <button mat-button type="button" (click)="step.set(1)">
+        {{ 'liveMonitoring.back' | translate }}
+      </button>
+      <button mat-flat-button class="finish-button" type="button" [disabled]="!acknowledged()" (click)="finish()">
+        <mat-icon aria-hidden="true">flag</mat-icon>
+        {{ 'liveMonitoring.finish_confirm' | translate }}
+      </button>
+    </div>
+  }
+</div>

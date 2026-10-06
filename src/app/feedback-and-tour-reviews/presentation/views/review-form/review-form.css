@@ -41,7 +41,7 @@
 .title-block {
   flex: 1;
 
-  h3 {
+  h2 {
     margin: 0;
     font-size: clamp(2rem, 2vw + 0.8rem, 3rem);
     line-height: 1.08;

@@ -25,6 +25,11 @@
   box-shadow: 0 12px 24px rgba(47, 107, 79, 0.12);
 }
 
+.tour-card:focus-within {
+  border-color: #9a6528;
+  box-shadow: 0 0 0 2px rgb(154 101 40 / 20%);
+}
+
 mat-card-content {
   flex: 1;
   overflow: hidden;
@@ -48,11 +53,14 @@ mat-card-content {
   font-weight: 700;
   margin: 0 0 8px;
   color: #1f3d2e;
+  overflow-wrap: anywhere;
 }
 
 .description {
   color: #444;
   margin: 0 0 16px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 .info-box {
@@ -74,6 +82,7 @@ mat-card-content {
 .value {
   display: block;
   font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
 .footer-card {
@@ -118,5 +127,4 @@ mat-card-content {
   background-color: #edf6ef;
   border-color: #2f6b4f;
 }
-
 

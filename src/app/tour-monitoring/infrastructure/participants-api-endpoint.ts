@@ -15,6 +15,6 @@ export class ParticipantsApiEndpoint extends BaseApiEndpoint<Participant, Partic
    * @param http - The HttpClient to be used for making API requests.
    */
   constructor(http: HttpClient) {
-    super(http, `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderParticipantsEndpointPath}`, new ParticipantAssembler());
+    super(http, `${environment.participantsApiBaseUrl}${environment.tourmateProviderParticipantsEndpointPath}`, new ParticipantAssembler());
   }
 }

@@ -26,8 +26,8 @@ export class ReviewStore {
     this._loadingSignal.set(true);
 
     forkJoin({
-      reviews: this.http.get<any[]>('http://localhost:3000/reviews'),
-      comments: this.http.get<any[]>('http://localhost:3000/comments')
+      reviews: this.http.get<any[]>('https://6ac570fc54a61668c5f72d4d.mockapi.io/api/v1/reviews'),
+      comments: this.http.get<any[]>('https://6ac570fc54a61668c5f72d4d.mockapi.io/api/v1/comments')
     }).subscribe(({ reviews, comments }) => {
       const merged = reviews.map((rev: any) => {
         const found = comments.find((c: any) => c.reviewId === rev.id || c.id === rev.id);

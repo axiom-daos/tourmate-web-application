@@ -10,7 +10,7 @@ import {environment} from '../../../environments/environment';
 export class TourScheduleApiEndpoint extends BaseApiEndpoint<TourSchedule, TourScheduleResource, TourSchedulesResponse, TourScheduleAssembler> {
 
     constructor(http: HttpClient) {
-      super(http,environment.tourmateProviderApiBaseUrl + environment.tourmateProviderTourSchedulesEndpointPath, new TourScheduleAssembler());
+      super(http,environment.tourSchedulesApiBaseUrl + environment.tourmateProviderTourSchedulesEndpointPath, new TourScheduleAssembler());
     }
 
 }
