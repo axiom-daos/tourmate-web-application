@@ -1,136 +1,132 @@
-<div class="dashboard-container">
-  <!-- Cabecera  -->
+<main class="dashboard-container">
   <header class="dashboard-header">
     <div class="header-info">
       <div class="eyebrow-wrapper">
-        <span class="pulse-dot"></span>
+        <span class="pulse-dot" aria-hidden="true"></span>
         <span class="eyebrow">{{ 'option.monitoring' | translate }}</span>
       </div>
       <h1 class="title">{{ 'activeTours.list-title' | translate }}</h1>
       <p class="subtitle">{{ 'activeTours.list-description' | translate }}</p>
     </div>
 
-    <div class="header-actions">
-      <button mat-flat-button class="btn-glow-primary" (click)="navigateToNew()">
-        <mat-icon>add</mat-icon>
-        {{ 'activeTours.new' | translate }}
-      </button>
-    </div>
+    <button mat-flat-button class="btn-glow-primary" type="button" (click)="navigateToNew()">
+      <mat-icon aria-hidden="true">add</mat-icon>
+      {{ 'activeTours.new' | translate }}
+    </button>
   </header>
 
-  <!-- Panels -->
   @if (store.loading()) {
-  <div class="glass-panel loading-panel" role="status">
-    <mat-spinner diameter="20"></mat-spinner>
-    <span>{{ 'common.loading' | translate }}</span>
-  </div>
+    <div class="glass-panel loading-panel" role="status">
+      <mat-spinner diameter="20"></mat-spinner>
+      <span>{{ 'common.loading' | translate }}</span>
+    </div>
   }
 
   @if (store.error()) {
-  <div class="glass-panel error-panel" role="alert">
-    <mat-icon>warning</mat-icon>
-    <span>{{ store.error() }}</span>
-  </div>
+    <div class="glass-panel error-panel" role="alert">
+      <mat-icon aria-hidden="true">warning</mat-icon>
+      <span>{{ store.error() }}</span>
+    </div>
   }
 
-  <!-- Container -->
-  <section class="data-view-container" [attr.aria-label]="'activeTours.list-title' | translate">
-    <div class="custom-scroll-area" tabindex="0">
+  <section class="active-tour-section" [attr.aria-label]="'activeTours.list-title' | translate">
+    @if (store.activeTours().length > 0) {
+      <div class="list-toolbar">
+        <p class="results-count" aria-live="polite">
+          {{ 'activeTours.card_count' | translate: { count: store.activeTours().length } }}
+        </p>
+        <div class="sort-controls">
+          <label for="active-tour-sort">{{ 'activeTours.sort_by' | translate }}</label>
+          <select id="active-tour-sort" [value]="sortBy()" (change)="changeSort($event)">
+            <option value="id">{{ 'activeTours.sort_id' | translate }}</option>
+            <option value="title">{{ 'activeTours.sort_title' | translate }}</option>
+            <option value="capacity">{{ 'activeTours.sort_capacity' | translate }}</option>
+          </select>
+          <button
+            mat-icon-button
+            type="button"
+            [attr.aria-label]="(sortDirection() === 'asc' ? 'activeTours.sort_descending' : 'activeTours.sort_ascending') | translate"
+            (click)="toggleSortDirection()"
+          >
+            <mat-icon aria-hidden="true">{{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+          </button>
+        </div>
+      </div>
 
-      <table mat-table [dataSource]="dataSource()" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear class="spectacular-table">
-
-        <!-- ID Column -->
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'activeTours.id' | translate }}</th>
-          <td mat-cell *matCellDef="let activeTour" [attr.data-label]="'activeTours.id' | translate">
-            <span class="tour-id-badge">#{{ activeTour.id }}</span>
-          </td>
-        </ng-container>
-
-        <!-- Tour Title Column -->
-        <ng-container matColumnDef="tourTitle">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'activeTours.tourTitle' | translate }}</th>
-          <td mat-cell *matCellDef="let activeTour" [attr.data-label]="'activeTours.tourTitle' | translate">
-            <span class="tour-title-text">{{ activeTour.tourSchedule?.tour?.details?.title || '—' }}</span>
-          </td>
-        </ng-container>
-
-        <!-- Guide Name Column -->
-        <ng-container matColumnDef="guideName">
-          <th mat-header-cell *matHeaderCellDef>{{ 'activeTours.guide' | translate }}</th>
-          <td mat-cell *matCellDef="let activeTour" [attr.data-label]="'activeTours.guide' | translate">
-            <div class="guide-profile">
-              <div class="guide-avatar">
-                <!-- Interpolación segura para evitar cortes en el renderizado -->
-                {{ activeTour.guide?.user?.firstName?.charAt(0)?.toUpperCase() ?? 'G' }}
+      <div class="tour-card-grid">
+        @for (activeTour of visibleTours(); track activeTour.id) {
+          <mat-card appearance="outlined" class="active-tour-card" [attr.aria-label]="'activeTours.card_label' | translate: { id: activeTour.id }">
+            <mat-card-header>
+              <div class="card-leading" aria-hidden="true">
+                {{ guideInitial(activeTour) }}
               </div>
-              <span class="guide-name">
-                {{ activeTour.guide?.user?.firstName || '—' }} {{ activeTour.guide?.user?.lastName || '' }}
+              <div class="card-heading">
+                <span class="tour-id-badge">#{{ activeTour.id }}</span>
+                <mat-card-title>
+                  {{ activeTour.tourSchedule?.tour?.details?.title || '—' }}
+                </mat-card-title>
+              </div>
+              <span class="status-pill" [class.status-finished]="activeTour.status === 'FINISHED'">
+                <span class="status-dot" aria-hidden="true"></span>
+                {{ activeTour.status || '—' }}
               </span>
-            </div>
-          </td>
-        </ng-container>
+            </mat-card-header>
 
-        <!-- Capacity Column -->
-        <ng-container matColumnDef="tourScheduleIdMaxCapacity">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'activeTours.tourScheduleIdMaxCapacity' | translate }}</th>
-          <td mat-cell *matCellDef="let activeTour" [attr.data-label]="'activeTours.tourScheduleIdMaxCapacity' | translate">
-            <div class="capacity-indicator">
-              <mat-icon>people_alt</mat-icon>
-              <span>{{ activeTour.tourSchedule?.maxCapacity || '—' }}</span>
-            </div>
-          </td>
-        </ng-container>
+            <mat-card-content>
+              <div class="card-detail">
+                <mat-icon aria-hidden="true">person</mat-icon>
+                <span>{{ 'activeTours.assigned-guide' | translate }}</span>
+                <strong>{{ guideName(activeTour) }}</strong>
+              </div>
+              <div class="card-detail">
+                <mat-icon aria-hidden="true">people_alt</mat-icon>
+                <span>{{ 'activeTours.tourScheduleIdMaxCapacity' | translate }}</span>
+                <strong>{{ activeTour.tourSchedule?.maxCapacity ?? '—' }}</strong>
+              </div>
+            </mat-card-content>
 
-        <!-- Status Column -->
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef>{{ 'activeTours.status' | translate }}</th>
-          <td mat-cell *matCellDef="let activeTour" [attr.data-label]="'activeTours.status' | translate">
-            <div class="status-pill">
-              <span class="status-dot"></span>
-              {{ activeTour.status || '—' }}
-            </div>
-          </td>
-        </ng-container>
-
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="align-right">{{ 'activeTours.actions' | translate }}</th>
-          <td mat-cell *matCellDef="let activeTour" class="actions-cell">
-            <div class="action-group">
-              <button mat-icon-button class="ghost-btn" matTooltip="Editar" (click)="editActiveTour(activeTour.id)">
-                <mat-icon>edit_note</mat-icon>
+            <mat-card-actions align="end">
+              <button
+                mat-icon-button
+                type="button"
+                [matTooltip]="'activeTours.edit' | translate"
+                [attr.aria-label]="'activeTours.edit' | translate"
+                (click)="editActiveTour(activeTour.id)"
+              >
+                <mat-icon aria-hidden="true">edit_note</mat-icon>
               </button>
-              <button mat-stroked-button class="action-btn" (click)="navigateToLive(activeTour.id)">
-                <mat-icon>cast_connected</mat-icon>
+              <button mat-stroked-button class="action-btn" type="button" (click)="navigateToLive(activeTour.id)">
+                <mat-icon aria-hidden="true">cast_connected</mat-icon>
                 <span>{{ 'activeTours.view' | translate }}</span>
               </button>
-            </div>
-          </td>
-        </ng-container>
-
-        <!-- Files -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="floating-row fade-in-up"></tr>
-      </table>
-
-    </div>
-
-    <!-- Empty State -->
-    @if (!store.loading() && !store.error() && store.activeTours().length === 0) {
-    <div class="empty-state-canvas">
-      <div class="empty-illustration">
-        <mat-icon>explore_off</mat-icon>
-        <div class="orbit"></div>
+            </mat-card-actions>
+          </mat-card>
+        }
       </div>
-      <h3>{{ 'activeTours.empty-title' | translate }}</h3>
-      <p>{{ 'activeTours.empty-description' | translate }}</p>
-    </div>
-    }
 
-    <!-- Paginador -->
-    <div class="paginator-container">
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-    </div>
+      <mat-paginator
+        class="tour-paginator"
+        [length]="sortedTours().length"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[6, 12, 24]"
+        [showFirstLastButtons]="true"
+        [attr.aria-label]="'activeTours.pagination' | translate"
+        (page)="onPageChange($event)"
+      ></mat-paginator>
+    } @else if (!store.loading() && !store.error()) {
+      <div class="empty-state-canvas">
+        <div class="empty-illustration" aria-hidden="true">
+          <mat-icon>explore_off</mat-icon>
+          <div class="orbit"></div>
+        </div>
+        <h2>{{ 'activeTours.empty-title' | translate }}</h2>
+        <p>{{ 'activeTours.empty-description' | translate }}</p>
+        <button mat-flat-button class="btn-glow-primary" type="button" (click)="navigateToNew()">
+          <mat-icon aria-hidden="true">add</mat-icon>
+          {{ 'activeTours.new' | translate }}
+        </button>
+      </div>
+    }
   </section>
-</div>
+</main>

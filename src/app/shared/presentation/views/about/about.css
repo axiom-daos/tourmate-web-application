@@ -14,20 +14,14 @@
 }
 
 .about-mark {
-  display: grid;
-  width: 58px;
-  height: 58px;
+  display: block;
+  width: clamp(88px, 20vw, 112px);
+  height: clamp(88px, 20vw, 112px);
   margin: 0 auto 18px;
-  place-items: center;
-  border-radius: 16px;
-  color: var(--tm-forest);
-  background: #e7eee5;
-}
-
-.about-mark mat-icon {
-  width: 30px;
-  height: 30px;
-  font-size: 30px;
+  border: 1px solid var(--tm-border);
+  border-radius: 22px;
+  background: var(--tm-forest);
+  object-fit: cover;
 }
 
 .eyebrow {
