@@ -1,6 +1,21 @@
-.list-header {
-  display: flex;
+@import '../tour-list/tour-list.css';
+
+.status-tag {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px;
+  min-height: 25px;
+  padding: 0 9px;
+  border-radius: 999px;
+  color: #345344;
+  background: #e0ebdf;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.tour-id-cell {
+  font-weight: bolder;
+}
+
+.tour-max-capacity-cell {
+  font-weight: bolder;
 }

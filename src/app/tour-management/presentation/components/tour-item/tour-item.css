@@ -1,0 +1,122 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+
+}
+
+.tour-card {
+  --verde: #2e6b4f;
+  --verde-claro: #f1f6f2;
+  border-radius: 16px;
+  padding: 8px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #dce9df;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.tour-card:hover {
+  transform: translateY(-4px);
+  border-color: #2f6b4f;
+  box-shadow: 0 12px 24px rgba(47, 107, 79, 0.12);
+}
+
+mat-card-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.tour-id {
+  font-size: 12px;
+  color: #555;
+  font-weight: bolder;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: #1f3d2e;
+}
+
+.description {
+  color: #444;
+  margin: 0 0 16px;
+}
+
+.info-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  background-color: #f4f8f4;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.label {
+  display: block;
+  font-size: 13px;
+  color: #333;
+}
+
+.value {
+  display: block;
+  font-size: 13px;
+}
+
+.footer-card {
+  border-top: 1px solid #e3e8e5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+.btn-edit {
+  flex: 1;
+  --mdc-outlined-button-outline-color: var(--verde);
+  --mdc-outlined-button-label-text-color: var(--verde);
+  --mat-button-outlined-outline-color: var(--verde);
+  --mat-button-outlined-label-text-color: var(--verde);
+
+}
+
+.chip-status {
+  --mat-chip-elevated-container-color: #f1f6f2;
+  --mat-chip-label-text-color: #2e6b4f;
+  --mat-chip-label-text-size: 12px;
+  --mat-chip-outline-color: #2e6b4f;
+  --mat-chip-outline-width: 1px;
+  --mat-chip-container-shape-radius: 999px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.chip-inactive {
+  --mdc-chip-elevated-container-color: #fdf0ee;
+  --mdc-chip-label-text-color: #b3261e;
+  --mat-chip-label-text-size: 12px;
+  --mat-chip-elevated-container-color: #fdf0ee;
+  --mat-chip-label-text-color: #b3261e;
+  --mat-chip-outline-width: 1px;
+  --mat-chip-container-shape-radius: 999px;
+}
+
+.btn-edit:hover {
+  background-color: #edf6ef;
+  border-color: #2f6b4f;
+}
+
+

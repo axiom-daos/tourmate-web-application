@@ -4,8 +4,8 @@ import {ActiveTour} from '../domain/model/active-tour.entity';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ActiveToursApiEndpoint} from './active-tours-api-endpoint';
-import {TourGuidesApiEndpoint} from './tour-guides-api-endpoint';
-import {TourGuide} from '../domain/model/tour-guide.entity';
+import {TourGuide} from '../../iam/domain/model/tour-guide.entity';
+import {IamApi} from '../../iam/infrastructure/iam-api';
 import {ParticipantsApiEndpoint} from './participants-api-endpoint';
 import {Participant} from '../domain/model/participant.entity';
 import {TourSchedule} from '../../tour-management/domain/model/tour-schedule.entity';
@@ -18,7 +18,7 @@ import {TourScheduleApiEndpoint} from '../../tour-management/infrastructure/tour
 export class TourMonitoringApi extends BaseApi {
   private readonly http = inject(HttpClient);
   private readonly activeToursEndpoint = new ActiveToursApiEndpoint(this.http);
-  private readonly tourGuidesEndpoint = new TourGuidesApiEndpoint(this.http);
+  private readonly iamApi = inject(IamApi);
   private readonly tourSchedulesEndpoint = new TourScheduleApiEndpoint(this.http);
   private readonly participantsEndpoint = new ParticipantsApiEndpoint(this.http);
 
@@ -70,7 +70,7 @@ export class TourMonitoringApi extends BaseApi {
    * @returns Stream with the tourGuide collection.
    */
   getTourGuides = (): Observable<TourGuide[]> =>
-    this.tourGuidesEndpoint.getAll();
+    this.iamApi.getTourGuides();
 
   /**
    * Retrieves a single tourGuide by ID.
@@ -78,7 +78,7 @@ export class TourMonitoringApi extends BaseApi {
    * @returns An Observable of the TourGuide object.
    */
   getTourGuide = (id: number): Observable<TourGuide> =>
-    this.tourGuidesEndpoint.getById(id);
+    this.iamApi.getTourGuide(id);
 
   /**
    * Creates a new tourGuide.
@@ -86,7 +86,7 @@ export class TourMonitoringApi extends BaseApi {
    * @returns An Observable of the created TourGuide object.
    */
   createTourGuide = (tourGuide: TourGuide): Observable<TourGuide> =>
-    this.tourGuidesEndpoint.create(tourGuide);
+    this.iamApi.createTourGuide(tourGuide);
 
   /**
    * Updates an existing tourGuide.
@@ -94,7 +94,7 @@ export class TourMonitoringApi extends BaseApi {
    * @returns An Observable of the updated TourGuide object.
    */
   updateTourGuide = (tourGuide: TourGuide): Observable<TourGuide> =>
-    this.tourGuidesEndpoint.update(tourGuide, tourGuide.id);
+    this.iamApi.updateTourGuide(tourGuide);
 
   /**
    * Deletes a tourGuide by ID.
@@ -102,7 +102,7 @@ export class TourMonitoringApi extends BaseApi {
    * @returns An Observable of void.
    */
   deleteTourGuide = (id: number): Observable<void> =>
-    this.tourGuidesEndpoint.delete(id);
+    this.iamApi.deleteTourGuide(id);
 
 
 

@@ -1,0 +1,27 @@
+:host {
+  display: inline-flex;
+}
+
+:host ::ng-deep .mat-button-toggle-group {
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 5%);
+}
+
+:host ::ng-deep .mat-button-toggle {
+  color: #d9e3dc;
+  background: transparent;
+  font-size: 0.72rem;
+}
+
+:host ::ng-deep .mat-button-toggle-checked {
+  color: var(--tm-forest);
+  background: #dce7dc;
+}
+
+:host ::ng-deep .mat-button-toggle-label-content {
+  min-width: 42px;
+  padding: 0 10px;
+  line-height: 32px;
+}

@@ -6,6 +6,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { DatePipe, LowerCasePipe, NgIf } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IncidentStore } from '../../../application/incident.store';
 import { Incident } from '../../../domain/model/aggregates/incident.entity';
@@ -20,11 +21,12 @@ import { Incident } from '../../../domain/model/aggregates/incident.entity';
     MatTableModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     MatPaginatorModule,
     MatSortModule,
     DatePipe,
     LowerCasePipe,
-    TranslatePipe,
+    TranslatePipe
   ],
   templateUrl: './incident-list.html',
   styleUrl: './incident-list.css',

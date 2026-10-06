@@ -1,4 +1,55 @@
-<div class="container-with-spacing">
-  <h1>{{ 'home.title' | translate }}</h1>
-  <p>{{ 'home.content' | translate }}</p>
-</div>
+<section class="welcome-panel" aria-labelledby="welcome-title">
+  <div class="welcome-copy">
+    <span class="eyebrow">{{ 'shell.platform' | translate }}</span>
+    <h2 id="welcome-title">{{ 'home.title' | translate }}</h2>
+    <p>{{ 'home.content' | translate }}</p>
+  </div>
+  <div class="welcome-illustration" aria-hidden="true">
+    <mat-icon>landscape</mat-icon>
+    <span class="illustration-orbit"></span>
+  </div>
+</section>
+
+<section class="workspace-section" aria-labelledby="workspace-title">
+  <div class="section-heading">
+    <div>
+      <h2 id="workspace-title">{{ 'home.workspace_title' | translate }}</h2>
+      <p>{{ 'home.workspace_hint' | translate }}</p>
+    </div>
+  </div>
+
+  <div class="workspace-grid">
+    <a class="workspace-card" routerLink="/management/tours">
+      <span class="workspace-icon"><mat-icon>terrain</mat-icon></span>
+      <span class="workspace-card-copy">
+        <strong>{{ 'home.tours_title' | translate }}</strong>
+        <span>{{ 'home.tours_description' | translate }}</span>
+      </span>
+      <span class="workspace-link">{{ 'home.open_module' | translate }} <mat-icon>arrow_forward</mat-icon></span>
+    </a>
+    <a class="workspace-card" routerLink="/monitoring">
+      <span class="workspace-icon"><mat-icon>sensors</mat-icon></span>
+      <span class="workspace-card-copy">
+        <strong>{{ 'home.monitoring_title' | translate }}</strong>
+        <span>{{ 'home.monitoring_description' | translate }}</span>
+      </span>
+      <span class="workspace-link">{{ 'home.open_module' | translate }} <mat-icon>arrow_forward</mat-icon></span>
+    </a>
+    <a class="workspace-card" routerLink="/safety-and-incident-management">
+      <span class="workspace-icon workspace-icon-alert"><mat-icon>emergency</mat-icon></span>
+      <span class="workspace-card-copy">
+        <strong>{{ 'home.incidents_title' | translate }}</strong>
+        <span>{{ 'home.incidents_description' | translate }}</span>
+      </span>
+      <span class="workspace-link">{{ 'home.open_module' | translate }} <mat-icon>arrow_forward</mat-icon></span>
+    </a>
+    <a class="workspace-card" routerLink="/subscriptions">
+      <span class="workspace-icon"><mat-icon>credit_card</mat-icon></span>
+      <span class="workspace-card-copy">
+        <strong>{{ 'home.billing_title' | translate }}</strong>
+        <span>{{ 'home.billing_description' | translate }}</span>
+      </span>
+      <span class="workspace-link">{{ 'home.open_module' | translate }} <mat-icon>arrow_forward</mat-icon></span>
+    </a>
+  </div>
+</section>

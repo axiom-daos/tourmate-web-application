@@ -1,11 +1,58 @@
-import {computed, inject, Injectable, Signal, signal} from '@angular/core';
+import {computed, DestroyRef, inject, Injectable, Signal, signal} from '@angular/core';
+import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
+import {EMPTY, catchError, distinctUntilChanged, finalize, retry, switchMap, tap} from 'rxjs';
 import {ActiveTour} from '../domain/model/active-tour.entity';
 import {TourMonitoringApi} from '../infrastructure/tour-monitoring-api';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {retry} from 'rxjs';
-import {TourGuide} from '../domain/model/tour-guide.entity';
+import {TourGuide} from '../../iam/domain/model/tour-guide.entity';
 import {Participant} from '../domain/model/participant.entity';
 import {TourSchedule} from '../../tour-management/domain/model/tour-schedule.entity';
+import {IamApi} from '../../iam/infrastructure/iam-api';
+import {User} from '../../iam/domain/model/user.entity';
+import {Checkpoint} from '../../tour-management/domain/model/checkpoint.entity';
+import {Tour} from '../../tour-management/domain/model/tour.entity';
+import {TourManagementApi} from '../../tour-management/infrastructure/tour-management-api';
+import {IncidentStatus} from '../../safety-and-incident-management/domain/model/value-object/incident-status';
+import {IncidentStore} from '../../safety-and-incident-management/application/incident.store';
+
+export interface MapPoint {
+  x: number;
+  y: number;
+}
+
+export interface PositionedCheckpoint extends MapPoint {
+  checkpoint: Checkpoint;
+}
+
+export interface PositionedIncident extends MapPoint {
+  id: number;
+  reporterName: string;
+}
+
+export function projectCoordinate(
+  latitude: number,
+  longitude: number,
+  coordinates: Array<{latitude: number; longitude: number}>,
+): MapPoint {
+  if (coordinates.length === 0) {
+    return {x: 500, y: 280};
+  }
+
+  const longitudes = coordinates.map(coordinate => coordinate.longitude);
+  const latitudes = coordinates.map(coordinate => coordinate.latitude);
+  const longitudeSpan = Math.max(...longitudes) - Math.min(...longitudes) || 0.01;
+  const latitudeSpan = Math.max(...latitudes) - Math.min(...latitudes) || 0.01;
+  const longitudePadding = longitudeSpan * 0.12;
+  const latitudePadding = latitudeSpan * 0.12;
+  const minLongitude = Math.min(...longitudes) - longitudePadding;
+  const maxLongitude = Math.max(...longitudes) + longitudePadding;
+  const minLatitude = Math.min(...latitudes) - latitudePadding;
+  const maxLatitude = Math.max(...latitudes) + latitudePadding;
+
+  return {
+    x: 85 + ((longitude - minLongitude) / (maxLongitude - minLongitude)) * 830,
+    y: 410 - ((latitude - minLatitude) / (maxLatitude - minLatitude)) * 300,
+  };
+}
 
 /**
  * Holds tourMonitoring application state and coordinates activeTour application layer behavior.
@@ -15,6 +62,10 @@ import {TourSchedule} from '../../tour-management/domain/model/tour-schedule.ent
 })
 export class TourMonitoringStore {
   private readonly tourMonitoringApi = inject(TourMonitoringApi);
+  private readonly tourManagementApi = inject(TourManagementApi);
+  private readonly iamApi = inject(IamApi);
+  private readonly incidentStore = inject(IncidentStore);
+  private readonly destroyRef = inject(DestroyRef);
 
 
   readonly activeTourCount = computed(() => this.activeTours().length);
@@ -35,6 +86,153 @@ export class TourMonitoringStore {
   private readonly participantsSignal = signal<Participant[]>([]);
   readonly participants = this.participantsSignal.asReadonly();
 
+  private readonly toursSignal = signal<Tour[]>([]);
+  readonly tours = this.toursSignal.asReadonly();
+
+  private readonly usersSignal = signal<User[]>([]);
+  readonly users = this.usersSignal.asReadonly();
+
+  private readonly checkpointsSignal = signal<Checkpoint[]>([]);
+  readonly checkpoints = this.checkpointsSignal.asReadonly();
+
+  private readonly checkpointLoadingSignal = signal(false);
+  readonly checkpointLoading = this.checkpointLoadingSignal.asReadonly();
+
+  readonly activeTourId = signal<number | null>(null);
+  readonly selectedActiveTour = computed(() => {
+    const activeTours = this.activeTours();
+    const selectedId = this.activeTourId();
+    if (selectedId !== null) {
+      return activeTours.find(tour => tour.id === selectedId) ?? null;
+    }
+    return activeTours.find(tour => tour.status === 'IN_PROGRESS') ??
+      activeTours[0] ??
+      null;
+  });
+
+  readonly selectedSchedule = computed(() => {
+    const scheduleId = this.selectedActiveTour()?.tourScheduleId;
+    return this.tourSchedules().find(schedule => schedule.id === scheduleId) ?? null;
+  });
+
+  readonly selectedTour = computed(() => {
+    const tourId = this.selectedSchedule()?.tourId;
+    return this.tours().find(tour => tour.id === tourId) ?? null;
+  });
+
+  readonly activeExpeditionOptions = computed(() =>
+    this.activeTours()
+      .filter(activeTour =>
+        activeTour.status === 'IN_PROGRESS' || activeTour.id === this.activeTourId(),
+      )
+      .map(activeTour => {
+        const schedule = this.tourSchedules().find(
+          candidate => candidate.id === activeTour.tourScheduleId,
+        );
+        const tour = this.tours().find(candidate => candidate.id === schedule?.tourId);
+        return {
+          activeTour,
+          title: tour?.details.title ?? `#${activeTour.id}`,
+        };
+      }),
+  );
+
+  readonly routeCheckpoints = computed(() =>
+    [...this.checkpoints()].sort((left, right) => left.orderIndex - right.orderIndex),
+  );
+
+  readonly coordinates = computed(() => {
+    const points = this.routeCheckpoints().map(checkpoint => ({
+      latitude: checkpoint.latitude,
+      longitude: checkpoint.longitude,
+    }));
+    const activeTour = this.selectedActiveTour();
+    if (activeTour) {
+      points.push({
+        latitude: activeTour.currentLatitude,
+        longitude: activeTour.currentLongitude,
+      });
+    }
+    for (const incident of this.selectedIncidents()) {
+      points.push({latitude: incident.latitude, longitude: incident.longitude});
+    }
+    return points;
+  });
+
+  readonly positionedCheckpoints = computed<PositionedCheckpoint[]>(() =>
+    this.routeCheckpoints().map(checkpoint => ({
+      checkpoint,
+      ...projectCoordinate(checkpoint.latitude, checkpoint.longitude, this.coordinates()),
+    })),
+  );
+
+  readonly routePoints = computed(() =>
+    this.positionedCheckpoints()
+      .map(({x, y}) => `${x},${y}`)
+      .join(' '),
+  );
+
+  readonly currentPosition = computed<MapPoint | null>(() => {
+    const activeTour = this.selectedActiveTour();
+    return activeTour
+      ? projectCoordinate(activeTour.currentLatitude, activeTour.currentLongitude, this.coordinates())
+      : null;
+  });
+
+  readonly participantsForTour = computed(() => {
+    const scheduleId = this.selectedActiveTour()?.tourScheduleId;
+    return scheduleId
+      ? this.participants().filter(participant => participant.tourScheduleId === scheduleId)
+      : [];
+  });
+
+  readonly participantCards = computed(() => {
+    const usersById = new Map(this.users().map(user => [user.id, user]));
+    return this.participantsForTour().map(participant => ({
+      participant,
+      user: usersById.get(participant.userId) ?? null,
+      displayName: this.displayName(usersById.get(participant.userId), participant.userId),
+    }));
+  });
+
+  readonly currentGuide = computed(() => {
+    const guideId = this.selectedActiveTour()?.guideId;
+    return this.tourGuides().find(guide => guide.id === guideId) ?? null;
+  });
+
+  readonly guideName = computed(() => {
+    const guide = this.currentGuide();
+    return guide
+      ? this.displayName(this.users().find(user => user.id === guide.userId), guide.userId)
+      : null;
+  });
+
+  readonly selectedIncidents = computed(() => {
+    const activeTourId = this.selectedActiveTour()?.id;
+    return this.incidentStore.incidents().filter(
+      incident =>
+        incident.activeTourId === activeTourId &&
+        incident.status !== IncidentStatus.RESOLVED &&
+        incident.status !== IncidentStatus.CLOSED,
+    );
+  });
+
+  readonly positionedIncidents = computed<PositionedIncident[]>(() => {
+    const usersById = new Map(this.users().map(user => [user.id, user]));
+    return this.selectedIncidents().map(incident => ({
+      id: incident.id,
+      reporterName: this.displayName(usersById.get(incident.reportedByUserId), incident.reportedByUserId),
+      ...projectCoordinate(incident.latitude, incident.longitude, this.coordinates()),
+    }));
+  });
+
+  readonly alertCount = computed(() =>
+    this.incidentStore.incidents().filter(
+      incident =>
+        incident.status !== IncidentStatus.RESOLVED &&
+        incident.status !== IncidentStatus.CLOSED,
+    ).length,
+  );
 
 
 
@@ -56,11 +254,76 @@ export class TourMonitoringStore {
    * Creates an instance of TourMonitoringStore and loads initial data.
    */
   constructor() {
-    this.loadTourSchedules();
+
     this.loadActiveTours();
     this.loadTourGuides();
-
+    this.loadTourSchedules();
     this.loadParticipants();
+    this.loadUsers();
+    this.loadTours();
+    this.watchRouteCheckpoints();
+  }
+
+  selectActiveTour(id: number | null): void {
+    this.activeTourId.set(id);
+  }
+
+  private loadUsers(): void {
+    this.iamApi.getUsers().pipe(
+      retry(1),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: users => {
+        this.usersSignal.set(users);
+        this.assignUsersToTourGuides();
+      },
+      error: error => this.errorSignal.set(this.formatError(error, 'Unable to load expedition data')),
+    });
+  }
+
+  private loadTours(): void {
+    this.tourManagementApi.getTours().pipe(
+      retry(1),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: tours => {
+        this.toursSignal.set(tours);
+        this.assignToursToTourSchedules();
+      },
+      error: error => this.errorSignal.set(this.formatError(error, 'Unable to load expedition data')),
+    });
+  }
+
+  private watchRouteCheckpoints(): void {
+    toObservable(this.selectedTour)
+      .pipe(
+        distinctUntilChanged((previous, current) => previous?.id === current?.id),
+        switchMap(tour => {
+          if (!tour) {
+            this.checkpointsSignal.set([]);
+            this.checkpointLoadingSignal.set(false);
+            return EMPTY;
+          }
+
+          this.checkpointLoadingSignal.set(true);
+          return this.tourManagementApi.getCheckpointsForTour(tour.id).pipe(
+            retry(1),
+            tap(() => this.errorSignal.set(null)),
+            catchError(error => {
+              this.errorSignal.set(this.formatError(error, 'Unable to load route checkpoints'));
+              this.checkpointsSignal.set([]);
+              return EMPTY;
+            }),
+            finalize(() => this.checkpointLoadingSignal.set(false)),
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(checkpoints => this.checkpointsSignal.set(checkpoints));
+  }
+
+  private displayName(user: User | undefined, userId: number): string {
+    return user ? `${user.firstName} ${user.lastName}` : `#${userId}`;
   }
 
   /**
@@ -148,6 +411,7 @@ export class TourMonitoringStore {
         this.loadingSignal.set(false);
         this.errorSignal.set(null);
         this.assignTourSchedulesToActiveTours();
+        this.assignTourGuidesToActiveTours();
       },
       error: err => {
         this.errorSignal.set(this.formatError(err, 'Failed to load activeTours'));
@@ -161,6 +425,7 @@ export class TourMonitoringStore {
   getTourGuideById = (id: number): Signal<TourGuide | undefined> => {
     return computed(() => id ? this.tourGuides().find(c => c.id === id) : undefined);
   }
+
   /**
    * adds a new tourGuide.
    * @param tourGuide - The tourGuide to add.
@@ -231,9 +496,8 @@ export class TourMonitoringStore {
         this.tourGuidesSignal.set(tourGuides);
         this.loadingSignal.set(false);
         this.errorSignal.set(null);
-
-
-
+        this.assignUsersToTourGuides();
+        this.assignTourGuidesToActiveTours();
       },
       error: err => {
         this.errorSignal.set(this.formatError(err, 'Failed to load tourGuides'));
@@ -315,7 +579,8 @@ export class TourMonitoringStore {
       next: tourSchedules => {
         console.log(tourSchedules);
         this.tourSchedulesSignal.set(tourSchedules);
-        //this.assignTourSchedulesToActiveTours();
+        this.assignToursToTourSchedules();
+        this.assignTourSchedulesToActiveTours();
         //this.assignTourSchedulesToParticipants();
         this.loadingSignal.set(false);
         this.errorSignal.set(null);
@@ -343,8 +608,8 @@ export class TourMonitoringStore {
     this.errorSignal.set(null);
     this.tourMonitoringApi.createParticipant(participant).pipe(retry(2)).subscribe({
       next: createdParticipant => {
-        createdParticipant = this.assignTourScheduleToParticipant(participant);
-        this.participantsSignal.update(participants => [...participants, createdParticipant]);
+        const assignedParticipant = this.assignTourScheduleToParticipant(createdParticipant);
+        this.participantsSignal.update(participants => [...participants, assignedParticipant]);
         this.loadingSignal.set(false);
       },
       error: err => {
@@ -428,9 +693,44 @@ export class TourMonitoringStore {
     this.activeToursSignal.update(activeTours => activeTours.map(activeTour => this.assignTourScheduleToActiveTour(activeTour)));
   };
 
+  private assignToursToTourSchedules = (): void => {
+    this.tourSchedulesSignal.update(tourSchedules =>
+      tourSchedules.map(tourSchedule => {
+        tourSchedule.tour = this.tours().find(tour => tour.id === tourSchedule.tourId) ?? null;
+        return tourSchedule;
+      }),
+    );
+    this.assignTourSchedulesToActiveTours();
+  };
+
   private assignTourScheduleToActiveTour = (activeTour: ActiveTour): ActiveTour => {
     const tourScheduleId = activeTour.tourScheduleId ?? 0;
     activeTour.tourSchedule = tourScheduleId ? this.getTourScheduleById(tourScheduleId)() ?? null : null;
+    return activeTour;
+  }
+
+  private assignTourGuidesToActiveTours = (): void => {
+    this.activeToursSignal.update(activeTours =>
+      activeTours.map(activeTour => this.assignTourGuideToActiveTour(activeTour)),
+    );
+  };
+
+  private assignUsersToTourGuides = (): void => {
+    this.tourGuidesSignal.update(tourGuides =>
+      tourGuides.map(tourGuide => this.assignUserToTourGuide(tourGuide)),
+    );
+    this.assignTourGuidesToActiveTours();
+  };
+
+  private assignUserToTourGuide = (tourGuide: TourGuide): TourGuide => {
+    const user = this.users().find(candidate => candidate.id === tourGuide.userId) ?? null;
+    tourGuide.user = user;
+    return tourGuide;
+  };
+
+  private assignTourGuideToActiveTour = (activeTour: ActiveTour): ActiveTour => {
+    const tourGuideId = activeTour.guideId ?? 0;
+    activeTour.guide = tourGuideId ? this.getTourGuideById(tourGuideId)() ?? null : null;
     return activeTour;
   }
 

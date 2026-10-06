@@ -648,18 +648,6 @@
   ],
   "participants": [
     {
-      "id": 1,
-      "tourScheduleId": 1,
-      "userId": 14,
-      "joinedAt": "2026-09-28T10:45:00"
-    },
-    {
-      "id": 2,
-      "tourScheduleId": 1,
-      "userId": 13,
-      "joinedAt": "2026-09-20T12:00:00"
-    },
-    {
       "id": 3,
       "tourScheduleId": 2,
       "userId": 14,
@@ -772,12 +760,6 @@
       "tourScheduleId": 7,
       "userId": 10,
       "joinedAt": "2026-09-03T17:30:00"
-    },
-    {
-      "id": 22,
-      "tourScheduleId": 7,
-      "userId": 16,
-      "joinedAt": "2026-09-24T16:15:00"
     },
     {
       "id": 23,
@@ -922,6 +904,30 @@
       "tourScheduleId": 16,
       "userId": 15,
       "joinedAt": "2026-09-02T20:45:00"
+    },
+    {
+      "id": 47,
+      "userId": 13,
+      "joinedAt": "2026-10-05T04:30:32.368Z",
+      "tourScheduleId": 7
+    },
+    {
+      "id": 48,
+      "userId": 9,
+      "joinedAt": "2026-10-05T04:30:45.888Z",
+      "tourScheduleId": 1
+    },
+    {
+      "id": 49,
+      "userId": 16,
+      "joinedAt": "2026-10-05T04:32:35.888Z",
+      "tourScheduleId": 1
+    },
+    {
+      "id": 50,
+      "userId": 11,
+      "joinedAt": "2026-10-05T04:33:01.489Z",
+      "tourScheduleId": 1
     }
   ],
   "active_tours": [
@@ -959,13 +965,14 @@
   "incidents": [
     {
       "id": 1,
+      "uuid": "",
       "activeTourId": 1,
       "reportedByUserId": 9,
       "description": "Un participante se torció el tobillo en el sendero.",
       "latitude": -13.156,
       "longitude": -72.526,
       "reportedAt": "2026-10-01T09:20:00",
-      "status": "OPEN"
+      "status": "RESOLVED"
     },
     {
       "id": 2,

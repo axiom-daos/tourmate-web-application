@@ -1,0 +1,50 @@
+<mat-card class="tour-card">
+  <mat-card-content>
+
+    <div class="top-row">
+      @if (tour().status === 'ACTIVE') {
+        <mat-chip class="chip-status">{{  tour().status }}</mat-chip>
+      } @else {
+        <mat-chip class="chip-inactive">{{  tour().status }}</mat-chip>
+      }
+      <span class="tour-id">{{ tour().id }}</span>
+    </div>
+
+    <h2 class="title">{{ tour().details.title }}</h2>
+    <p class="description">{{ tour().details.description }}</p>
+
+    <div class="info-box">
+      <div>
+        <span class="label">{{ 'tours.agency_id' | translate  }}</span>
+        <span class="value">{{  tour().agencyId }}</span>
+      </div>
+
+      <div>
+        <span class="label">{{ 'tours.duration' | translate  }}</span>
+        <span class="value">{{  tour().details.duration }}</span>
+      </div>
+
+      <div>
+        <span class="label">{{ 'tours.difficulty' | translate  }}</span>
+        <span class="value">{{  tour().details.difficulty | lowercase }}</span>
+      </div>
+
+      <div>
+        <span class="label">{{ 'tours.price' | translate  }}</span>
+        <span class="value">{{ tour().details.price.amount }} {{ tour().details.price.currency }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="footer-card">
+
+    <button mat-stroked-button class="btn-edit" (click)="editTour.emit()">
+      <mat-icon>edit</mat-icon>
+      {{ 'tours.edit' | translate }}
+    </button>
+
+    <button mat-icon-button (click)="deleteTour.emit()">
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

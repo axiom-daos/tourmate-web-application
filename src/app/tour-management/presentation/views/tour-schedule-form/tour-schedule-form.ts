@@ -5,7 +5,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInput} from '@angular/material/input';
 import {TranslatePipe} from '@ngx-translate/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {TourManagementStore} from '../../../application/tour-management-store';
 import {TourSchedule} from '../../../domain/model/tour-schedule.entity';
 
@@ -16,7 +16,8 @@ import {TourSchedule} from '../../../domain/model/tour-schedule.entity';
     MatSelectModule,
     MatButtonModule,
     MatInput,
-    TranslatePipe
+    TranslatePipe,
+    RouterLink
   ],
   selector: 'app-tour-schedule-form',
   styleUrl: './tour-schedule-form.css',
@@ -30,9 +31,9 @@ export class TourScheduleForm {
   #store: TourManagementStore = inject(TourManagementStore)
 
   protected form = this.#fb.group({
-    tourId: new FormControl<number | null>(null),
+    tourId: new FormControl<number | null>(null, { validators: [Validators.required] }),
     departureDateTime: new FormControl<string>('', { nonNullable: true, validators: [Validators.required]}),
-    maxCapacity: new FormControl<number | null>(null),
+    maxCapacity: new FormControl<number | null>(null, { validators: [Validators.required] }),
     status: new FormControl<string>('', { nonNullable: true, validators: [Validators.required]}),
   })
 
@@ -66,6 +67,7 @@ export class TourScheduleForm {
   }
 
   protected submit(): void  {
+    if (this.form.invalid) return;
 
     let formattedDateTime = this.form.value.departureDateTime
     if(formattedDateTime && formattedDateTime.length === 16) {

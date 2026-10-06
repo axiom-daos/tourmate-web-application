@@ -1,10 +1,9 @@
 import {Component, inject} from '@angular/core';
 import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {TourMonitoringStore} from '../../../application/tour-monitoring.store';
 import {ActiveTour} from '../../../domain/model/active-tour.entity';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInput} from '@angular/material/input';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -17,10 +16,10 @@ import {TranslatePipe} from '@ngx-translate/core';
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatSelectModule,
     MatButtonModule,
     MatInput,
-    TranslatePipe
+    TranslatePipe,
+    RouterLink
   ],
   templateUrl: './active-tour-form.html',
   styleUrl: './active-tour-form.css'
@@ -36,13 +35,13 @@ export class ActiveTourForm {
    */
   form = this.fb.group({
 
-    tourScheduleId: new FormControl<number | null>(null),
-    guideId: new FormControl<number | null>(null),
+    tourScheduleId: new FormControl<number | null>(null, { validators: [Validators.required] }),
+    guideId: new FormControl<number | null>(null, { validators: [Validators.required] }),
     status: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
     currentLatitude: new FormControl<number | null>(null),
     currentLongitude: new FormControl<number | null>(null),
     startedAt: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-    finishedAt: new FormControl<string| null>('', {  validators: [Validators.required] }),
+    finishedAt: new FormControl<string | null>(null),
   });
 
 
@@ -90,13 +89,13 @@ export class ActiveTourForm {
     if (this.form.invalid) return;
     const activeTour: ActiveTour = new ActiveTour({
       id: this.activeTourId ?? 0,
-      tourScheduleId: this.activeTourId ?? 0,
-      guideId: this.form.value.guideId ?? 0,
+      tourScheduleId: this.form.value.tourScheduleId!,
+      guideId: this.form.value.guideId!,
       status: this.form.value.status!,
       currentLatitude: this.form.value.currentLatitude!,
       currentLongitude: this.form.value.currentLongitude!,
       startedAt: this.form.value.startedAt!,
-      finishedAt: this.form.value.finishedAt!
+      finishedAt: this.form.value.finishedAt ?? ''
 
     });
 
@@ -106,7 +105,7 @@ export class ActiveTourForm {
       this.store.addActiveTour(activeTour);
     }
 
-    this.router.navigate(['tour-monitoring/active-tours']).then();
+    this.router.navigate(['/monitoring/active-tours']).then();
   }
 
 }

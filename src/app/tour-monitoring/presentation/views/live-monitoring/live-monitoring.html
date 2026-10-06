@@ -1,0 +1,260 @@
+<section class="monitoring-page">
+  <header class="monitoring-toolbar">
+    <label class="route-picker">
+      <span>{{ 'liveMonitoring.route_label' | translate }}</span>
+      <select
+        [ngModel]="store.selectedActiveTour()?.id ?? ''"
+        [attr.aria-label]="'liveMonitoring.select_expedition' | translate"
+        (ngModelChange)="selectExpedition($event)"
+      >
+        @for (option of store.activeExpeditionOptions(); track option.activeTour.id) {
+          <option [value]="option.activeTour.id">
+            {{ option.title }}
+          </option>
+        }
+        @if (store.activeExpeditionOptions().length === 0) {
+          <option value="">{{ 'liveMonitoring.no_active_expeditions' | translate }}</option>
+        }
+      </select>
+    </label>
+
+    <div class="toolbar-status">
+      <span class="connection-badge">
+        <span class="status-dot" aria-hidden="true"></span>
+        {{ 'liveMonitoring.expedition_active' | translate }}
+      </span>
+      <a
+        class="alert-count"
+        routerLink="/safety-and-incident-management/incidents"
+        [attr.aria-label]="'liveMonitoring.open_alerts' | translate: { count: store.alertCount() }"
+      >
+        <mat-icon aria-hidden="true">warning</mat-icon>
+        {{ 'liveMonitoring.alerts' | translate: { count: store.alertCount() } }}
+      </a>
+      <span class="base-label">{{ 'liveMonitoring.base_name' | translate }}</span>
+    </div>
+  </header>
+
+  @if (store.error()) {
+    <div class="error-banner" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <span>{{ store.error() }}</span>
+    </div>
+  }
+
+  @if (store.loading() && !store.selectedActiveTour()) {
+    <div class="loading-state" role="status">
+      <mat-spinner diameter="32"></mat-spinner>
+      <span>{{ 'common.loading' | translate }}</span>
+    </div>
+  } @else if (store.selectedActiveTour(); as expedition) {
+    <div class="monitoring-grid">
+      <section class="map-panel" [attr.aria-label]="'liveMonitoring.map_panel' | translate">
+        <div class="map-topline">
+          <div class="topography-label">
+            <span>{{ 'liveMonitoring.topography' | translate }}</span>
+            <strong>{{ store.selectedTour()?.details?.title ?? ('liveMonitoring.route_unavailable' | translate) }}</strong>
+          </div>
+          <div class="gps-label">
+            <span>GPS</span>
+            {{ coordinates(expedition.currentLatitude, expedition.currentLongitude) }}
+          </div>
+        </div>
+
+        <div class="map-canvas">
+          <svg
+            class="route-map"
+            viewBox="0 0 1000 560"
+            role="img"
+            [attr.aria-label]="'liveMonitoring.map_description' | translate: { route: store.selectedTour()?.details?.title ?? '' }"
+          >
+            <title>{{ 'liveMonitoring.map_title' | translate }}</title>
+            <desc>{{ 'liveMonitoring.map_description' | translate: { route: store.selectedTour()?.details?.title ?? '' } }}</desc>
+            <g class="contours" aria-hidden="true">
+              <path d="M-30 145 C150 75 245 220 425 152 S760 85 1035 158" />
+              <path d="M-30 238 C175 165 260 304 455 240 S775 175 1035 246" />
+              <path d="M-30 334 C180 260 290 402 475 335 S790 270 1035 344" />
+              <path d="M-30 430 C180 355 280 492 485 430 S795 365 1035 438" />
+            </g>
+
+            <g [attr.transform]="'translate(500 280) scale(' + zoom() + ') translate(-500 -280)'">
+              @if (store.routePoints()) {
+                <polyline class="trail-route" [attr.points]="store.routePoints()" />
+              } @else {
+                <text class="map-empty-label" x="500" y="280" text-anchor="middle">
+                  {{ 'liveMonitoring.checkpoints_empty' | translate }}
+                </text>
+              }
+
+              @for (point of store.positionedCheckpoints(); track point.checkpoint.id; let index = $index) {
+                <g class="checkpoint-marker">
+                  <circle class="checkpoint-halo" [attr.cx]="point.x" [attr.cy]="point.y" r="12" />
+                  <circle class="checkpoint-dot" [attr.cx]="point.x" [attr.cy]="point.y" r="6" />
+                  <text class="checkpoint-label" [attr.x]="point.x + 15" [attr.y]="point.y - 12">
+                    {{ point.checkpoint.name }}
+                  </text>
+                  <text class="checkpoint-number" [attr.x]="point.x" [attr.y]="point.y + 3">
+                    {{ index + 1 }}
+                  </text>
+                </g>
+              }
+
+              @for (incident of store.positionedIncidents(); track incident.id) {
+                <g class="incident-marker">
+                  <circle class="incident-halo" [attr.cx]="incident.x" [attr.cy]="incident.y" r="14" />
+                  <circle class="incident-dot" [attr.cx]="incident.x" [attr.cy]="incident.y" r="7" />
+                  <text class="incident-label" [attr.x]="incident.x + 14" [attr.y]="incident.y + 24">
+                    {{ 'liveMonitoring.incident_marker' | translate: { id: incident.id } }}
+                  </text>
+                </g>
+              }
+
+              @if (store.currentPosition(); as position) {
+                <g class="expedition-marker">
+                  <circle class="expedition-halo" [attr.cx]="position.x" [attr.cy]="position.y" r="17" />
+                  <circle class="expedition-dot" [attr.cx]="position.x" [attr.cy]="position.y" r="8" />
+                  <text class="expedition-label" [attr.x]="position.x + 18" [attr.y]="position.y - 15">
+                    {{ 'liveMonitoring.current_position' | translate }}
+                  </text>
+                </g>
+              }
+            </g>
+          </svg>
+
+          <div class="zoom-control" [attr.aria-label]="'liveMonitoring.map_zoom' | translate">
+            <button mat-icon-button type="button" [attr.aria-label]="'liveMonitoring.zoom_in' | translate" (click)="zoomIn()">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button mat-icon-button type="button" [attr.aria-label]="'liveMonitoring.zoom_out' | translate" (click)="zoomOut()">
+              <mat-icon>remove</mat-icon>
+            </button>
+          </div>
+
+          @if (store.checkpointLoading()) {
+            <span class="map-loading">{{ 'liveMonitoring.loading_route' | translate }}</span>
+          }
+        </div>
+
+        <div class="map-legend" [attr.aria-label]="'liveMonitoring.map_legend' | translate">
+          <span><i class="legend-route"></i>{{ 'liveMonitoring.legend_route' | translate }}</span>
+          <span><i class="legend-checkpoint"></i>{{ 'liveMonitoring.legend_checkpoint' | translate }}</span>
+          <span><i class="legend-current"></i>{{ 'liveMonitoring.legend_current' | translate }}</span>
+          @if (store.selectedIncidents().length > 0) {
+            <span><i class="legend-incident"></i>{{ 'liveMonitoring.legend_incident' | translate }}</span>
+          }
+        </div>
+      </section>
+
+      <aside class="participant-panel" [attr.aria-label]="'liveMonitoring.participants_heading' | translate">
+        <header class="participant-heading">
+          <div>
+            <h2>{{ 'liveMonitoring.participants_heading' | translate }}</h2>
+            <p>{{ 'liveMonitoring.participant_count' | translate: { count: store.participantsForTour().length } }}</p>
+          </div>
+          <span class="telemetry-badge">{{ 'liveMonitoring.telemetry_unavailable_short' | translate }}</span>
+        </header>
+
+        <div class="participant-add">
+          <label for="participant-to-add">{{ 'liveMonitoring.add_participant' | translate }}</label>
+          <div class="participant-add-controls">
+            <select
+              id="participant-to-add"
+              [value]="selectedParticipantUserId() ?? ''"
+              [disabled]="availableTourists().length === 0 || store.loading()"
+              (change)="selectParticipant($event)"
+            >
+              <option value="">{{ 'liveMonitoring.select_tourist' | translate }}</option>
+              @for (tourist of availableTourists(); track tourist.id) {
+                <option [value]="tourist.id">{{ tourist.firstName }} {{ tourist.lastName }}</option>
+              }
+            </select>
+            <button
+              mat-flat-button
+              type="button"
+              [disabled]="!selectedParticipantUserId() || store.loading()"
+              (click)="addParticipant()"
+            >
+              <mat-icon aria-hidden="true">person_add</mat-icon>
+              {{ 'liveMonitoring.add' | translate }}
+            </button>
+          </div>
+          @if (availableTourists().length === 0) {
+            <span class="participant-add-hint">{{ 'liveMonitoring.no_available_tourists' | translate }}</span>
+          }
+        </div>
+
+        <label class="participant-search">
+          <mat-icon aria-hidden="true">search</mat-icon>
+          <input
+            type="search"
+            [value]="search()"
+            [attr.aria-label]="'liveMonitoring.search_participants' | translate"
+            [placeholder]="'liveMonitoring.search_participants' | translate"
+            (input)="updateSearch($event)"
+          >
+        </label>
+
+        <div class="participant-list">
+          @for (entry of filteredParticipants(); track entry.participant.id) {
+            <article class="participant-card">
+              <div class="participant-card-heading">
+                <div>
+                  <h3>{{ entry.displayName }}</h3>
+                  <span>{{ 'liveMonitoring.participant_id' | translate: { id: entry.participant.id } }}</span>
+                </div>
+                <button
+                  mat-icon-button
+                  class="remove-participant"
+                  type="button"
+                  [disabled]="store.loading()"
+                  [attr.aria-label]="'liveMonitoring.remove_participant' | translate: { name: entry.displayName }"
+                  (click)="removeParticipant(entry.participant.id, entry.displayName)"
+                >
+                  <mat-icon aria-hidden="true">person_remove</mat-icon>
+                </button>
+                <span class="signal-pending">
+                  <span aria-hidden="true"></span>{{ 'liveMonitoring.no_sensor_data' | translate }}
+                </span>
+              </div>
+              <div class="telemetry-grid">
+                <div>
+                  <span>{{ 'liveMonitoring.heart_rate' | translate }}</span>
+                  <strong>— <small>{{ 'liveMonitoring.bpm' | translate }}</small></strong>
+                </div>
+                <div>
+                  <span>{{ 'liveMonitoring.oxygen' | translate }}</span>
+                  <strong>— <small>%</small></strong>
+                </div>
+              </div>
+              <p class="participant-meta">
+                {{ 'liveMonitoring.joined_at' | translate: { date: (entry.participant.joinedAt | date: 'shortDate') } }}
+              </p>
+              @if (store.selectedIncidents().length > 0) {
+                <a class="incident-action" routerLink="/safety-and-incident-management/incidents">
+                  <mat-icon aria-hidden="true">report</mat-icon>{{ 'liveMonitoring.review_incident' | translate }}
+                </a>
+              }
+            </article>
+          } @empty {
+            <div class="participants-empty">
+              <mat-icon>group_off</mat-icon>
+              <strong>{{ search() ? ('liveMonitoring.no_search_results' | translate) : ('liveMonitoring.no_participants' | translate) }}</strong>
+              <span>{{ 'liveMonitoring.participants_hint' | translate }}</span>
+            </div>
+          }
+        </div>
+
+        <footer class="panel-footer">
+          <span>{{ 'liveMonitoring.guide' | translate }}: <strong>{{ store.guideName() ?? ('liveMonitoring.guide_unassigned' | translate) }}</strong></span>
+          <span>{{ 'liveMonitoring.telemetry_unavailable' | translate }}</span>
+        </footer>
+      </aside>
+    </div>
+  } @else {
+    <section class="no-expedition">
+      <span class="empty-icon"><mat-icon>route</mat-icon></span>
+      <h2>{{ 'liveMonitoring.no_active_expeditions' | translate }}</h2>
+      <p>{{ 'liveMonitoring.no_active_expeditions_hint' | translate }}</p>
+    </section>
+  }
+</section>

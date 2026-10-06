@@ -1,79 +1,54 @@
+<section class="page-heading">
+  <div>
+    <span class="eyebrow">{{ 'option.management' | translate }}</span>
+    <h2>{{ 'tours.list_title' | translate }}</h2>
+    <p>{{ 'tours.page_description' | translate }}</p>
+  </div>
+  <button mat-raised-button color="primary" class="primary-action" (click)="navigateToNew()">
+    <mat-icon>add</mat-icon>{{ 'tours.new' | translate }}
+  </button>
+</section>
 
-<div class="list-header">
-  <h1 class="title">{{ 'tours.list_title' | translate }}</h1>
-  <button mat-raised-button color="primary" (click)="navigateToNew()">{{ 'tours.new' | translate }}</button>
-</div>
-
-@if (store.loading()) {
-<mat-spinner diameter="40"></mat-spinner>
-}
-
-@if (store.error()) {
-<mat-error>{{ store.error() }}</mat-error>
-}
-
-<mat-button-toggle-group [value]="currentView" (change)="onViewChange($event.value)">
-  <mat-button-toggle value="tours">
-    {{ 'tours.toggle_tours' | translate }}
-  </mat-button-toggle>
-
+<mat-button-toggle-group
+  class="view-switch"
+  [value]="currentView"
+  (change)="onViewChange($event.value)"
+  [attr.aria-label]="'tours.view_switch' | translate"
+>
+  <mat-button-toggle value="tours">{{ 'tours.toggle_tours' | translate }}</mat-button-toggle>
   <mat-button-toggle value="tour-schedules">
     {{ 'tour_schedules.toggle_tour_schedules' | translate }}
   </mat-button-toggle>
 </mat-button-toggle-group>
 
-<table mat-table [dataSource]="dataSource()" class="mat-elevation-z8" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tours.id' | translate }}</th>
-    <td mat-cell *matCellDef="let tour" >{{ tour.id }}</td>
-  </ng-container>
+@if (store.loading()) {
+  <div class="feedback-panel" role="status">
+    <mat-spinner diameter="28"></mat-spinner>
+    <span>{{ 'common.loading' | translate }}</span>
+  </div>
+}
 
-  <ng-container matColumnDef="agencyId">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tours.agency_id' | translate }}</th>
-    <td mat-cell *matCellDef="let tour" >{{ tour.agencyId }}</td>
-  </ng-container>
+@if (store.error()) {
+  <div class="feedback-panel error-panel" role="alert">{{ store.error() }}</div>
+}
 
-  <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tours.title' | translate }}</th>
-    <td mat-cell *matCellDef="let tour">{{ tour.details.title }}</td>
-  </ng-container>
+<section class="table-card" [attr.aria-label]="'tours.list_title' | translate">
 
-  <ng-container matColumnDef="description">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tours.description' | translate }}</th>
-    <td mat-cell *matCellDef="let tour">{{ tour.details.description }}</td>
-  </ng-container>
+  <div class="cards-grid">
+    @for (tour of store.tours(); track tour.id) {
 
-  <ng-container matColumnDef="duration">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tours.duration' | translate }}</th>
-    <td mat-cell *matCellDef="let tour">{{ tour.details.duration }}</td>
-  </ng-container>
+      <app-tour-item class="tour-enter" [tour]="tour" (editTour)="editTour(tour.id)" (deleteTour)="deleteTour(tour.id)"></app-tour-item>
 
-  <ng-container matColumnDef="difficulty">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tours.difficulty' | translate }}</th>
-    <td mat-cell *matCellDef="let tour">{{ tour.details.difficulty }}</td>
-  </ng-container>
+    }
+  </div>
 
-  <ng-container matColumnDef="price">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tours.price' | translate }}</th>
-    <td mat-cell *matCellDef="let tour">{{ tour.details.price.amount }} {{ tour.details.price.currency }}</td>
-  </ng-container>
 
-  <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tours.status' | translate }}</th>
-    <td mat-cell *matCellDef="let tour">{{ tour.status }}</td>
-  </ng-container>
 
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef> {{ 'tours.actions' | translate }} </th>
-    <td mat-cell *matCellDef="let tour" >
-      <button mat-icon-button aria-label=" {{ 'tours.edit' | translate }} " (click)="editTour(tour.id)"> <mat-icon>edit</mat-icon> </button>
-      <button mat-icon-button aria-label=" {{ 'tours.delete' | translate }} " (click)="deleteTour(tour.id)"> <mat-icon>delete</mat-icon> </button>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
-
-<mat-paginator [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
-
+  @if (!store.loading() && !store.error() && store.tours().length === 0) {
+    <div class="empty-state">
+      <mat-icon>explore</mat-icon>
+      <strong>{{ 'tours.empty_title' | translate }}</strong>
+      <span>{{ 'tours.empty_description' | translate }}</span>
+    </div>
+  }
+</section>

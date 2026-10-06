@@ -6,6 +6,8 @@ import {Observable, tap} from 'rxjs';
 import {Tour} from '../domain/model/tour.entity';
 import {TourScheduleApiEndpoint} from './tour-schedule-api-endpoint';
 import {TourSchedule} from '../domain/model/tour-schedule.entity';
+import {Checkpoint} from '../domain/model/checkpoint.entity';
+import {CheckpointsApiEndpoint} from './checkpoints-api-endpoint';
 
 @Service()
 export class TourManagementApi extends BaseApi {
@@ -13,6 +15,7 @@ export class TourManagementApi extends BaseApi {
   #http: HttpClient = inject(HttpClient)
   #toursEndpoint: ToursApiEndpoint = new ToursApiEndpoint(this.#http)
   #tourSchedulesEndpoint: TourScheduleApiEndpoint = new TourScheduleApiEndpoint(this.#http)
+  #checkpointsEndpoint: CheckpointsApiEndpoint = new CheckpointsApiEndpoint(this.#http)
 
   getTours = (): Observable<Tour[]> => this.#toursEndpoint.getAll()
 
@@ -33,5 +36,8 @@ export class TourManagementApi extends BaseApi {
   updateTourSchedule = (tourSchedule: TourSchedule): Observable<TourSchedule> => this.#tourSchedulesEndpoint.update(tourSchedule, tourSchedule.id)
 
   deleteTourSchedule = (id: number): Observable<void> => this.#tourSchedulesEndpoint.delete(id)
+
+  getCheckpointsForTour = (tourId: number): Observable<Checkpoint[]> =>
+    this.#checkpointsEndpoint.getForTour(tourId)
 
 }

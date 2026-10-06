@@ -1,1 +1,42 @@
+:host {
+  display: grid;
+  min-height: 60vh;
+  place-items: center;
+}
 
+.not-found-card {
+  width: min(100%, 560px);
+  padding: clamp(28px, 5vw, 48px);
+  border: 1px solid var(--tm-border);
+  border-radius: 16px;
+  background: var(--tm-surface);
+  text-align: center;
+}
+
+.not-found-code {
+  color: #b5c3b7;
+  font-size: clamp(4rem, 14vw, 7rem);
+  font-weight: 750;
+  letter-spacing: -0.09em;
+  line-height: 1;
+}
+
+h2 {
+  margin: 12px 0 6px;
+  font-size: 1.6rem;
+  letter-spacing: -0.04em;
+}
+
+p {
+  margin: 0 0 22px;
+  color: var(--tm-muted);
+  overflow-wrap: anywhere;
+}
+
+button {
+  min-height: 42px;
+  padding-inline: 20px;
+  border-radius: 9px;
+  color: white !important;
+  background: var(--tm-forest) !important;
+}
