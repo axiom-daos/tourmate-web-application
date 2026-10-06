@@ -1,10 +1,9 @@
-import {Component, input, InputSignal, output, Output, OutputEmitterRef} from '@angular/core';
+import {Component, input, InputSignal, output, OutputEmitterRef} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import {Tour} from '../../../domain/model/tour.entity';
 import {MatChip} from '@angular/material/chips';
 import {TranslatePipe} from '@ngx-translate/core';
-import {MatCell} from '@angular/material/table';
 import {MatIcon} from '@angular/material/icon';
 import {LowerCasePipe} from '@angular/common';
 
@@ -14,7 +13,6 @@ import {LowerCasePipe} from '@angular/common';
     MatButtonModule,
     MatChip,
     TranslatePipe,
-    MatCell,
     MatIcon,
     LowerCasePipe
   ],

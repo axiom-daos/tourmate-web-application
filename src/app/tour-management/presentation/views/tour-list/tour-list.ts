@@ -23,28 +23,12 @@ import {TourItem} from '../../components/tour-item/tour-item';
 
 @Component({
   imports: [
-    MatTable,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatCell,
-    MatHeaderRowDef,
-    MatRowDef,
     MatButton,
-    MatHeaderRow,
-    MatRow,
     MatProgressSpinner,
     TranslatePipe,
     MatIcon,
-    MatIconButton,
-    MatSort,
-    MatSortHeader,
-    MatPaginator,
     MatButtonToggleGroup,
     MatButtonToggle,
-    MatGridList,
-    MatGridTile,
     TourItem
   ],
   selector: 'app-tour-list',

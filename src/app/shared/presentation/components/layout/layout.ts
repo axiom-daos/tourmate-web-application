@@ -48,7 +48,8 @@ export class Layout {
       icon: 'emergency',
     },
     { link: '/subscriptions', label: 'option.subscriptions', icon: 'credit_card' },
-    { link: '/about', label: 'option.about', icon: 'info' },
+    { link: '/feedback-and-tour-reviews', label: 'option.feedback_and_reviews', icon: 'mode_comment' },
+    { link: '/about', label: 'option.about', icon: 'info' }
   ]);
 
   @HostListener('window:resize')
