@@ -19,6 +19,11 @@ export interface MapPoint {
   y: number;
 }
 
+export interface GeographicCoordinates {
+  latitude: number;
+  longitude: number;
+}
+
 export interface PositionedCheckpoint extends MapPoint {
   checkpoint: Checkpoint;
 }
@@ -94,6 +99,10 @@ export class TourMonitoringStore {
 
   private readonly checkpointsSignal = signal<Checkpoint[]>([]);
   readonly checkpoints = this.checkpointsSignal.asReadonly();
+
+  private readonly scheduleStartCoordinatesSignal = signal<GeographicCoordinates | null>(null);
+  readonly scheduleStartCoordinates = this.scheduleStartCoordinatesSignal.asReadonly();
+  private scheduleCoordinatesRequest = 0;
 
   private readonly checkpointLoadingSignal = signal(false);
   readonly checkpointLoading = this.checkpointLoadingSignal.asReadonly();
@@ -268,6 +277,31 @@ export class TourMonitoringStore {
     this.activeTourId.set(id);
   }
 
+  loadScheduleStartCoordinates(scheduleId: number): void {
+    const schedule = this.tourSchedules().find(candidate => candidate.id === scheduleId);
+    const request = ++this.scheduleCoordinatesRequest;
+    this.scheduleStartCoordinatesSignal.set(null);
+    if (!schedule) return;
+
+    this.tourManagementApi.getCheckpointsForTour(schedule.tourId).pipe(
+      retry(1),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: checkpoints => {
+        if (request !== this.scheduleCoordinatesRequest) return;
+        const start = [...checkpoints].sort((left, right) => left.orderIndex - right.orderIndex)[0];
+        this.scheduleStartCoordinatesSignal.set(
+          start ? {latitude: start.latitude, longitude: start.longitude} : null,
+        );
+      },
+      error: error => {
+        if (request === this.scheduleCoordinatesRequest) {
+          this.errorSignal.set(this.formatError(error, 'Unable to load route start coordinates'));
+        }
+      },
+    });
+  }
+
   private loadUsers(): void {
     this.iamApi.getUsers().pipe(
       retry(1),
@@ -344,8 +378,10 @@ export class TourMonitoringStore {
     this.errorSignal.set(null);
     this.tourMonitoringApi.createActiveTour(activeTour).pipe(retry(2)).subscribe({
       next: createdActiveTour => {
-        createdActiveTour = this.assignTourScheduleToActiveTour(activeTour);
-        this.activeToursSignal.update(activeTours => [...activeTours, createdActiveTour]);
+        const assignedActiveTour = this.assignTourGuideToActiveTour(
+          this.assignTourScheduleToActiveTour(createdActiveTour),
+        );
+        this.activeToursSignal.update(activeTours => [...activeTours, assignedActiveTour]);
         this.loadingSignal.set(false);
       },
       error: err => {
@@ -365,6 +401,7 @@ export class TourMonitoringStore {
     this.tourMonitoringApi.updateActiveTour(updatedActiveTour).pipe(retry(2)).subscribe({
       next: activeTour => {
         activeTour = this.assignTourScheduleToActiveTour(activeTour);
+        activeTour = this.assignTourGuideToActiveTour(activeTour);
         this.activeToursSignal.update(activeTours =>
           activeTours.map(c => c.id === activeTour.id ? activeTour : c)
         );

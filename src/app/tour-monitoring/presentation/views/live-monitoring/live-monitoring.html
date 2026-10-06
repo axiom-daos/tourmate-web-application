@@ -21,8 +21,24 @@
     <div class="toolbar-status">
       <span class="connection-badge">
         <span class="status-dot" aria-hidden="true"></span>
-        {{ 'liveMonitoring.expedition_active' | translate }}
+        {{ (store.selectedActiveTour()?.status === 'IN_PROGRESS'
+          ? 'liveMonitoring.expedition_active'
+          : 'liveMonitoring.expedition_finished') | translate }}
       </span>
+      @if (store.selectedActiveTour(); as expedition) {
+        @if (expedition.status === 'IN_PROGRESS') {
+          <button
+            mat-flat-button
+            class="finish-expedition-button"
+            type="button"
+            [disabled]="store.loading()"
+            (click)="confirmFinishExpedition(expedition)"
+          >
+            <mat-icon aria-hidden="true">flag</mat-icon>
+            {{ 'liveMonitoring.finish_expedition' | translate }}
+          </button>
+        }
+      }
       <a
         class="alert-count"
         routerLink="/safety-and-incident-management/incidents"

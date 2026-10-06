@@ -3,6 +3,8 @@ import {ActiveTour} from '../domain/model/active-tour.entity';
 import {ActiveTourResource, ActiveToursResponse} from './active-tours-response';
 import {ActiveTourAssembler} from './active-tour-assembler';
 import {HttpClient} from '@angular/common/http';
+import {catchError, map} from 'rxjs';
+import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 
 
@@ -16,5 +18,13 @@ export class ActiveToursApiEndpoint extends BaseApiEndpoint<ActiveTour, ActiveTo
    */
   constructor(http: HttpClient) {
     super(http, `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderActiveToursEndpointPath}`, new ActiveTourAssembler());
+  }
+
+  override create(activeTour: ActiveTour): Observable<ActiveTour> {
+    const {id: _id, ...resource} = this.assembler.toResourceFromEntity(activeTour);
+    return this.http.post<ActiveTourResource>(this.endpointUrl, resource).pipe(
+      map(created => this.assembler.toEntityFromResource(created)),
+      catchError(this.handleError('Failed to create active tour')),
+    );
   }
 }
