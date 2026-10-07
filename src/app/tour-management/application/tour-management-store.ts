@@ -63,11 +63,11 @@ export class TourManagementStore {
   }
 
   getTourById = (id: number): Signal<Tour | undefined> => {
-    return computed(() => id ? this.tours().find(t => t.id === id) : undefined)
+    return computed(() => id ? this.tours().find(t => t.id == id) : undefined)
   }
 
   getTourScheduleById = (id: number): Signal<TourSchedule | undefined> => {
-    return computed(() => id ? this.tourSchedules().find(ts => ts.id === id) : undefined)
+    return computed(() => id ? this.tourSchedules().find(ts => ts.id == id) : undefined)
   }
 
   addTour = (tour: Tour): void => {

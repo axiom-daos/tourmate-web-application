@@ -2,7 +2,7 @@
   <mat-card-content>
 
     <div class="top-row">
-      @if (tour().status === 'ACTIVE') {
+      @if (tour().status === 'PUBLISHED') {
         <mat-chip class="chip-status">{{  tour().status }}</mat-chip>
       } @else {
         <mat-chip class="chip-inactive">{{  tour().status }}</mat-chip>
