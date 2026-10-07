@@ -139,6 +139,7 @@
     "empty-description": "Las expediciones activas aparecerán aquí cuando estén disponibles.",
     "edit": "Editar tour activo",
     "delete": "Eliminar tour activo",
+    "delete_confirm": "¿Eliminar este tour activo? Esta acción no se puede deshacer.",
     "view": "Ver en vivo",
     "tourTitle": "Nombre del Tour"
   },

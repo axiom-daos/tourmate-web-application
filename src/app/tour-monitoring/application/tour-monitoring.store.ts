@@ -112,7 +112,7 @@ export class TourMonitoringStore {
     const activeTours = this.activeTours();
     const selectedId = this.activeTourId();
     if (selectedId !== null) {
-      return activeTours.find(tour => tour.id === selectedId) ?? null;
+      return activeTours.find(tour => this.idsMatch(tour.id, selectedId)) ?? null;
     }
     return activeTours.find(tour => tour.status === 'IN_PROGRESS') ??
       activeTours[0] ??
@@ -121,24 +121,24 @@ export class TourMonitoringStore {
 
   readonly selectedSchedule = computed(() => {
     const scheduleId = this.selectedActiveTour()?.tourScheduleId;
-    return this.tourSchedules().find(schedule => schedule.id === scheduleId) ?? null;
+    return this.tourSchedules().find(schedule => this.idsMatch(schedule.id, scheduleId)) ?? null;
   });
 
   readonly selectedTour = computed(() => {
     const tourId = this.selectedSchedule()?.tourId;
-    return this.tours().find(tour => tour.id === tourId) ?? null;
+    return this.tours().find(tour => this.idsMatch(tour.id, tourId)) ?? null;
   });
 
   readonly activeExpeditionOptions = computed(() =>
     this.activeTours()
       .filter(activeTour =>
-        activeTour.status === 'IN_PROGRESS' || activeTour.id === this.activeTourId(),
+        activeTour.status === 'IN_PROGRESS' || this.idsMatch(activeTour.id, this.activeTourId()),
       )
       .map(activeTour => {
         const schedule = this.tourSchedules().find(
-          candidate => candidate.id === activeTour.tourScheduleId,
+          candidate => this.idsMatch(candidate.id, activeTour.tourScheduleId),
         );
-        const tour = this.tours().find(candidate => candidate.id === schedule?.tourId);
+        const tour = this.tours().find(candidate => this.idsMatch(candidate.id, schedule?.tourId));
         return {
           activeTour,
           title: tour?.details.title ?? `#${activeTour.id}`,
@@ -191,7 +191,7 @@ export class TourMonitoringStore {
   readonly participantsForTour = computed(() => {
     const scheduleId = this.selectedActiveTour()?.tourScheduleId;
     return scheduleId
-      ? this.participants().filter(participant => participant.tourScheduleId === scheduleId)
+      ? this.participants().filter(participant => this.idsMatch(participant.tourScheduleId, scheduleId))
       : [];
   });
 
@@ -206,13 +206,13 @@ export class TourMonitoringStore {
 
   readonly currentGuide = computed(() => {
     const guideId = this.selectedActiveTour()?.guideId;
-    return this.tourGuides().find(guide => guide.id === guideId) ?? null;
+    return this.tourGuides().find(guide => this.idsMatch(guide.id, guideId)) ?? null;
   });
 
   readonly guideName = computed(() => {
     const guide = this.currentGuide();
     return guide
-      ? this.displayName(this.users().find(user => user.id === guide.userId), guide.userId)
+      ? this.displayName(this.users().find(user => this.idsMatch(user.id, guide.userId)), guide.userId)
       : null;
   });
 
@@ -220,7 +220,7 @@ export class TourMonitoringStore {
     const activeTourId = this.selectedActiveTour()?.id;
     return this.incidentStore.incidents().filter(
       incident =>
-        incident.activeTourId === activeTourId &&
+        this.idsMatch(incident.activeTourId, activeTourId) &&
         incident.status !== IncidentStatus.RESOLVED &&
         incident.status !== IncidentStatus.CLOSED,
     );
@@ -278,7 +278,7 @@ export class TourMonitoringStore {
   }
 
   loadScheduleStartCoordinates(scheduleId: number): void {
-    const schedule = this.tourSchedules().find(candidate => candidate.id === scheduleId);
+    const schedule = this.tourSchedules().find(candidate => this.idsMatch(candidate.id, scheduleId));
     const request = ++this.scheduleCoordinatesRequest;
     this.scheduleStartCoordinatesSignal.set(null);
     if (!schedule) return;
@@ -331,7 +331,7 @@ export class TourMonitoringStore {
   private watchRouteCheckpoints(): void {
     toObservable(this.selectedTour)
       .pipe(
-        distinctUntilChanged((previous, current) => previous?.id === current?.id),
+        distinctUntilChanged((previous, current) => this.idsMatch(previous?.id, current?.id)),
         switchMap(tour => {
           if (!tour) {
             this.checkpointsSignal.set([]);
@@ -366,7 +366,7 @@ export class TourMonitoringStore {
    * @returns Reactive selection for the requested activeTour.
    */
   getActiveTourById = (id: number): Signal<ActiveTour | undefined> => {
-    return computed(() => id ? this.activeTours().find(c => c.id === id) : undefined);
+    return computed(() => id ? this.activeTours().find(c => this.idsMatch(c.id, id)) : undefined);
   }
 
   /**
@@ -376,7 +376,7 @@ export class TourMonitoringStore {
   addActiveTour = (activeTour: ActiveTour): void => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.tourMonitoringApi.createActiveTour(activeTour).pipe(retry(2)).subscribe({
+    this.tourMonitoringApi.createActiveTour(activeTour).subscribe({
       next: createdActiveTour => {
         const assignedActiveTour = this.assignTourGuideToActiveTour(
           this.assignTourScheduleToActiveTour(createdActiveTour),
@@ -398,12 +398,12 @@ export class TourMonitoringStore {
   updateActiveTour = (updatedActiveTour: ActiveTour): void => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.tourMonitoringApi.updateActiveTour(updatedActiveTour).pipe(retry(2)).subscribe({
+    this.tourMonitoringApi.updateActiveTour(updatedActiveTour).subscribe({
       next: activeTour => {
         activeTour = this.assignTourScheduleToActiveTour(activeTour);
         activeTour = this.assignTourGuideToActiveTour(activeTour);
         this.activeToursSignal.update(activeTours =>
-          activeTours.map(c => c.id === activeTour.id ? activeTour : c)
+          activeTours.map(c => this.idsMatch(c.id, activeTour.id) ? activeTour : c)
         );
         this.loadingSignal.set(false);
       },
@@ -421,9 +421,9 @@ export class TourMonitoringStore {
   deleteActiveTour = (id: number): void => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.tourMonitoringApi.deleteActiveTour(id).pipe(retry(2)).subscribe({
+    this.tourMonitoringApi.deleteActiveTour(id).subscribe({
       next: () => {
-        this.activeToursSignal.update(activeTours => activeTours.filter(c => c.id !== id));
+        this.activeToursSignal.update(activeTours => activeTours.filter(c => !this.idsMatch(c.id, id)));
         this.loadingSignal.set(false);
       },
       error: err => {
@@ -460,7 +460,7 @@ export class TourMonitoringStore {
 
 
   getTourGuideById = (id: number): Signal<TourGuide | undefined> => {
-    return computed(() => id ? this.tourGuides().find(c => c.id === id) : undefined);
+    return computed(() => id ? this.tourGuides().find(c => this.idsMatch(c.id, id)) : undefined);
   }
 
   /**
@@ -546,7 +546,9 @@ export class TourMonitoringStore {
 
 
   getTourScheduleById = (id: number): Signal<TourSchedule | undefined> => {
-    return computed(() => id ? this.tourSchedules().find(c => c.id === id) : undefined);
+    return computed(() =>
+      this.tourSchedules().find(schedule => this.idsMatch(schedule.id, id)),
+    );
   }
   /**
    * adds a new tourSchedule.
@@ -633,7 +635,7 @@ export class TourMonitoringStore {
   };
 
   getParticipantById = (id: number): Signal<Participant | undefined> => {
-    return computed(() => id ? this.participants().find(c => c.id === id) : undefined);
+    return computed(() => id ? this.participants().find(c => this.idsMatch(c.id, id)) : undefined);
   }
 
   /**
@@ -643,7 +645,7 @@ export class TourMonitoringStore {
   addParticipant = (participant: Participant): void => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.tourMonitoringApi.createParticipant(participant).pipe(retry(2)).subscribe({
+    this.tourMonitoringApi.createParticipant(participant).subscribe({
       next: createdParticipant => {
         const assignedParticipant = this.assignTourScheduleToParticipant(createdParticipant);
         this.participantsSignal.update(participants => [...participants, assignedParticipant]);
@@ -663,11 +665,11 @@ export class TourMonitoringStore {
   updateParticipant = (updatedParticipant: Participant): void => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.tourMonitoringApi.updateParticipant(updatedParticipant).pipe(retry(2)).subscribe({
+    this.tourMonitoringApi.updateParticipant(updatedParticipant).subscribe({
       next: participant => {
         participant = this.assignTourScheduleToParticipant(participant);
         this.participantsSignal.update(participants =>
-          participants.map(c => c.id === participant.id ? participant : c)
+          participants.map(c => this.idsMatch(c.id, participant.id) ? participant : c)
         );
         this.loadingSignal.set(false);
       },
@@ -685,9 +687,9 @@ export class TourMonitoringStore {
   deleteParticipant = (id: number): void => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.tourMonitoringApi.deleteParticipant(id).pipe(retry(2)).subscribe({
+    this.tourMonitoringApi.deleteParticipant(id).subscribe({
       next: () => {
-        this.participantsSignal.update(participants => participants.filter(c => c.id !== id));
+        this.participantsSignal.update(participants => participants.filter(c => !this.idsMatch(c.id, id)));
         this.loadingSignal.set(false);
       },
       error: err => {
@@ -733,7 +735,7 @@ export class TourMonitoringStore {
   private assignToursToTourSchedules = (): void => {
     this.tourSchedulesSignal.update(tourSchedules =>
       tourSchedules.map(tourSchedule => {
-        tourSchedule.tour = this.tours().find(tour => tour.id === tourSchedule.tourId) ?? null;
+        tourSchedule.tour = this.tours().find(tour => this.idsMatch(tour.id, tourSchedule.tourId)) ?? null;
         return tourSchedule;
       }),
     );
@@ -760,7 +762,7 @@ export class TourMonitoringStore {
   };
 
   private assignUserToTourGuide = (tourGuide: TourGuide): TourGuide => {
-    const user = this.users().find(candidate => candidate.id === tourGuide.userId) ?? null;
+    const user = this.users().find(candidate => this.idsMatch(candidate.id, tourGuide.userId)) ?? null;
     tourGuide.user = user;
     return tourGuide;
   };
@@ -771,6 +773,15 @@ export class TourMonitoringStore {
     return activeTour;
   }
 
+  private idsMatch(left: unknown, right: unknown): boolean {
+    if (left === null || left === undefined || right === null || right === undefined) {
+      return false;
+    }
+
+    const leftId = Number(left);
+    const rightId = Number(right);
+    return Number.isSafeInteger(leftId) && leftId > 0 && leftId === rightId;
+  }
 
   /**
    * Normalizes unknown errors into a display-friendly message.
