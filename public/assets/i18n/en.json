@@ -139,6 +139,7 @@
     "empty-description": "Active expeditions will appear here when they are available.",
     "edit": "Edit active tour",
     "delete": "Delete active tour",
+    "delete_confirm": "Delete this active tour? This action cannot be undone.",
     "view": "Watch live",
     "tourTitle": "Tour Name"
   },

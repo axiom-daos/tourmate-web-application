@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
@@ -40,20 +40,36 @@ export class ReviewForm implements OnInit {
 
   isEditMode = false;
   reviewId: number | null = null;
+  private commentId: any = null;
+
+  constructor() {
+    effect(() => {
+      if (this.isEditMode && this.reviewId !== null) {
+        const reviews = this.reviewStore.reviews();
+        const existingReview = reviews.find(
+          (r: any) => Number(r.id || r.Id) === this.reviewId || String(r.id || r.Id) === String(this.reviewId)
+        );
+        if (existingReview && !this.reviewForm.dirty) {
+          this.commentId = existingReview.commentId;
+          this.reviewForm.patchValue({
+            tourId: existingReview.tourId,
+            userId: existingReview.userId,
+            rating: existingReview.rating,
+            comment: existingReview.comment
+          });
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.isEditMode = true;
       this.reviewId = Number(idParam);
-      const existingReview = this.reviewStore.reviews().find(r => r.id === this.reviewId);
-      if (existingReview) {
-        this.reviewForm.patchValue({
-          tourId: existingReview.tourId,
-          userId: existingReview.userId,
-          rating: existingReview.rating,
-          comment: existingReview.comment
-        });
+
+      if (this.reviewStore.reviews().length === 0) {
+        this.reviewStore.loadData();
       }
     }
   }
@@ -66,6 +82,7 @@ export class ReviewForm implements OnInit {
     if (this.isEditMode && this.reviewId !== null) {
       this.reviewStore.updateReview({
         id: this.reviewId,
+        commentId: this.commentId,
         tourId: Number(formValues.tourId),
         userId: Number(formValues.userId),
         rating: Number(formValues.rating),

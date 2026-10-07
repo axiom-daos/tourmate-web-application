@@ -24,8 +24,8 @@ export const environment = {
   plansApiBaseUrl: 'https://6ac5531c54a61668c5f71bc5.mockapi.io/api/v1',
   subscriptionsApiBaseUrl: 'https://6ac5531c54a61668c5f71bc5.mockapi.io/api/v1' ,
   paymentsApiBaseUrl: 'https://6ac5596354a61668c5f72167.mockapi.io/api/v1' ,
-  commentsApiBaseUrl: 'https://6ac53f854a61668c5f71c23.mockapi.io/' ,
-  reviewsApiBaseUrl: 'https://6ac53f854a61668c5f71c23.mockapi.io/' ,
-  incidentsApiBaseUrl: 'https://6ac551e654a61668c5f71abf.mockapi.io/api/v1/' ,
+  commentsApiBaseUrl: 'https://6ac570fc54a61668c5f72d4d.mockapi.io/api/v1',
+  reviewsApiBaseUrl: 'https://6ac570fc54a61668c5f72d4d.mockapi.io/api/v1',
+  incidentsApiBaseUrl: 'https://6ac551e654a61668c5f71abf.mockapi.io/api/v1/',
 
 };

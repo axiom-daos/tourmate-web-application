@@ -1,7 +1,8 @@
-import {Component, computed, effect, inject} from '@angular/core';
+import {Component, computed, effect, inject, signal} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {TourMonitoringStore} from '../../../application/tour-monitoring.store';
 import {ActiveTour} from '../../../domain/model/active-tour.entity';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -32,10 +33,15 @@ export class ActiveTourForm {
   protected readonly store = inject(TourMonitoringStore);
 
   protected readonly scheduleOptions = computed(() =>
-    this.store.tourSchedules().map(schedule => ({
-      schedule,
-      tourTitle: schedule.tour?.details.title ?? `#${schedule.tourId}`,
-    })),
+    this.store.tourSchedules().map(schedule => {
+      const tour = schedule.tour ??
+        this.store.tours().find(candidate => Number(candidate.id) === Number(schedule.tourId));
+      return {
+        schedule,
+        scheduleId: Number(schedule.id),
+        tourTitle: tour?.details.title ?? `#${schedule.tourId}`,
+      };
+    }),
   );
 
   protected readonly form = this.fb.group({
@@ -56,11 +62,12 @@ export class ActiveTourForm {
   });
 
   protected isEdit = false;
-  private activeTourId: number | null = null;
+  protected readonly editFormHydrated = signal(false);
+  private readonly activeTourId = signal<number | null>(null);
 
   constructor() {
     effect(() => {
-      if (this.isEdit || this.form.controls.tourScheduleId.value !== null) return;
+      if (this.activeTourId() !== null || this.form.controls.tourScheduleId.value !== null) return;
 
       const schedules = this.store.tourSchedules();
       const initialSchedule =
@@ -74,7 +81,7 @@ export class ActiveTourForm {
 
     effect(() => {
       const coordinates = this.store.scheduleStartCoordinates();
-      if (!coordinates || this.isEdit) return;
+      if (!coordinates || this.activeTourId() !== null) return;
 
       this.form.patchValue({
         currentLatitude: coordinates.latitude,
@@ -82,17 +89,16 @@ export class ActiveTourForm {
       });
     });
 
-    this.route.params.subscribe(params => {
-      this.activeTourId = params['id'] ? Number(params['id']) : null;
-      this.isEdit = this.activeTourId !== null;
-      if (!this.activeTourId) return;
+    effect(() => {
+      const id = this.activeTourId();
+      if (id === null || this.editFormHydrated()) return;
 
-      const activeTour = this.store.getActiveTourById(this.activeTourId)();
+      const activeTour = this.store.getActiveTourById(id)();
       if (!activeTour) return;
 
       this.form.patchValue({
-        tourScheduleId: activeTour.tourScheduleId,
-        guideId: activeTour.guideId,
+        tourScheduleId: Number(activeTour.tourScheduleId),
+        guideId: Number(activeTour.guideId),
         status: activeTour.status,
         currentLatitude: activeTour.currentLatitude,
         currentLongitude: activeTour.currentLongitude,
@@ -101,6 +107,15 @@ export class ActiveTourForm {
           ? this.toLocalDateTime(new Date(activeTour.finishedAt))
           : null,
       });
+      this.editFormHydrated.set(true);
+    });
+
+    this.route.params.pipe(takeUntilDestroyed()).subscribe(params => {
+      const routeId = params['id'] ? Number(params['id']) : null;
+      const id = routeId !== null && Number.isSafeInteger(routeId) && routeId > 0 ? routeId : null;
+      this.isEdit = id !== null;
+      this.editFormHydrated.set(false);
+      this.activeTourId.set(id);
     });
   }
 
@@ -113,6 +128,8 @@ export class ActiveTourForm {
   }
 
   protected submit(): void {
+    if (this.isEdit && !this.editFormHydrated()) return;
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -120,7 +137,7 @@ export class ActiveTourForm {
 
     const values = this.form.getRawValue();
     const activeTour = new ActiveTour({
-      id: this.activeTourId ?? 0,
+      id: this.activeTourId() ?? 0,
       tourScheduleId: values.tourScheduleId!,
       guideId: values.guideId!,
       status: values.status,

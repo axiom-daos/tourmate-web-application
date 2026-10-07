@@ -10,7 +10,7 @@ import { UsersApiEndpoint } from './users-api-endpoint';
 describe('UsersApiEndpoint', () => {
   let endpoint: UsersApiEndpoint;
   let httpTesting: HttpTestingController;
-  const usersUrl = `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderUsersEndpointPath}`;
+  const usersUrl = `${environment.usersApiBaseUrl}${environment.tourmateProviderUsersEndpointPath}`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
