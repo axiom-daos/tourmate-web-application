@@ -1,30 +1,26 @@
-import { inject, Injectable } from '@angular/core';
-import { Review } from '../domain/model/aggregates/review.entity';
+
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
+import { Review } from '../domain/model/aggregates/review.entity';
+import { ReviewResource, ReviewsResponse } from './review-response';
+import { ReviewAssembler } from './review-assembler';
+import { environment } from '../../../environments/environment';
 
-@Injectable({ providedIn: 'root' })
-export class ReviewApi {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'https://6ac570fc54a61668c5f72d4d.mockapi.io/api/v1/reviews';
+/**
+ * Endpoint client for review CRUD operations.
+ */
+export class ReviewApiEndpoint extends BaseApiEndpoint<
+  Review,
+  ReviewResource,
+  ReviewsResponse,
+  ReviewAssembler
+> {
 
-  getReviews(): Observable<Review[]> {
-    return this.http.get<Review[]>(this.baseUrl);
-  }
-
-  getReview(id: number): Observable<Review> {
-    return this.http.get<Review>(`${this.baseUrl}/${id}`);
-  }
-
-  createReview(review: Review): Observable<Review> {
-    return this.http.post<Review>(this.baseUrl, review);
-  }
-
-  updateReview(review: Review): Observable<Review> {
-    return this.http.put<Review>(`${this.baseUrl}/${review.id}`, review);
-  }
-
-  deleteReview(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  constructor(http: HttpClient) {
+    super(
+      http,
+      `${environment.reviewsApiBaseUrl}/reviews`,
+      new ReviewAssembler()
+    );
   }
 }
