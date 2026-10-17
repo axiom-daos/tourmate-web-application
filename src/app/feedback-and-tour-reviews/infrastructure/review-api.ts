@@ -1,30 +1,46 @@
+
 import { inject, Injectable } from '@angular/core';
-import { Review } from '../domain/model/aggregates/review.entity';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
-export class ReviewApi {
+import { BaseApi } from '../../shared/infrastructure/base-api';
+import { Review } from '../domain/model/aggregates/review.entity';
+import { ReviewApiEndpoint } from './review-api-endpoint';
+
+/**
+ * Infrastructure facade for review endpoint operations.
+ */
+@Injectable({
+  providedIn: 'root'
+})
+export class ReviewApi extends BaseApi {
+
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'https://6ac570fc54a61668c5f72d4d.mockapi.io/api/v1/reviews';
+  private readonly reviewsEndpoint =
+    new ReviewApiEndpoint(this.http);
 
-  getReviews(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl);
+  // Obtenemos todas las reseñas
+  getReviews(): Observable<Review[]> {
+    return this.reviewsEndpoint.getAll();
   }
 
-  getReview(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${id}`);
+  // Obtenemos una reseña por su ID
+  getReview(id: number): Observable<Review> {
+    return this.reviewsEndpoint.getById(id);
   }
 
-  createReview(review: Review): Observable<any> {
-    return this.http.post<any>(this.baseUrl, review);
+  // Creamos una nueva reseña
+  createReview(review: Review): Observable<Review> {
+    return this.reviewsEndpoint.create(review);
   }
 
-  updateReview(review: Review): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/${review.id}`, review);
+  // Actualizamos una reseña existente
+  updateReview(review: Review): Observable<Review> {
+    return this.reviewsEndpoint.update(review, review.id);
   }
 
+  // Eliminamos una reseña por su ID
   deleteReview(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    return this.reviewsEndpoint.delete(id);
   }
 }

@@ -1,5 +1,10 @@
+
 import { BaseEntity } from '../../../../shared/domain/model/base-entity';
 
+/**
+ * Represents a Review aggregate in the
+ * feedback and tour reviews domain model.
+ */
 export class Review implements BaseEntity {
   #id: number;
   #userId: number;
@@ -21,18 +26,43 @@ export class Review implements BaseEntity {
     this.#createdAt = review.createdAt;
   }
 
-  get id(): number { return this.#id; }
-  set id(value: number) { this.#id = value; }
+  get id(): number {
+    return this.#id;
+  }
 
-  get userId(): number { return this.#userId; }
-  set userId(value: number) { this.#userId = value; }
+  set id(value: number) {
+    this.#id = value;
+  }
 
-  get tourId(): number { return this.#tourId; }
-  set tourId(value: number) { this.#tourId = value; }
+  get userId(): number {
+    return this.#userId;
+  }
 
-  get rating(): number { return this.#rating; }
-  set rating(value: number) { this.#rating = value; }
+  set userId(value: number) {
+    this.#userId = value;
+  }
 
-  get createdAt(): string { return this.#createdAt; }
-  set createdAt(value: string) { this.#createdAt = value; }
+  get tourId(): number {
+    return this.#tourId;
+  }
+
+  set tourId(value: number) {
+    this.#tourId = value;
+  }
+
+  get rating(): number {
+    return this.#rating;
+  }
+
+  set rating(value: number) {
+    this.#rating = value;
+  }
+
+  get createdAt(): string {
+    return this.#createdAt;
+  }
+
+  set createdAt(value: string) {
+    this.#createdAt = value;
+  }
 }
