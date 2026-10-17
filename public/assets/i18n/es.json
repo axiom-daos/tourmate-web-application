@@ -233,8 +233,8 @@
     "loading_route": "Cargando ruta..."
   },
   "reviews": {
-    "list_title": "Gestión de Reseñas y Feedback",
-    "list_subtitle": "Experiencias y calificaciones que los viajeros comparten al terminar sus tours.",
+    "list_title": "Reseñas y Valoraciones",
+    "list_subtitle": "Consulta las experiencias, opiniones y calificaciones que los viajeros comparten sobre sus tours.",
     "add_new": "+ Añadir Nueva Reseña",
     "review_count": "{{count}} reseñas de viajeros",
     "rating_aria": "{{rating}} de 5 estrellas",
@@ -262,7 +262,14 @@
     "user_id_label": "ID del Usuario",
     "rating_label": "Calificación (Rating)",
     "comment_label": "Comentarios de la Experiencia",
-    "delete_confirm": "¿Estás seguro de que deseas eliminar esta reseña?"
+    "delete_confirm": "¿Estás seguro de que deseas eliminar esta reseña?",
+    "notice_title": "Importante",
+    "notice_description": "Verifica que el tour, el usuario y la calificación sean correctos antes de guardar la reseña.",
+    "rating_excellent": "Excelente",
+    "rating_very_good": "Muy bueno",
+    "rating_good": "Bueno",
+    "rating_fair": "Regular",
+    "rating_poor": "Malo"
   },
   "about": {
     "title": "Acerca de",

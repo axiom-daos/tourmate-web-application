@@ -25,6 +25,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+
 import { TranslatePipe } from '@ngx-translate/core';
 
 import {
@@ -43,6 +45,7 @@ import {
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatIconModule,
     TranslatePipe
   ],
   templateUrl: './review-form.html',
@@ -65,15 +68,21 @@ export class ReviewForm implements OnInit {
   private commentId: number | null = null;
   private createdAt: string | null = null;
 
-  // Definimos el formulario y sus validaciones
+  // Definimos los campos y validaciones del formulario
   reviewForm: FormGroup = this.fb.group({
     tourId: [
       '',
-      [Validators.required, Validators.min(1)]
+      [
+        Validators.required,
+        Validators.min(1)
+      ]
     ],
     userId: [
       '',
-      [Validators.required, Validators.min(1)]
+      [
+        Validators.required,
+        Validators.min(1)
+      ]
     ],
     rating: [
       5,
@@ -91,7 +100,7 @@ export class ReviewForm implements OnInit {
 
   constructor() {
 
-    // Cargamos los datos de la reseña al editar
+    // Cargamos los datos cuando editamos una reseña
     effect(() => {
       const reviews = this.reviewStore.reviews();
 
@@ -104,7 +113,7 @@ export class ReviewForm implements OnInit {
       }
 
       const existingReview = reviews.find(
-        review => review.id === this.reviewId
+        review => Number(review.id) === Number(this.reviewId)
       );
 
       if (existingReview) {
@@ -136,14 +145,14 @@ export class ReviewForm implements OnInit {
       this.isEditMode = true;
       this.reviewId = id;
 
-      // Consultamos los datos cuando no están cargados
+      // Consultamos las reseñas cuando no están cargadas
       if (this.reviewStore.reviews().length === 0) {
         this.reviewStore.loadData();
       }
     }
   }
 
-  // Validamos y enviamos el formulario
+  // Validamos y guardamos los datos del formulario
   onSubmit(): void {
 
     if (this.reviewForm.invalid || this.isSaving) {
@@ -164,7 +173,7 @@ export class ReviewForm implements OnInit {
     const rating = Number(values.rating);
     const comment = String(values.comment ?? '').trim();
 
-    // Validamos los datos ingresados
+    // Verificamos los identificadores y la calificación
     if (
       !Number.isInteger(tourId) ||
       tourId <= 0 ||
@@ -176,10 +185,11 @@ export class ReviewForm implements OnInit {
       comment.length === 0
     ) {
       this.errorMessage =
-        'Verifica los datos del formulario.';
+        'Verifica los datos ingresados en el formulario.';
       return;
     }
 
+    // Preparamos los datos de la reseña
     const review: ReviewInput = {
       tourId,
       userId,
@@ -188,7 +198,7 @@ export class ReviewForm implements OnInit {
       createdAt: this.createdAt ?? new Date().toISOString()
     };
 
-    // Conservamos los identificadores al editar
+    // Conservamos los datos originales al editar
     if (this.isEditMode && this.reviewId !== null) {
       review.id = this.reviewId;
       review.commentId = this.commentId;
@@ -206,13 +216,14 @@ export class ReviewForm implements OnInit {
       next: () => {
         this.isSaving = false;
 
-        // Navegamos cuando la API confirma el guardado
+        // Regresamos a la lista después de guardar
         this.router.navigate([
           '/feedback-and-tour-reviews/reviews'
         ]);
       },
       error: () => {
         this.isSaving = false;
+
         this.errorMessage =
           'Ocurrió un error al guardar la reseña.';
       }
