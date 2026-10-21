@@ -79,6 +79,11 @@
 
             <mat-card-content>
               <div class="card-detail">
+                <mat-icon aria-hidden="true">event_note</mat-icon>
+                <span>{{ 'activeTour.tourScheduleId' | translate }}</span>
+                <strong>#{{ activeTour.tourScheduleId }}</strong>
+              </div>
+              <div class="card-detail">
                 <mat-icon aria-hidden="true">person</mat-icon>
                 <span>{{ 'activeTours.assigned-guide' | translate }}</span>
                 <strong>{{ guideName(activeTour) }}</strong>
@@ -99,6 +104,16 @@
                 (click)="editActiveTour(activeTour.id)"
               >
                 <mat-icon aria-hidden="true">edit_note</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                class="delete-active-tour"
+                [matTooltip]="'activeTours.delete' | translate"
+                [attr.aria-label]="'activeTours.delete' | translate"
+                (click)="deleteActiveTour(activeTour.id)"
+              >
+                <mat-icon aria-hidden="true">delete_outline</mat-icon>
               </button>
               <button mat-stroked-button class="action-btn" type="button" (click)="navigateToLive(activeTour.id)">
                 <mat-icon aria-hidden="true">cast_connected</mat-icon>

@@ -1,113 +1,305 @@
-import { Injectable, signal, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { forkJoin } from 'rxjs';
 
+import {
+  Injectable,
+  inject,
+  signal,
+  computed
+} from '@angular/core';
+
+import {
+  Observable,
+  forkJoin,
+  of,
+  switchMap,
+  map,
+  tap,
+  catchError,
+  throwError,
+  finalize
+} from 'rxjs';
+
+import { Review } from '../domain/model/aggregates/review.entity';
+import { Comment } from '../domain/model/aggregates/comment.entity';
+import { ReviewApi } from '../infrastructure/review-api';
+import { CommentApi } from '../infrastructure/comment-api';
+
+export interface ReviewItem {
+  id: number;
+  userId: number;
+  tourId: number;
+  rating: number;
+  createdAt: string;
+  commentId: number | null;
+  comment: string;
+}
+
+export interface ReviewInput {
+  id?: number;
+  userId: number;
+  tourId: number;
+  rating: number;
+  comment: string;
+  commentId?: number | null;
+  createdAt?: string;
+}
+
+/**
+ * Manages review and comment application state.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewStore {
-  private http = inject(HttpClient);
 
-  // Señales de estado privadas
-  private _reviewsSignal = signal<any[]>([]);
-  private _loadingSignal = signal<boolean>(false);
+  private readonly reviewApi = inject(ReviewApi);
+  private readonly commentApi = inject(CommentApi);
 
-  // Getters públicos para consumir las señales
-  get reviews() {
-    return this._reviewsSignal;
-  }
+  // Estado privado
+  private readonly reviewsSignal = signal<ReviewItem[]>([]);
+  private readonly loadingSignal = signal(false);
+  private readonly errorSignal = signal<string | null>(null);
 
-  get loading() {
-    return this._loadingSignal;
-  }
+  // Estado público
+  readonly reviews = this.reviewsSignal.asReadonly();
+  readonly loading = this.loadingSignal.asReadonly();
+  readonly error = this.errorSignal.asReadonly();
 
-  // Carga y fusiona /reviews con /comments del json-server
+  readonly reviewCount = computed(
+    () => this.reviews().length
+  );
+
+  // READ: Cargamos reseñas y comentarios
   loadData(): void {
-    this._loadingSignal.set(true);
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
 
     forkJoin({
-      reviews: this.http.get<any[]>('https://6ac570fc54a61668c5f72d4d.mockapi.io/api/v1/reviews'),
-      comments: this.http.get<any[]>('https://6ac570fc54a61668c5f72d4d.mockapi.io/api/v1/comments')
-    }).subscribe(({ reviews, comments }) => {
-      const merged = reviews.map((rev: any) => {
-        const found = comments.find((c: any) => c.reviewId === rev.id || c.id === rev.id);
-        return {
-          ...rev,
-          comment: found ? found.content : (rev.comment || 'Sin comentario')
-        };
-      });
-      this._reviewsSignal.set(merged);
-      this._loadingSignal.set(false);
+      reviews: this.reviewApi.getReviews(),
+      comments: this.commentApi.getComments()
+    }).pipe(
+      finalize(() => this.loadingSignal.set(false))
+    ).subscribe({
+      next: ({ reviews, comments }) => {
+        const result = reviews.map(review =>
+          this.mapReview(review, comments)
+        );
+
+        this.reviewsSignal.set(result);
+      },
+      error: (error: unknown) => {
+        this.setError(error, 'Error al cargar las reseñas');
+      }
     });
   }
 
+  // Relacionamos una reseña con su comentario
+  private mapReview(
+    review: Review,
+    comments: Comment[]
+  ): ReviewItem {
+
+    const comment = comments.find(
+      item => Number(item.reviewId) === Number(review.id)
+    );
+
+    return {
+      id: Number(review.id),
+      userId: Number(review.userId),
+      tourId: Number(review.tourId),
+      rating: Number(review.rating),
+      createdAt: review.createdAt,
+      commentId: comment ? Number(comment.id) : null,
+      comment: comment?.content ?? ''
+    };
+  }
+
+  // READ: Buscamos una reseña en el estado
   getReviewById(id: number) {
-    return () => this._reviewsSignal().find((r: any) => r.id === id);
+    return computed(() =>
+      this.reviews().find(
+        review => review.id === Number(id)
+      )
+    );
   }
 
-  addReview(newReview: any): void {
-    this.http.post<any>('http://localhost:3000/reviews', {
-      userId: newReview.userId,
-      tourId: newReview.tourId,
-      rating: newReview.rating,
-      createdAt: newReview.createdAt
-    }).subscribe((createdReview: any) => {
-      const generatedId = createdReview.id;
-      this.http.post('http://localhost:3000/comments', {
-        reviewId: generatedId,
-        content: newReview.comment,
-        createdAt: newReview.createdAt
-      }).subscribe({
-        next: () => {
-          const reviewWithId = { ...newReview, id: generatedId };
-          this._reviewsSignal.set([...this._reviewsSignal(), reviewWithId]);
-        },
-        error: () => {
-          const reviewWithId = { ...newReview, id: generatedId };
-          this._reviewsSignal.set([...this._reviewsSignal(), reviewWithId]);
-        }
-      });
+  // READ: Consultamos una reseña desde la API
+  getReview(id: number): Observable<Review> {
+    return this.reviewApi.getReview(id);
+  }
+
+  // CREATE: Creamos una reseña y su comentario
+  addReview(input: ReviewInput): Observable<ReviewItem> {
+    this.errorSignal.set(null);
+    this.loadingSignal.set(true);
+
+    const createdAt =
+      input.createdAt ?? new Date().toISOString();
+
+    const review = new Review({
+      id: 0,
+      userId: Number(input.userId),
+      tourId: Number(input.tourId),
+      rating: Number(input.rating),
+      createdAt
     });
+
+    return this.reviewApi.createReview(review).pipe(
+      switchMap(createdReview => {
+
+        const comment = new Comment({
+          id: 0,
+          reviewId: Number(createdReview.id),
+          content: input.comment,
+          createdAt
+        });
+
+        return this.commentApi.createComment(comment).pipe(
+          map(createdComment => ({
+            id: Number(createdReview.id),
+            userId: Number(createdReview.userId),
+            tourId: Number(createdReview.tourId),
+            rating: Number(createdReview.rating),
+            createdAt: createdReview.createdAt,
+            commentId: Number(createdComment.id),
+            comment: createdComment.content
+          } as ReviewItem))
+        );
+      }),
+      tap(item => {
+        this.reviewsSignal.update(reviews => [
+          ...reviews,
+          item
+        ]);
+      }),
+      catchError((error: unknown) => {
+        this.setError(error, 'Error al crear la reseña');
+        return throwError(() => error);
+      }),
+      finalize(() => this.loadingSignal.set(false))
+    );
   }
 
-  updateReview(updated: any): void {
-    this.http.put(`http://localhost:3000/reviews/${updated.id}`, {
-      id: updated.id,
-      userId: updated.userId,
-      tourId: updated.tourId,
-      rating: updated.rating,
-      createdAt: updated.createdAt
-    }).subscribe(() => {
-      this.http.put(`http://localhost:3000/comments/${updated.id}`, {
-        id: updated.id,
-        reviewId: updated.id,
-        content: updated.comment,
-        createdAt: updated.createdAt
-      }).subscribe({
-        next: () => {
-          const updatedList = this._reviewsSignal().map((r: any) => r.id === updated.id ? updated : r);
-          this._reviewsSignal.set(updatedList);
-        },
-        error: () => {
-          const updatedList = this._reviewsSignal().map((r: any) => r.id === updated.id ? updated : r);
-          this._reviewsSignal.set(updatedList);
-        }
-      });
+  // UPDATE: Actualizamos una reseña y su comentario
+  updateReview(input: ReviewInput): Observable<ReviewItem> {
+    this.errorSignal.set(null);
+
+    if (input.id == null) {
+      return throwError(
+        () => new Error('Review ID is required')
+      );
+    }
+
+    this.loadingSignal.set(true);
+
+    const existing = this.reviews().find(
+      review => review.id === Number(input.id)
+    );
+
+    const createdAt =
+      existing?.createdAt ??
+      input.createdAt ??
+      new Date().toISOString();
+
+    const review = new Review({
+      id: Number(input.id),
+      userId: Number(input.userId),
+      tourId: Number(input.tourId),
+      rating: Number(input.rating),
+      createdAt
     });
+
+    return this.reviewApi.updateReview(review).pipe(
+      switchMap(updatedReview => {
+
+        const commentId =
+          input.commentId ?? existing?.commentId;
+
+        const comment = new Comment({
+          id: commentId != null ? Number(commentId) : 0,
+          reviewId: Number(updatedReview.id),
+          content: input.comment,
+          createdAt
+        });
+
+        const commentRequest = commentId != null
+          ? this.commentApi.updateComment(comment)
+          : this.commentApi.createComment(comment);
+
+        return commentRequest.pipe(
+          map(savedComment => ({
+            id: Number(updatedReview.id),
+            userId: Number(updatedReview.userId),
+            tourId: Number(updatedReview.tourId),
+            rating: Number(updatedReview.rating),
+            createdAt: updatedReview.createdAt,
+            commentId: Number(savedComment.id),
+            comment: savedComment.content
+          } as ReviewItem))
+        );
+      }),
+      tap(updated => {
+        this.reviewsSignal.update(reviews =>
+          reviews.map(review =>
+            review.id === updated.id
+              ? updated
+              : review
+          )
+        );
+      }),
+      catchError((error: unknown) => {
+        this.setError(error, 'Error al actualizar la reseña');
+        return throwError(() => error);
+      }),
+      finalize(() => this.loadingSignal.set(false))
+    );
   }
 
+  // DELETE: Eliminamos comentarios y reseña
   deleteReview(id: number): void {
-    // 1. Actualizamos la interfaz de forma inmediata (quita el elemento de la tabla al instante)
-    const filtered = this._reviewsSignal().filter((r: any) => r.id !== id);
-    this._reviewsSignal.set(filtered);
+    this.errorSignal.set(null);
+    this.loadingSignal.set(true);
 
-    // 2. Eliminamos en el servidor en segundo plano sin bloquear la vista si falla un recurso
-    this.http.delete(`http://localhost:3000/reviews/${id}`).subscribe({
-      error: (err) => console.error('Error al borrar review en servidor', err)
-    });
+    this.commentApi.getComments().pipe(
+      switchMap(comments => {
 
-    this.http.delete(`http://localhost:3000/comments/${id}`).subscribe({
-      error: (err) => console.log('Comentario no encontrado en servidor', err)
+        const relatedComments = comments.filter(
+          comment =>
+            Number(comment.reviewId) === Number(id)
+        );
+
+        if (relatedComments.length === 0) {
+          return of([]);
+        }
+
+        return forkJoin(
+          relatedComments.map(comment =>
+            this.commentApi.deleteComment(Number(comment.id))
+          )
+        );
+      }),
+      switchMap(() => this.reviewApi.deleteReview(id)),
+      finalize(() => this.loadingSignal.set(false))
+    ).subscribe({
+      next: () => {
+        this.reviewsSignal.update(reviews =>
+          reviews.filter(
+            review => review.id !== Number(id)
+          )
+        );
+      },
+      error: (error: unknown) => {
+        this.setError(error, 'Error al eliminar la reseña');
+      }
     });
+  }
+
+  // Centralizamos el manejo de errores
+  private setError(
+    error: unknown,
+    fallback: string
+  ): void {
+    this.errorSignal.set(
+      error instanceof Error ? error.message : fallback
+    );
   }
 }

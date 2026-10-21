@@ -5,6 +5,11 @@
     <p>{{ 'activeTour.form-description' | translate }}</p>
   </header>
 
+  @if (isEdit && !editFormHydrated()) {
+    <div class="form-loading" role="status">
+      <span>{{ 'common.loading' | translate }}</span>
+    </div>
+  } @else {
   <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
     <div class="form-grid">
       <mat-form-field appearance="outline">
@@ -17,8 +22,8 @@
           @if (scheduleOptions().length === 0) {
             <mat-option disabled>{{ 'activeTour.no-schedules' | translate }}</mat-option>
           }
-          @for (option of scheduleOptions(); track option.schedule.id) {
-            <mat-option [value]="option.schedule.id">
+          @for (option of scheduleOptions(); track option.scheduleId) {
+            <mat-option [value]="option.scheduleId">
               {{ option.tourTitle }} · {{ option.schedule.departureDateTime | date: 'short' }}
             </mat-option>
           }
@@ -100,4 +105,5 @@
       </button>
     </div>
   </form>
+  }
 </section>

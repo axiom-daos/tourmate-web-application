@@ -322,6 +322,15 @@
   background: #f0f4ef;
 }
 
+.active-tour-card mat-card-actions .delete-active-tour {
+  color: #92583f;
+}
+
+.active-tour-card mat-card-actions .delete-active-tour:hover {
+  color: #8e382c;
+  background: #fbefeb;
+}
+
 .action-btn {
   min-height: 38px;
   border-color: rgb(41 72 62 / 22%) !important;

@@ -37,6 +37,16 @@
   background: var(--tm-surface);
 }
 
+.form-loading {
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--tm-border);
+  border-radius: 14px;
+  color: var(--tm-muted);
+  background: var(--tm-surface);
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

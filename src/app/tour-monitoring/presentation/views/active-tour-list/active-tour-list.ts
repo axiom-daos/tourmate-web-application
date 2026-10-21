@@ -7,7 +7,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/icon';
 
 /**
@@ -31,6 +31,7 @@ import {MatIconModule} from '@angular/material/icon';
 export class ActiveTourList {
   readonly store = inject(TourMonitoringStore);
   protected router = inject(Router);
+  private readonly translate = inject(TranslateService);
 
   protected readonly pageIndex = signal(0);
   protected readonly pageSize = signal(6);
@@ -75,7 +76,10 @@ export class ActiveTourList {
    * @param id - The ID of the activeTour to delete.
    */
   deleteActiveTour(id: number) {
-    this.store.deleteActiveTour(id);
+    const confirmation = this.translate.instant('activeTours.delete_confirm');
+    if (window.confirm(confirmation)) {
+      this.store.deleteActiveTour(id);
+    }
   }
 
   /**

@@ -1,9 +1,10 @@
+
 :host {
   display: block;
-  min-height: calc(100vh - 64px);
-  background: linear-gradient(180deg, #f3efe9 0%, #f0ece5 100%);
-  font-family: "Geist", "Segoe UI", sans-serif;
-  color: #1d2f2a;
+  min-height: calc(100vh - 140px);
+  background: #f8f7f2;
+  color: #29433a;
+  font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
 }
 
 *,
@@ -12,175 +13,293 @@
   box-sizing: border-box;
 }
 
+/* Contenedor principal */
 .review-shell {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 48px 24px 32px;
+  width: min(948px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 14px 0 40px;
 }
 
-.review-card {
-  width: min(980px, 100%);
-  background: rgba(255, 255, 255, 0.28);
-  border: 1px solid rgba(29, 47, 42, 0.12);
-  border-radius: 20px;
-  box-shadow: 0 12px 30px rgba(20, 28, 26, 0.06);
-  backdrop-filter: blur(8px);
-  padding: 24px 26px 20px;
-}
-
-.card-header {
+/* Encabezado */
+.form-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 24px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid rgba(29, 47, 42, 0.12);
+  margin-bottom: 22px;
 }
 
-.title-block {
+.header-information {
   flex: 1;
-
-  h2 {
-    margin: 0;
-    font-size: clamp(2rem, 2vw + 0.8rem, 3rem);
-    line-height: 1.08;
-    letter-spacing: -0.06em;
-    color: #1b2d2a;
-    font-weight: 800;
-  }
+  min-width: 0;
 }
 
+.header-information h1 {
+  margin: 0 0 8px;
+  color: #29433a;
+  font-size: clamp(1.6rem, 2.2vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.header-information p {
+  margin: 0;
+  color: #708078;
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+/* Indicador del formulario */
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 8px 14px;
+  color: #95633f;
+  background: #fff5ec;
+  border: 1px solid #efd6c3;
+  border-radius: 24px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.badge-icon {
+  font-size: 0.95rem;
+}
+
+/* Tarjeta del formulario */
+.review-card {
+  width: 100%;
+  padding: 28px 30px 24px;
+  background: #fffefb;
+  border: 1px solid #dce3d9;
+  border-radius: 14px;
+}
+
+/* Organización del formulario */
 .review-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding-top: 18px;
+  gap: 14px;
 }
 
 .form-row {
   display: flex;
-  gap: 18px;
+  gap: 16px;
+  width: 100%;
+}
 
-  &.two-columns > * {
-    flex: 1;
-  }
+.form-row.two-columns > * {
+  flex: 1;
+  min-width: 0;
 }
 
 .full-width {
   width: 100%;
+  min-width: 0;
 }
 
-/* Angular Material Overrides personalizados */
-:host ::ng-deep {
-  .mat-mdc-form-field {
-    width: 100%;
-  }
-
-  .mat-mdc-text-field-wrapper {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 14px;
-    box-shadow: inset 0 0 0 1px rgba(29, 47, 42, 0.14);
-    transition: box-shadow 0.2s ease;
-
-    &:hover {
-      box-shadow: inset 0 0 0 1px rgba(29, 47, 42, 0.28);
-    }
-  }
-
-  .mdc-notched-outline__leading,
-  .mdc-notched-outline__notch,
-  .mdc-notched-outline__trailing {
-    border-color: rgba(29, 47, 42, 0.2) !important;
-  }
-
-  .mat-mdc-form-field-label {
-    color: #5b6e67;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-
-  .mat-mdc-input-element,
-  .mat-mdc-select-value {
-    color: #1d2d2a;
-    font-size: 1rem;
-  }
+/* Campos Angular Material */
+:host ::ng-deep .mat-mdc-form-field {
+  width: 100%;
 }
 
-.field-label {
-  margin-top: 4px;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #5b6e67;
+:host ::ng-deep .mat-mdc-text-field-wrapper {
+  background: #fff !important;
+  border-radius: 5px;
 }
 
-.textarea-field {
-  margin-top: -6px;
+:host ::ng-deep .mdc-notched-outline__leading,
+:host ::ng-deep .mdc-notched-outline__notch,
+:host ::ng-deep .mdc-notched-outline__trailing {
+  border-color: #bfc9c2;
 }
 
+:host ::ng-deep .mat-mdc-form-field:hover
+.mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field:hover
+.mdc-notched-outline__notch,
+:host ::ng-deep .mat-mdc-form-field:hover
+.mdc-notched-outline__trailing {
+  border-color: #5d7869;
+}
+
+:host ::ng-deep .mat-mdc-input-element,
+:host ::ng-deep .mat-mdc-select-value {
+  color: #29433a;
+  font-size: 0.95rem;
+}
+
+:host ::ng-deep .mat-mdc-floating-label {
+  color: #465e51;
+  font-size: 0.9rem;
+}
+
+/* Campo de comentarios */
+.comment-field textarea {
+  min-height: 94px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* Mensaje informativo */
+.information-message {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background-color: #edf4ec;
+  border: 1px solid #d7e5d5;
+  border-radius: 10px;
+}
+
+.information-message mat-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #52745d;
+  font-size: 24px;
+}
+
+.information-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.information-content strong {
+  color: #294f3b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.information-content span {
+  color: #526d5b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Mensaje de error */
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  color: #a33d2e;
+  background: #fff1ed;
+  border: 1px solid #efccc4;
+  border-radius: 9px;
+  font-size: 0.85rem;
+}
+
+.form-error mat-icon {
+  flex-shrink: 0;
+}
+
+/* Botones del formulario */
 .footer-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
+  margin-top: 6px;
   padding-top: 18px;
-  border-top: 1px solid rgba(29, 47, 42, 0.12);
+  border-top: 1px solid #e2e7df;
 }
 
+/* Botón cancelar */
 .secondary-btn {
-  background: transparent !important;
-  border: 1px solid rgba(29, 47, 42, 0.32) !important;
-  color: #203f3a !important;
-  border-radius: 12px !important;
   min-height: 42px !important;
-  padding: 0 18px !important;
-  font-weight: 700 !important;
-  transition: background-color 0.2s ease !important;
-
-  &:hover {
-    background: rgba(29, 47, 42, 0.04) !important;
-  }
+  padding: 0 20px !important;
+  color: #29433a !important;
+  background: #fffefb !important;
+  border: 1px solid #dce3d9 !important;
+  border-radius: 9px !important;
+  font-weight: 600 !important;
 }
 
+.secondary-btn:hover:not(:disabled) {
+  background: #f0f3ed !important;
+}
+
+/* Botón publicar y actualizar */
 .submit-btn {
-  background: linear-gradient(135deg, #bf785d 0%, #a95d3d 100%) !important;
-  color: #fffdfc !important;
-  border-radius: 12px !important;
   min-height: 42px !important;
   padding: 0 22px !important;
-  font-weight: 800 !important;
-  box-shadow: 0 12px 18px rgba(169, 93, 61, 0.18);
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  color: #ffffff !important;
+  background: #be7956 !important;
+  border: none !important;
+  border-radius: 9px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
 
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 14px 22px rgba(169, 93, 61, 0.24);
+.submit-btn:hover:not(:disabled) {
+  background: #a96545 !important;
+}
+
+/* Botones deshabilitados */
+.submit-btn:disabled,
+.secondary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Diseño para tablets */
+@media (max-width: 768px) {
+  .review-shell {
+    padding-top: 22px;
+  }
+
+  .form-header {
+    align-items: flex-start;
+  }
+
+  .review-card {
+    padding: 22px 20px;
+  }
+
+  .form-row.two-columns {
+    flex-direction: column;
+    gap: 6px;
   }
 }
 
-.back-btn {
-  margin-bottom: 12px;
-  border-radius: 12px !important;
-  border-color: rgba(29, 47, 42, 0.24) !important;
-  color: #203f3a !important;
-  font-weight: 700 !important;
-  min-height: 40px !important;
-  padding: 0 16px !important;
-}
+/* Diseño para móviles */
+@media (max-width: 480px) {
+  .review-shell {
+    width: calc(100% - 24px);
+    padding-top: 18px;
+  }
 
-.back-btn:hover {
-  background: rgba(29, 47, 42, 0.04);
-}
-
-@media (max-width: 900px) {
-  .card-header,
-  .form-row,
-  .footer-actions {
+  .form-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
+  }
+
+  .header-information h1 {
+    font-size: 1.65rem;
+  }
+
+  .review-card {
+    padding: 18px 14px;
+  }
+
+  .information-message {
+    align-items: flex-start;
+    padding: 12px 14px;
+  }
+
+  .footer-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .footer-actions button {
+    width: 100%;
   }
 }
