@@ -81,7 +81,10 @@
       "description_required": "Description is required.",
       "duration_required": "Duration is required.",
       "price_amount_required": "Price is required."
-    }
+    },
+    "s1": "Tours in Catalog",
+    "s2": "Open Tours",
+    "s3": "Scheduled Slots"
   },
   "tour_schedules": {
     "list_title": "Tour Schedules",

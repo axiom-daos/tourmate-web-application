@@ -81,7 +81,10 @@
       "description_required": "La descripción es obligatoria.",
       "duration_required": "La duración es obligatoria.",
       "price_amount_required": "El precio es obligatorio."
-    }
+    },
+    "s1": "tours en Catálogo",
+    "s2": "Tours Abiertos",
+    "s3": "Cupos Programados"
   },
   "tour_schedules": {
     "list_title": "Horarios de Tours",

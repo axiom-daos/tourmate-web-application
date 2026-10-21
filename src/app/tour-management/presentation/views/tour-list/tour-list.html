@@ -9,6 +9,21 @@
   </button>
 </section>
 
+<section class="band">
+  <div>
+    <b id="s1">{{ store.getToursLength() }}</b>
+    <span>{{ 'tours.s1' | translate }}</span>
+  </div>
+  <div>
+    <b id="s2">{{ store.getToursOpenedCount() }}</b>
+    <span>{{ 'tours.s2' | translate }}</span>
+  </div>
+  <div>
+    <b id="s3">{{ store.getTotalSpots() }}</b>
+    <span>{{ 'tours.s3' | translate }}</span>
+  </div>
+</section>
+
 <mat-button-toggle-group
   class="view-switch"
   [value]="currentView"
