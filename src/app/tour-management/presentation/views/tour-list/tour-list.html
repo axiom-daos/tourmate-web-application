@@ -50,9 +50,9 @@
 <section class="table-card" [attr.aria-label]="'tours.list_title' | translate">
 
   <div class="cards-grid">
-    @for (tour of store.tours(); track tour.id) {
+    @for (tour of store.tours(); track tour.id; let i = $index) {
 
-      <app-tour-item class="tour-enter" [tour]="tour" (editTour)="editTour(tour.id)" (deleteTour)="deleteTour(tour.id)"></app-tour-item>
+      <app-tour-item class="tour-enter" [tour]="tour" [imageUrl]="images[i % images.length]" (editTour)="editTour(tour.id)" (deleteTour)="deleteTour(tour.id)"></app-tour-item>
 
     }
   </div>

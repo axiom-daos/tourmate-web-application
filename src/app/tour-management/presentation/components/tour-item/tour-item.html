@@ -1,55 +1,52 @@
-<mat-card class="tour-card">
-  <mat-card-content>
+<mat-card appearance="outlined" class="tour-card">
 
-    <div class="top-row">
-      @if (tour().status === 'OPENED') {
-        <mat-chip class="chip-status">{{  tour().status }}</mat-chip>
-      } @else {
-        <mat-chip class="chip-inactive">{{  tour().status }}</mat-chip>
-      }
-      <span class="tour-id">{{ tour().id }}</span>
-    </div>
+  <div class="img-container">
+    @if (imageUrl()) {
+      <img [src]="imageUrl()" [alt]="tour().details.title" loading="lazy">
+    }
+    <span class="stamp">{{ tour().details.duration }}</span>
+  </div>
 
-    <h2 class="title">{{ tour().details.title }}</h2>
-    <p class="description">{{ tour().details.description }}</p>
+  <div class="top">
+    <span class="st">{{ tour().status }}</span>
+    <span class="ref">Tour {{ tour().id }}</span>
+  </div>
 
-    <div class="info-box">
+  <mat-card-content class="body">
+    <h3 class="title">{{ tour().details.title }}</h3>
+    <p class="desc">{{ tour().details.description }}</p>
+
+
+    <dl class="meta">
       <div>
-        <span class="label">{{ 'tours.agency_id' | translate  }}</span>
-        <span class="value">{{  tour().agencyId }}</span>
+        <dt>{{ 'tours.difficulty' | translate }}</dt>
+        <dd>
+          <span class="dots">
+            @for(level of [1,2,3]; track level) {
+              <i class="dot" [class.on]="level <= difficultyLevel()"></i>
+            }
+          </span>
+          {{ tour().details.difficulty }}
+        </dd>
       </div>
-
       <div>
-        <span class="label">{{ 'tours.duration' | translate  }}</span>
-        <span class="value">{{  tour().details.duration }}</span>
+        <dt>{{ 'tours.agency' | translate }}</dt>
+        <dd>N.º {{ tour().agencyId }}</dd>
       </div>
-
-      <div>
-        <span class="label">{{ 'tours.difficulty' | translate  }}</span>
-        <span class="value">{{  tour().details.difficulty | lowercase }}</span>
-      </div>
-
-      <div>
-        <span class="label">{{ 'tours.price' | translate  }}</span>
-        <span class="value">{{ tour().details.price.amount }} {{ tour().details.price.currency }}</span>
-      </div>
-    </div>
+    </dl>
   </mat-card-content>
 
   <mat-card-actions class="footer-card">
 
-    <button mat-stroked-button type="button" class="btn-edit" (click)="editTour.emit()">
-      <mat-icon aria-hidden="true">edit</mat-icon>
-      {{ 'tours.edit' | translate }}
-    </button>
+    <div class="price">{{ tour().details.price.amount }} <small>{{ tour().details.price.currency }}</small></div>
+    <div class="acts">
+      <button mat-icon-button (click)="editTour.emit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button (click)="deleteTour.emit()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
 
-    <button
-      mat-icon-button
-      type="button"
-      [attr.aria-label]="'tours.delete' | translate"
-      (click)="deleteTour.emit()"
-    >
-      <mat-icon aria-hidden="true">delete_outline</mat-icon>
-    </button>
   </mat-card-actions>
 </mat-card>

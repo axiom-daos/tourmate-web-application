@@ -1,4 +1,14 @@
 :root {
+  --ground: #F6F5F0;
+  --surface: #FDFCF8;
+  --step: #EFF0EA;
+  --sage: #E2EAE1;
+  --sage-ink: #2C5A47;
+  --ink: #16302A;
+  --deep: #1E3A33;
+  --on-deep: #F6F5F0;
+  --muted: #66756F;
+  --warm-ink: #6E6552;
   --tm-forest: #1f382f;
   --tm-forest-soft: #29483d;
   --tm-canvas: #f7f6f1;

@@ -52,6 +52,7 @@
     "new": "Añadir Tour",
     "list_title": "Tours",
     "id": "ID",
+    "agency": "Agencia",
     "agency_id": "ID de Agencia",
     "title": "Título",
     "description": "Descripción",

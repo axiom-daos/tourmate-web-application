@@ -110,10 +110,10 @@
 }
 
 .table-card {
-  overflow: hidden;
-  border: 1px solid var(--tm-border);
-  border-radius: 14px;
-  background: var(--tm-surface);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
 }
 
 .table-scroll {
@@ -248,11 +248,10 @@ td.mat-mdc-cell {
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 440px));
-  grid-auto-rows: minmax(0, 1fr);
-  justify-content: start;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   gap: clamp(14px, 2vw, 24px);
-  padding: clamp(14px, 2.5vw, 28px);
+  align-items: stretch;
+
 }
 
 .tour-enter {
