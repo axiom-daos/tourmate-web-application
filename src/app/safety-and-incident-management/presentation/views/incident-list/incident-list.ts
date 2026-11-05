@@ -26,7 +26,7 @@ import { Incident } from '../../../domain/model/aggregates/incident.entity';
     MatSortModule,
     DatePipe,
     LowerCasePipe,
-    TranslatePipe
+    TranslatePipe,
   ],
   templateUrl: './incident-list.html',
   styleUrl: './incident-list.css',
@@ -62,7 +62,7 @@ export class IncidentList {
   });
 
   editIncident(id: number) {
-    this.router.navigate([`safety-and-incident-management/incidents/${id}/edit`]).then();
+    this.router.navigate([`/safety-and-incident-management/incidents/${id}/edit`]).then();
   }
 
   resolveIncident(incident: Incident) {
@@ -74,6 +74,6 @@ export class IncidentList {
   }
 
   navigateToNew() {
-    this.router.navigate(['safety-and-incident-management/incidents/new-incident']).then();
+    this.router.navigate(['/safety-and-incident-management/incidents/new-incident']).then();
   }
 }
