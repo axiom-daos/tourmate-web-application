@@ -5,14 +5,14 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
-import { DatePipe, LowerCasePipe, NgIf } from '@angular/common';
+import { DatePipe, LowerCasePipe, NgClass } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IncidentStore } from '../../../application/incident.store';
 import { Incident } from '../../../domain/model/aggregates/incident.entity';
 
 /**
- * Displays the incident collection with table actions.
+ * Displays the incident collection with table actions and manual offline synchronization triggers.
  */
 @Component({
   selector: 'app-incident-list',
@@ -27,6 +27,7 @@ import { Incident } from '../../../domain/model/aggregates/incident.entity';
     DatePipe,
     LowerCasePipe,
     TranslatePipe,
+    NgClass,
   ],
   templateUrl: './incident-list.html',
   styleUrl: './incident-list.css',
@@ -61,6 +62,10 @@ export class IncidentList {
     return source;
   });
 
+  public triggerManualSync() {
+    this.store.syncOfflineIncidents();
+  }
+
   editIncident(id: number) {
     this.router.navigate([`/safety-and-incident-management/incidents/${id}/edit`]).then();
   }
@@ -74,6 +79,6 @@ export class IncidentList {
   }
 
   navigateToNew() {
-    this.router.navigate(['/safety-and-incident-management/incidents/new-incident']).then();
+    this.router.navigate(['/safety-and-incident-management/incidents/new']).then();
   }
 }
