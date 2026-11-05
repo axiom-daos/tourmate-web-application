@@ -38,6 +38,15 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
+        <mat-label>{{ 'incidents.severity' | translate }} (Severidad)</mat-label>
+        <mat-select formControlName="severity">
+          @for (sev of severities; track sev) {
+            <mat-option [value]="sev">{{ sev }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
         <mat-label>{{ 'incidents.reported_at' | translate }}</mat-label>
         <input matInput type="datetime-local" formControlName="reportedAt" required>
       </mat-form-field>
@@ -67,9 +76,16 @@
       </mat-form-field>
     </div>
 
-    <div class="protocol-note">
-      <mat-icon aria-hidden="true">health_and_safety</mat-icon>
-      <span>{{ 'incidents.protocol_note' | translate }}</span>
+    <div class="protocol-panel" [ngClass]="{'critical-protocol': currentSeverity === 'CRITICAL'}">
+      <div class="protocol-header">
+        <mat-icon aria-hidden="true">health_and_safety</mat-icon>
+        <strong>Protocolos de Emergencia Guiados ({{ currentSeverity }})</strong>
+      </div>
+      <ul class="protocol-list">
+        @for (protocol of activeProtocols; track protocol) {
+          <li>{{ protocol }}</li>
+        }
+      </ul>
     </div>
 
     <div class="form-actions">
