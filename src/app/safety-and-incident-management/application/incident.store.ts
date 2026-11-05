@@ -82,6 +82,15 @@ export class IncidentStore {
   updateIncident = (updatedIncident: Incident): void => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
+
+   if (!updatedIncident.isSynced) {
+      this.incidentsSignal.update((incidents) =>
+        incidents.map((i) => (i.uuid === updatedIncident.uuid ? updatedIncident : i)),
+      );
+      this.loadingSignal.set(false);
+      return;
+    }
+
     this.incidentApi
       .updateIncident(updatedIncident)
       .pipe(retry(2))
@@ -137,8 +146,7 @@ export class IncidentStore {
           );
           this.removeLocalOfflineIncident(incident.uuid);
         },
-        error: () => {
-        },
+        error: () => {},
       });
     });
   };
