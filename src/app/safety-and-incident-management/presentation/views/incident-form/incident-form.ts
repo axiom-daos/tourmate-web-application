@@ -91,6 +91,7 @@ export class IncidentForm {
   submit() {
     if (this.form.invalid) return;
     const reportedAt = this.form.value.reportedAt!;
+
     const incident: Incident = new Incident({
       id: this.incidentId ?? 0,
       activeTourId: this.form.value.activeTourId!,
@@ -100,6 +101,8 @@ export class IncidentForm {
       longitude: this.form.value.longitude!,
       reportedAt: new Date(reportedAt).toISOString(),
       status: this.form.value.status!,
+      severity: 'HIGH',
+      isSynced: false
     });
 
     if (this.isEdit) {
@@ -108,7 +111,7 @@ export class IncidentForm {
       this.store.addIncident(incident);
     }
 
-    this.router.navigate(['safety-and-incident-management/incidents']).then();
+    this.router.navigate(['/safety-and-incident-management/incidents']).then();
   }
 
   private toLocalDateTime(value: string): string {
