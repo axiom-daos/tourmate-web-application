@@ -10,7 +10,8 @@ const incidentForm = () =>
  */
 export const safetyIncidentRoutes: Routes = [
   { path: 'incidents', loadComponent: incidentList },
+  { path: 'incidents/new', loadComponent: incidentForm },
   { path: 'incidents/new-incident', loadComponent: incidentForm },
   { path: 'incidents/:id/edit', loadComponent: incidentForm },
-  { path: '', redirectTo: '/safety-and-incident-management/incidents', pathMatch: 'full'}
+  { path: '', redirectTo: 'incidents', pathMatch: 'full' },
 ];
