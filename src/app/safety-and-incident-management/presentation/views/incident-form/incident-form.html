@@ -18,6 +18,9 @@
         @if (form.get('activeTourId')?.touched && form.get('activeTourId')?.hasError('required')) {
           <mat-error>{{ 'incidents.active_tour_required' | translate }}</mat-error>
         }
+        @if (form.get('activeTourId')?.touched && form.get('activeTourId')?.hasError('min')) {
+          <mat-error>{{ 'incidents.id_invalid' | translate }}</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -26,6 +29,17 @@
         @if (form.get('reportedByUserId')?.touched && form.get('reportedByUserId')?.hasError('required')) {
           <mat-error>{{ 'incidents.reported_by_required' | translate }}</mat-error>
         }
+        @if (form.get('reportedByUserId')?.touched && form.get('reportedByUserId')?.hasError('min')) {
+          <mat-error>{{ 'incidents.id_invalid' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'incidents.reporter_role' | translate }}</mat-label>
+        <mat-select formControlName="reporterRole">
+          <mat-option value="TOURIST">{{ 'incidents.reporter_roles.TOURIST' | translate }}</mat-option>
+          <mat-option value="GUIDE">{{ 'incidents.reporter_roles.GUIDE' | translate }}</mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -54,11 +68,17 @@
       <mat-form-field appearance="outline">
         <mat-label>{{ 'incidents.latitude' | translate }}</mat-label>
         <input matInput type="number" step="any" formControlName="latitude" required>
+        @if (form.get('latitude')?.touched && (form.get('latitude')?.hasError('min') || form.get('latitude')?.hasError('max'))) {
+          <mat-error>{{ 'incidents.latitude_invalid' | translate }}</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>{{ 'incidents.longitude' | translate }}</mat-label>
         <input matInput type="number" step="any" formControlName="longitude" required>
+        @if (form.get('longitude')?.touched && (form.get('longitude')?.hasError('min') || form.get('longitude')?.hasError('max'))) {
+          <mat-error>{{ 'incidents.longitude_invalid' | translate }}</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="field-wide">
@@ -71,6 +91,9 @@
           required
         ></textarea>
         @if (form.get('description')?.touched && form.get('description')?.hasError('required')) {
+          <mat-error>{{ 'incidents.description_required' | translate }}</mat-error>
+        }
+        @if (form.get('description')?.touched && form.get('description')?.hasError('pattern')) {
           <mat-error>{{ 'incidents.description_required' | translate }}</mat-error>
         }
       </mat-form-field>
