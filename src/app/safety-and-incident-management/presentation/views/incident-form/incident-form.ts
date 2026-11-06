@@ -41,18 +41,24 @@ export class IncidentForm {
   public form = this.fb.group({
     activeTourId: new FormControl<number>(1, {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.min(1)],
     }),
     reportedByUserId: new FormControl<number>(1, {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.min(1)],
     }),
     description: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.pattern(/\S/)],
     }),
-    latitude: new FormControl<number>(0, { nonNullable: true, validators: [Validators.required] }),
-    longitude: new FormControl<number>(0, { nonNullable: true, validators: [Validators.required] }),
+    latitude: new FormControl<number>(0, {
+      nonNullable: true,
+      validators: [Validators.required, Validators.min(-90), Validators.max(90)],
+    }),
+    longitude: new FormControl<number>(0, {
+      nonNullable: true,
+      validators: [Validators.required, Validators.min(-180), Validators.max(180)],
+    }),
     reportedAt: new FormControl<string>(this.toLocalDateTime(new Date().toISOString()), {
       nonNullable: true,
       validators: [Validators.required],
@@ -62,6 +68,10 @@ export class IncidentForm {
       validators: [Validators.required],
     }),
     severity: new FormControl<string>('HIGH', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    reporterRole: new FormControl<'TOURIST' | 'GUIDE'>('TOURIST', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -99,6 +109,7 @@ export class IncidentForm {
             reportedAt: this.toLocalDateTime(incident.reportedAt),
             status: incident.status,
             severity: incident.severity ?? 'HIGH',
+            reporterRole: incident.reporterRole,
           });
           this.currentSeverity = incident.severity ?? 'HIGH';
           this.updateProtocols(this.currentSeverity);
@@ -138,6 +149,7 @@ export class IncidentForm {
       reportedAt: reportedAt,
       status: (formValues.status as IncidentStatus) ?? IncidentStatus.OPEN,
       severity: formValues.severity ?? 'HIGH',
+      reporterRole: formValues.reporterRole ?? 'TOURIST',
       isSynced: false,
     });
 
