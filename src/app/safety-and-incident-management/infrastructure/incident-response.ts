@@ -14,6 +14,8 @@ export interface IncidentResource extends BaseResource {
   reportedAt: string;
   status: string;
   severity?: string;
+  resolutionNote?: string;
+  reporterRole?: 'TOURIST' | 'GUIDE';
 }
 
 /**
