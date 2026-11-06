@@ -318,6 +318,45 @@
     "edit_title": "Update incident case",
     "form_description": "Capture the report details and location so the operations team can respond.",
     "priority_notice": "Safety report",
+    "sync_pending": "Sync pending ({{count}})",
+    "pending_offline": "{{count}} report(s) saved locally while offline. They will sync automatically, or you can use the button above.",
+    "synced": "Synced",
+    "offline": "Offline",
+    "load_error": "Incidents could not be loaded from the server.",
+    "severity": "Severity",
+    "status_values": {
+      "OPEN": "Open",
+      "IN_REVIEW": "In review",
+      "RESOLVED": "Resolved",
+      "CLOSED": "Closed"
+    },
+    "severity_values": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
+    },
+    "protocols": {
+      "title": "Guided emergency protocols ({{severity}})",
+      "critical": {
+        "1": "Start the immediate medical evacuation protocol.",
+        "2": "Establish a satellite or VHF radio link with the operations base.",
+        "3": "Administer supplemental oxygen and monitor vital signs for 15 minutes."
+      },
+      "high": {
+        "1": "Stop the active expedition.",
+        "2": "Assess hydration and provide tactical first aid.",
+        "3": "Report the exact location to the lead guide and prepare the rescue kit."
+      },
+      "low": {
+        "1": "Record the observation in the route log.",
+        "2": "Monitor the participant at the next Bluetooth checkpoint."
+      },
+      "medium": {
+        "1": "Record the observation in the route log.",
+        "2": "Monitor the participant at the next Bluetooth checkpoint."
+      }
+    },
     "latitude": "Latitude",
     "longitude": "Longitude",
     "description_hint": "Describe what happened and include any relevant field observations.",
