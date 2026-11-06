@@ -1,5 +1,5 @@
 import { Component, computed, inject, viewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { DatePipe, LowerCasePipe, NgClass } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { IncidentStore } from '../../../application/incident.store';
 import { Incident } from '../../../domain/model/aggregates/incident.entity';
 
@@ -24,6 +25,7 @@ import { Incident } from '../../../domain/model/aggregates/incident.entity';
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatSortModule,
+    RouterLink,
     DatePipe,
     LowerCasePipe,
     TranslatePipe,
@@ -35,6 +37,7 @@ import { Incident } from '../../../domain/model/aggregates/incident.entity';
 export class IncidentList {
   readonly store = inject(IncidentStore);
   protected router = inject(Router);
+  private readonly translate = inject(TranslateService);
 
   displayedColumns: string[] = [
     'id',
@@ -71,7 +74,8 @@ export class IncidentList {
   }
 
   resolveIncident(incident: Incident) {
-    this.store.resolveIncident(incident);
+    const note = window.prompt(this.translate.instant('incidents.resolution_note_prompt'));
+    if (note !== null) this.store.resolveIncident(incident, note);
   }
 
   deleteIncident(id: number) {
