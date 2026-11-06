@@ -13,6 +13,7 @@ export interface IncidentResource extends BaseResource {
   longitude: number;
   reportedAt: string;
   status: string;
+  severity?: string;
 }
 
 /**
