@@ -55,7 +55,7 @@ export class IncidentStore {
         this.loadingSignal.set(false);
       },
       error: (error) => {
-        this.errorSignal.set('No se pudieron cargar los incidentes desde el servidor.');
+        this.errorSignal.set('incidents.load_error');
         this.loadingSignal.set(false);
         console.error('Error fetching incidents from API', error);
       },
