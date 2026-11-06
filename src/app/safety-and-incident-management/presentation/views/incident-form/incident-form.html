@@ -32,16 +32,16 @@
         <mat-label>{{ 'incidents.status' | translate }}</mat-label>
         <mat-select formControlName="status">
           @for (status of statuses; track status) {
-            <mat-option [value]="status">{{ status }}</mat-option>
+            <mat-option [value]="status">{{ ('incidents.status_values.' + status) | translate }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>{{ 'incidents.severity' | translate }} (Severidad)</mat-label>
+        <mat-label>{{ 'incidents.severity' | translate }}</mat-label>
         <mat-select formControlName="severity">
           @for (sev of severities; track sev) {
-            <mat-option [value]="sev">{{ sev }}</mat-option>
+            <mat-option [value]="sev">{{ ('incidents.severity_values.' + sev) | translate }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -79,11 +79,15 @@
     <div class="protocol-panel" [ngClass]="{'critical-protocol': currentSeverity === 'CRITICAL'}">
       <div class="protocol-header">
         <mat-icon aria-hidden="true">health_and_safety</mat-icon>
-        <strong>Protocolos de Emergencia Guiados ({{ currentSeverity }})</strong>
+        <strong>
+          {{ 'incidents.protocols.title' | translate: {
+            severity: ('incidents.severity_values.' + currentSeverity) | translate
+          } }}
+        </strong>
       </div>
       <ul class="protocol-list">
         @for (protocol of activeProtocols; track protocol) {
-          <li>{{ protocol }}</li>
+          <li>{{ protocol | translate }}</li>
         }
       </ul>
     </div>
