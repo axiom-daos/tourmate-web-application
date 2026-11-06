@@ -110,18 +110,11 @@ export class IncidentForm {
   }
 
   private updateProtocols(severity: string) {
-    const dummyIncident = new Incident({
-      id: 0,
-      activeTourId: 1,
-      reportedByUserId: 1,
-      description: '',
-      latitude: 0,
-      longitude: 0,
-      reportedAt: new Date().toISOString(),
-      status: IncidentStatus.OPEN,
-      severity: severity as any,
-    });
-    this.activeProtocols = dummyIncident.getGuidedProtocols();
+    const protocolCount = severity === 'CRITICAL' || severity === 'HIGH' ? 3 : 2;
+    this.activeProtocols = Array.from(
+      { length: protocolCount },
+      (_, index) => `incidents.protocols.${severity.toLowerCase()}.${index + 1}`,
+    );
   }
 
   public submit() {
