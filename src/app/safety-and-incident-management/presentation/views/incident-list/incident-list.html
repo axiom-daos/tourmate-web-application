@@ -5,10 +5,19 @@
     <p>{{ 'incidents.list_description' | translate }}</p>
   </div>
   <div class="header-actions">
+    <a mat-stroked-button type="button" routerLink="/safety-and-incident-management/dashboard">
+      {{ 'incidents.safety.dashboard_title' | translate }}
+    </a>
     @if (store.pendingSyncIncidents().length > 0) {
-      <button mat-flat-button type="button" class="sync-burst-btn" (click)="triggerManualSync()">
+      <button
+        mat-flat-button
+        type="button"
+        class="sync-burst-btn"
+        [disabled]="store.syncing()"
+        (click)="triggerManualSync()"
+      >
         <mat-icon aria-hidden="true">sync</mat-icon>
-        {{ 'incidents.sync_pending' | translate: { count: store.pendingSyncIncidents().length } }}
+        {{ (store.syncing() ? 'incidents.syncing' : 'incidents.sync_pending') | translate: { count: store.pendingSyncIncidents().length } }}
       </button>
     }
     <button mat-flat-button type="button" class="new-incident-btn" (click)="navigateToNew()">
