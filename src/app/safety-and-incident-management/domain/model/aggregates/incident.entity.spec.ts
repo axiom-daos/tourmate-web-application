@@ -56,9 +56,10 @@ describe('Incident Domain Entity - Business Logic & Emergency Protocols', () => 
 
     expect(incident.status).toEqual(IncidentStatus.OPEN);
 
-    incident.resolve();
+    incident.resolve('Participant received first aid.');
 
     expect(incident.status).toEqual(IncidentStatus.RESOLVED);
+    expect(incident.resolutionNote).toEqual('Participant received first aid.');
   });
 
 });
