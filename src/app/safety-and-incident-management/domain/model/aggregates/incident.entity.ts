@@ -15,6 +15,8 @@ export class Incident implements BaseEntity {
   #status: IncidentStatus;
   #severity: IncidentSeverity;
   #isSynced: boolean;
+  #resolutionNote: string;
+  #reporterRole: 'TOURIST' | 'GUIDE';
 
   constructor(incident: {
     id: number;
@@ -28,6 +30,8 @@ export class Incident implements BaseEntity {
     status: IncidentStatus | string;
     severity?: IncidentSeverity | string;
     isSynced?: boolean;
+    resolutionNote?: string;
+    reporterRole?: 'TOURIST' | 'GUIDE';
   }) {
     this.#id = incident.id;
     this.#uuid = incident.uuid ?? '';
@@ -47,6 +51,8 @@ export class Incident implements BaseEntity {
         ? (incident.severity as IncidentSeverity)
         : 'MEDIUM';
     this.#isSynced = incident.isSynced ?? true;
+    this.#resolutionNote = incident.resolutionNote ?? '';
+    this.#reporterRole = incident.reporterRole ?? 'TOURIST';
   }
 
   get id(): number {
@@ -126,7 +132,22 @@ export class Incident implements BaseEntity {
     this.#isSynced = value;
   }
 
-  resolve(): void {
+  get resolutionNote(): string {
+    return this.#resolutionNote;
+  }
+  set resolutionNote(value: string) {
+    this.#resolutionNote = value;
+  }
+
+  get reporterRole(): 'TOURIST' | 'GUIDE' {
+    return this.#reporterRole;
+  }
+
+  resolve(note: string): void {
+    if (note.trim().length < 5) {
+      throw new Error('An incident resolution note must contain at least five characters.');
+    }
+    this.#resolutionNote = note.trim();
     this.#status = IncidentStatus.RESOLVED;
   }
 
