@@ -319,6 +319,45 @@
     "edit_title": "Actualizar caso de incidente",
     "form_description": "Registra los detalles y la ubicación para que el equipo de operaciones pueda responder.",
     "priority_notice": "Reporte de seguridad",
+    "sync_pending": "Sincronizar pendientes ({{count}})",
+    "pending_offline": "{{count}} reporte(s) guardado(s) localmente sin conexión. Se sincronizarán automáticamente o puedes usar el botón superior.",
+    "synced": "Sincronizado",
+    "offline": "Sin conexión",
+    "load_error": "No se pudieron cargar los incidentes desde el servidor.",
+    "severity": "Severidad",
+    "status_values": {
+      "OPEN": "Abierto",
+      "IN_REVIEW": "En revisión",
+      "RESOLVED": "Resuelto",
+      "CLOSED": "Cerrado"
+    },
+    "severity_values": {
+      "LOW": "Baja",
+      "MEDIUM": "Media",
+      "HIGH": "Alta",
+      "CRITICAL": "Crítica"
+    },
+    "protocols": {
+      "title": "Protocolos de emergencia guiados ({{severity}})",
+      "critical": {
+        "1": "Inicia el protocolo de evacuación médica inmediata.",
+        "2": "Establece un enlace satelital o de radio VHF con la base de operaciones.",
+        "3": "Administra oxígeno suplementario y monitorea los signos vitales durante 15 minutos."
+      },
+      "high": {
+        "1": "Detén la expedición activa.",
+        "2": "Evalúa la hidratación y aplica primeros auxilios tácticos.",
+        "3": "Informa la ubicación exacta al guía principal y prepara el kit de rescate."
+      },
+      "low": {
+        "1": "Registra la observación en la bitácora de ruta.",
+        "2": "Monitorea al participante en el próximo punto de control Bluetooth."
+      },
+      "medium": {
+        "1": "Registra la observación en la bitácora de ruta.",
+        "2": "Monitorea al participante en el próximo punto de control Bluetooth."
+      }
+    },
     "latitude": "Latitud",
     "longitude": "Longitud",
     "description_hint": "Describe lo ocurrido e incluye observaciones relevantes en campo.",
