@@ -1,10 +1,6 @@
-
 <div class="review-shell">
-
-  <!-- Encabezado del formulario -->
   <header class="form-header">
-
-    <div class="header-information">
+    <div class="header-copy">
       <h1>
         {{ isEditMode
         ? ('reviews.edit_title' | translate)
@@ -13,237 +9,161 @@
 
       <p>
         @if (isEditMode) {
-          Actualiza la calificación y los comentarios
-            de la experiencia del viajero.
+          {{ 'reviews.edit_description' | translate }}
         } @else {
-          Registra una nueva reseña y comparte
-            la experiencia del viajero durante el tour.
+          {{ 'reviews.new_description' | translate }}
         }
       </p>
     </div>
-
-    <div class="header-badge">
-      <span class="badge-icon">★</span>
-      <span>Reseñas de tours</span>
-    </div>
-
   </header>
 
-  <!-- Tarjeta principal -->
-  <section class="review-card">
+  <section class="review-panel">
+    <div class="panel-highlight">
+      <div class="panel-icon">
+        <mat-icon>travel_explore</mat-icon>
+      </div>
+
+      <div class="panel-copy">
+        <strong>{{ 'reviews.traveler_experience' | translate }}</strong>
+        <span>{{ 'reviews.traveler_experience_help' | translate }}</span>
+      </div>
+    </div>
 
     <form
       class="review-form"
       [formGroup]="reviewForm"
       (ngSubmit)="onSubmit()">
 
-      <!-- ID del Tour y Usuario -->
-      <div class="form-row two-columns">
+      <div class="form-grid">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'reviews.select_tour' | translate }}</mat-label>
 
-        <mat-form-field
-          appearance="outline"
-          class="full-width">
+          <mat-select formControlName="tourId" required>
+            @for (tour of tours(); track tour.id) {
+              <mat-option [value]="tour.id">
+                {{ tour.details?.title ?? 'Tour sin nombre' }}
+              </mat-option>
+            }
+          </mat-select>
 
-          <mat-label>
-            {{ 'reviews.tour_id_label' | translate }}
-          </mat-label>
-
-          <input
-            matInput
-            type="number"
-            min="1"
-            formControlName="tourId"
-            required>
-
-          @if (reviewForm.get('tourId')?.hasError('required')) {
-            <mat-error>
-              El ID del tour es obligatorio.
-            </mat-error>
+          @if (
+            reviewForm.get('tourId')?.hasError('required') &&
+            reviewForm.get('tourId')?.touched
+            ) {
+            <mat-error>{{ 'reviews.select_tour_required' | translate }}</mat-error>
           }
-
-          @if (reviewForm.get('tourId')?.hasError('min')) {
-            <mat-error>
-              El ID debe ser mayor a cero.
-            </mat-error>
-          }
-
         </mat-form-field>
 
-        <mat-form-field
-          appearance="outline"
-          class="full-width">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'reviews.select_client' | translate }}</mat-label>
 
-          <mat-label>
-            {{ 'reviews.user_id_label' | translate }}
-          </mat-label>
+          <mat-select formControlName="userId" required>
+            @for (user of users(); track user.id) {
+              <mat-option [value]="user.id">
+                {{ user.firstName }} {{ user.lastName }}
+              </mat-option>
+            }
+          </mat-select>
 
-          <input
-            matInput
-            type="number"
-            min="1"
-            formControlName="userId"
-            required>
-
-          @if (reviewForm.get('userId')?.hasError('required')) {
-            <mat-error>
-              El ID del usuario es obligatorio.
-            </mat-error>
+          @if (
+            reviewForm.get('userId')?.hasError('required') &&
+            reviewForm.get('userId')?.touched
+            ) {
+            <mat-error>{{ 'reviews.select_client_required' | translate }}</mat-error>
           }
-
-          @if (reviewForm.get('userId')?.hasError('min')) {
-            <mat-error>
-              El ID debe ser mayor a cero.
-            </mat-error>
-          }
-
         </mat-form-field>
-
       </div>
 
-      <!-- Calificación -->
-      <div class="form-row">
+      <div class="form-grid">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'reviews.rating_label' | translate }}</mat-label>
 
-        <mat-form-field
-          appearance="outline"
-          class="full-width">
-
-          <mat-label>
-            {{ 'reviews.rating_label' | translate }}
-          </mat-label>
-
-          <mat-select
-            formControlName="rating"
-            required>
-
+          <mat-select formControlName="rating" required>
             <mat-option [value]="5">
               5 - {{ 'reviews.rating_excellent' | translate }}
             </mat-option>
-
             <mat-option [value]="4">
               4 - {{ 'reviews.rating_very_good' | translate }}
             </mat-option>
-
             <mat-option [value]="3">
               3 - {{ 'reviews.rating_good' | translate }}
             </mat-option>
-
             <mat-option [value]="2">
               2 - {{ 'reviews.rating_fair' | translate }}
             </mat-option>
-
             <mat-option [value]="1">
               1 - {{ 'reviews.rating_poor' | translate }}
             </mat-option>
-
           </mat-select>
 
-          @if (reviewForm.get('rating')?.hasError('required')) {
-            <mat-error>
-              {{ 'reviews.rating_required' | translate }}
-            </mat-error>
+          @if (
+            reviewForm.get('rating')?.hasError('required') &&
+            reviewForm.get('rating')?.touched
+            ) {
+            <mat-error>{{ 'reviews.rating_required' | translate }}</mat-error>
           }
-
         </mat-form-field>
-
       </div>
 
-      <!-- Comentarios -->
-      <div class="form-row">
-
-        <mat-form-field
-          appearance="outline"
-          class="full-width comment-field">
-
-          <mat-label>
-            {{ 'reviews.comment_label' | translate }}
-          </mat-label>
+      <div class="form-grid">
+        <mat-form-field appearance="outline" class="full-width comment-field">
+          <mat-label>{{ 'reviews.comment_label' | translate }}</mat-label>
 
           <textarea
             matInput
             formControlName="comment"
-            rows="4"
+            rows="5"
             [placeholder]="'reviews.comment_placeholder' | translate"
             required></textarea>
 
-          @if (reviewForm.get('comment')?.hasError('required')) {
-            <mat-error>
-              {{ 'reviews.comment_required' | translate }}
-            </mat-error>
+          @if (
+            reviewForm.get('comment')?.hasError('required') &&
+            reviewForm.get('comment')?.touched
+            ) {
+            <mat-error>{{ 'reviews.comment_required' | translate }}</mat-error>
           }
-
         </mat-form-field>
-
       </div>
 
-      <!-- Mensaje informativo traducido -->
-      <div class="information-message">
+      <div class="info-box">
+        <mat-icon aria-hidden="true">verified_user</mat-icon>
 
-        <mat-icon aria-hidden="true">
-          verified_user
-        </mat-icon>
-
-        <div class="information-content">
-
-          <strong>
-            {{ 'reviews.notice_title' | translate }}
-          </strong>
-
-          <span>
-            {{ 'reviews.notice_description' | translate }}
-          </span>
-
+        <div class="info-content">
+          <strong>{{ 'reviews.notice_title' | translate }}</strong>
+          <span>{{ 'reviews.notice_description' | translate }}</span>
         </div>
-
       </div>
 
-      <!-- Mensaje de error -->
       @if (errorMessage) {
         <div class="form-error" role="alert">
-
-          <mat-icon aria-hidden="true">
-            error_outline
-          </mat-icon>
-
+          <mat-icon aria-hidden="true">error_outline</mat-icon>
           <span>{{ errorMessage }}</span>
-
         </div>
       }
 
-      <!-- Acciones -->
       <footer class="footer-actions">
-
         <button
           mat-stroked-button
           type="button"
           class="secondary-btn"
           routerLink="/feedback-and-tour-reviews/reviews"
           [disabled]="isSaving">
-
           {{ 'reviews.cancel' | translate }}
-
         </button>
 
         <button
           mat-flat-button
           type="submit"
           class="submit-btn"
-          [disabled]="reviewForm.invalid || isSaving ||
-            (isEditMode && !reviewLoaded)">
+          [disabled]="reviewForm.invalid || isSaving || (isEditMode && !reviewLoaded)">
 
           @if (isSaving) {
             {{ 'reviews.saving' | translate }}
           } @else {
-            {{ isEditMode
-            ? ('reviews.update' | translate)
-            : ('reviews.submit' | translate) }}
+            {{ isEditMode ? ('reviews.update' | translate) : ('reviews.submit' | translate) }}
           }
-
         </button>
-
       </footer>
-
     </form>
-
   </section>
-
 </div>

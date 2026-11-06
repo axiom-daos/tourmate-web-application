@@ -264,8 +264,9 @@
     "update": "Actualizar Reseña",
     "tour_id_label": "ID del Tour",
     "user_id_label": "ID del Usuario",
-    "rating_label": "Calificación (Rating)",
+    "rating_label": "Calificación",
     "comment_label": "Comentarios de la Experiencia",
+    "comment_placeholder": "Escribe tu comentario sobre la experiencia...",
     "delete_confirm": "¿Estás seguro de que deseas eliminar esta reseña?",
     "notice_title": "Importante",
     "notice_description": "Verifica que el tour, el usuario y la calificación sean correctos antes de guardar la reseña.",
@@ -273,12 +274,24 @@
     "rating_very_good": "Muy bueno",
     "rating_good": "Bueno",
     "rating_fair": "Regular",
-    "rating_poor": "Malo"
+    "rating_poor": "Malo",
+    "select_tour": "Selecciona un tour",
+    "select_client": "Selecciona un cliente",
+    "select_tour_required": "Debes seleccionar un tour.",
+    "select_client_required": "Debes seleccionar un cliente.",
+    "rating_required": "La calificación es obligatoria.",
+    "comment_required": "El comentario es obligatorio.",
+    "traveler_experience": "Experiencia del viajero",
+    "traveler_experience_help": "Ayuda a mejorar la calidad del servicio y del tour.",
+    "select_tour_label": "Selecciona un tour",
+    "select_client_label": "Selecciona un cliente"
   },
+
   "about": {
     "title": "Acerca de",
     "content": "Tourmate , parte de AXIOM Corporation."
   },
+
   "home": {
     "title": "Tus operaciones, en un solo lugar",
     "content": "Coordina tours, sigue expediciones activas y mantén a tus equipos informados desde un único espacio de trabajo.",

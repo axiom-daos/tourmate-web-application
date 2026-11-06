@@ -1,42 +1,27 @@
-
-<div class="review-container">
-
-  <!-- Encabezado -->
-  <header class="review-header">
-
-    <div class="header-copy">
+<div class="review-page">
+  <header class="review-hero">
+    <div class="hero-copy">
       <h1>{{ 'reviews.list_title' | translate }}</h1>
       <p>{{ 'reviews.list_subtitle' | translate }}</p>
     </div>
 
-    <!-- Crear una nueva reseña -->
     <a
       mat-flat-button
-      class="submit-btn"
+      class="primary-cta"
       routerLink="new">
-
-      <mat-icon aria-hidden="true">
-        rate_review
-      </mat-icon>
-
+      <mat-icon aria-hidden="true">rate_review</mat-icon>
       <span>{{ 'reviews.add_new' | translate }}</span>
     </a>
-
   </header>
 
-  <!-- Estado de carga -->
   @if (loading()) {
-
     <div class="feedback-message" role="status">
-      <mat-spinner diameter="24"></mat-spinner>
+      <mat-spinner diameter="26"></mat-spinner>
       <span>{{ 'common.loading' | translate }}</span>
     </div>
 
   } @else if (error()) {
-
-    <!-- Error al cargar las reseñas -->
-    <section class="empty-state" role="alert">
-
+    <section class="empty-state error-state" role="alert">
       <span class="empty-icon" aria-hidden="true">
         <mat-icon>error_outline</mat-icon>
       </span>
@@ -47,79 +32,57 @@
       <button
         mat-stroked-button
         type="button"
+        class="retry-btn"
         (click)="reviewStore.loadData()">
-
         <mat-icon>refresh</mat-icon>
         Reintentar
       </button>
-
     </section>
 
   } @else if (reviews().length === 0) {
-
-    <!-- Lista vacía -->
     <section class="empty-state" aria-live="polite">
-
       <span class="empty-icon" aria-hidden="true">
         <mat-icon>rate_review</mat-icon>
       </span>
 
       <h2>{{ 'reviews.empty_title' | translate }}</h2>
+      <p>{{ 'reviews.empty_description' | translate }}</p>
 
-      <p>
-        {{ 'reviews.empty_description' | translate }}
-      </p>
-
-      <a mat-stroked-button routerLink="new">
+      <a mat-stroked-button class="empty-btn" routerLink="new">
         {{ 'reviews.add_new' | translate }}
       </a>
-
     </section>
 
   } @else {
-
-    <!-- Listado de reseñas -->
     <section
       class="review-feed"
       [attr.aria-label]="'reviews.list_title' | translate">
 
-      <p class="review-count" aria-live="polite">
-        {{ 'reviews.review_count' | translate: {
-        count: reviews().length
-      } }}
-      </p>
+      <div class="feed-header">
+        <span class="feed-title">
+          {{ 'reviews.review_count' | translate: { count: reviews().length } }}
+        </span>
+      </div>
 
       <div class="review-grid">
-
         @for (review of reviews(); track review.id) {
-
           <article class="review-card">
-
-            <!-- Información del usuario -->
             <div class="review-card-top">
-
               <span class="review-avatar" aria-hidden="true">
-                <mat-icon>rate_review</mat-icon>
+                <mat-icon>person</mat-icon>
               </span>
 
               <div class="review-author">
-
                 <h2>{{ reviewerName(review.userId) }}</h2>
-
                 <p>
                   {{ 'reviews.date' | translate }}
                   · {{ review.createdAt | date:'mediumDate' }}
                 </p>
-
               </div>
 
-              <span class="review-id">
-                #{{ review.id }}
-              </span>
-
+              <span class="review-id">#{{ review.id }}</span>
             </div>
 
-            <!-- Calificación -->
             <div
               class="star-rating"
               role="img"
@@ -138,43 +101,22 @@
 
               <span class="rating-value">
                 {{ review.rating }}
-                <span class="rating-scale"> / 5</span>
+                <span class="rating-scale">/5</span>
               </span>
-
             </div>
 
-            <!-- Comentario -->
             <blockquote>
-
-              <mat-icon
-                class="quote-icon"
-                aria-hidden="true">
-                format_quote
-              </mat-icon>
-
-              <p>
-                {{ review.comment ||
-              ('reviews.no_comment' | translate) }}
-              </p>
-
+              <mat-icon class="quote-icon" aria-hidden="true">format_quote</mat-icon>
+              <p>{{ review.comment || ('reviews.no_comment' | translate) }}</p>
             </blockquote>
 
-            <!-- Tour y acciones -->
             <footer class="review-card-footer">
-
               <span class="tour-reference">
-
-                <mat-icon aria-hidden="true">
-                  landscape
-                </mat-icon>
-
+                <mat-icon aria-hidden="true">travel_explore</mat-icon>
                 {{ tourName(review.tourId) }}
-
               </span>
 
               <div class="review-actions">
-
-                <!-- Editar reseña -->
                 <button
                   mat-stroked-button
                   type="button"
@@ -183,15 +125,10 @@
                   [attr.aria-label]="'reviews.edit' | translate"
                   (click)="editReview(review.id)">
 
-                  <mat-icon aria-hidden="true">
-                    edit
-                  </mat-icon>
-
+                  <mat-icon aria-hidden="true">edit</mat-icon>
                   {{ 'reviews.edit' | translate }}
-
                 </button>
 
-                <!-- Eliminar reseña -->
                 <button
                   mat-icon-button
                   type="button"
@@ -199,25 +136,13 @@
                   [disabled]="loading()"
                   [attr.aria-label]="'reviews.delete' | translate"
                   (click)="deleteReview(review.id)">
-
-                  <mat-icon aria-hidden="true">
-                    delete_outline
-                  </mat-icon>
-
+                  <mat-icon aria-hidden="true">delete_outline</mat-icon>
                 </button>
-
               </div>
-
             </footer>
-
           </article>
-
         }
-
       </div>
-
     </section>
-
   }
-
 </div>
