@@ -4,6 +4,7 @@ import { provideHttpClientTesting, HttpTestingController } from '@angular/common
 import { IncidentStore } from './incident.store';
 import { Incident } from '../domain/model/aggregates/incident.entity';
 import { IncidentStatus } from '../domain/model/value-object/incident-status';
+import { environment } from '../../../environments/environment';
 
 describe('IncidentStore - Offline-First Resilience & Sync Bursts', () => {
   let store: IncidentStore;
@@ -50,12 +51,44 @@ describe('IncidentStore - Offline-First Resilience & Sync Bursts', () => {
     store.addIncident(newIncident);
 
     const postReqs = httpMock.match((req) => req.method === 'POST');
+    expect(postReqs.length).toBe(1);
+    expect(postReqs[0].request.url).toBe(
+      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+    );
     postReqs.forEach((req) => req.flush({ ...newIncident, id: 99, isSynced: true }));
 
     expect(store.incidentCount()).toBeGreaterThan(0);
 
     const rawStorage = localStorage.getItem(OFFLINE_STORAGE_KEY);
     expect(rawStorage).toBeTruthy();
+  });
+
+  it('should load incidents from the configured MockAPI endpoint', () => {
+    store.refreshIncidents();
+
+    const request = httpMock.expectOne(
+      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+    );
+    expect(request.request.method).toBe('GET');
+
+    request.flush([
+      {
+        id: 42,
+        uuid: 'remote-incident',
+        activeTourId: 7,
+        reportedByUserId: 3,
+        description: 'Remote incident',
+        latitude: 10,
+        longitude: 20,
+        reportedAt: new Date().toISOString(),
+        status: IncidentStatus.OPEN,
+        severity: 'HIGH',
+      },
+    ]);
+
+    expect(store.incidents().length).toBe(1);
+    expect(store.incidents()[0].id).toBe(42);
+    expect(store.incidents()[0].description).toBe('Remote incident');
   });
 
   it('should compute pendingSyncIncidents correctly filtering by un-synced items', () => {
