@@ -2,6 +2,8 @@ import { Injectable, computed, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Incident } from '../domain/model/aggregates/incident.entity';
 import { IncidentStatus } from '../domain/model/value-object/incident-status';
+import { environment } from '../../../environments/environment';
+import { IncidentResource } from '../infrastructure/incident-response';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +11,7 @@ import { IncidentStatus } from '../domain/model/value-object/incident-status';
 export class IncidentStore {
   private http = inject(HttpClient);
   private readonly OFFLINE_STORAGE_KEY = 'tourmate_offline_incidents';
-  private readonly API_URL = '/api/v1/incidents';
+  private readonly API_URL = `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`;
 
   private incidentsSignal = signal<Incident[]>(this.loadFromStorage());
   private loadingSignal = signal<boolean>(false);
@@ -24,6 +26,41 @@ export class IncidentStore {
   );
 
   readonly incidentCount = computed(() => this.incidentsSignal().length);
+
+  constructor() {
+    this.refreshIncidents();
+  }
+
+  public refreshIncidents() {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.http.get<IncidentResource[]>(this.API_URL).subscribe({
+      next: (resources) => {
+        const remoteIncidents = resources.map(
+          (resource) => new Incident({ ...resource, id: Number(resource.id) }),
+        );
+        const pendingLocalIncidents = this.pendingSyncIncidents().filter(
+          (local) =>
+            !remoteIncidents.some(
+              (remote) =>
+                (local.uuid && remote.uuid === local.uuid) ||
+                (local.id > 0 && remote.id === local.id),
+            ),
+        );
+        const incidents = [...pendingLocalIncidents, ...remoteIncidents];
+
+        this.incidentsSignal.set(incidents);
+        this.saveToStorage(incidents);
+        this.loadingSignal.set(false);
+      },
+      error: (error) => {
+        this.errorSignal.set('No se pudieron cargar los incidentes desde el servidor.');
+        this.loadingSignal.set(false);
+        console.error('Error fetching incidents from API', error);
+      },
+    });
+  }
 
   private loadFromStorage(): Incident[] {
     try {
