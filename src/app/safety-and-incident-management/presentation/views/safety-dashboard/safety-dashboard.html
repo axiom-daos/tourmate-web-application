@@ -1,0 +1,512 @@
+<header class="page-heading">
+  <div>
+    <span class="eyebrow">{{ 'option.safety_and_incident' | translate }}</span>
+    <h1>{{ 'incidents.safety.dashboard_title' | translate }}</h1>
+    <p>{{ 'incidents.safety.dashboard_description' | translate }}</p>
+  </div>
+  <div class="actions">
+    <button type="button" class="secondary-button" (click)="store.refresh()">
+      {{ 'incidents.safety.refresh' | translate }}
+    </button>
+    <button type="button" class="primary-button" (click)="exportReport()">
+      {{ 'incidents.safety.export_report' | translate }}
+    </button>
+    <a class="secondary-button" routerLink="/safety-and-incident-management/incidents">
+      {{ 'incidents.safety.manage_incidents' | translate }}
+    </a>
+  </div>
+</header>
+
+@if (store.loading()) {
+  <p class="feedback" role="status">{{ 'common.loading' | translate }}</p>
+}
+@if (store.error()) {
+  <p class="feedback error" role="alert">{{ store.error() | translate }}</p>
+}
+
+<section class="data-card incident-context">
+  <label>
+    {{ 'incidents.safety.select_incident' | translate }}
+    <details class="select-dropdown incident-dropdown" #incidentDropdown>
+      <summary [class.is-disabled]="!incidentStore.incidents().length">
+        @if (selectedIncident(); as currentIncident) {
+          <span class="selected-incident">
+            <span class="option-id">#{{ currentIncident.id }}</span>
+            <span class="selected-copy">
+              <strong>{{ currentIncident.description }}</strong>
+              <small>
+                {{ 'incidents.safety.expedition' | translate }} #{{ currentIncident.activeTourId }}
+                · {{ 'incidents.safety.participant' | translate }} #{{ currentIncident.reportedByUserId }}
+              </small>
+            </span>
+          </span>
+        } @else {
+          <span>{{ 'incidents.safety.no_incidents_for_monitoring' | translate }}</span>
+        }
+        <span class="dropdown-chevron" aria-hidden="true"></span>
+      </summary>
+      @if (incidentStore.incidents().length) {
+        <div class="select-menu incident-menu" role="list">
+          @for (incident of incidentStore.incidents(); track incident.id) {
+            <button
+              type="button"
+              class="select-option incident-option"
+              [class.is-selected]="selectedIncident()?.id === incident.id"
+              [attr.aria-current]="selectedIncident()?.id === incident.id ? 'true' : null"
+              (click)="selectIncident(incident.id); incidentDropdown.open = false"
+            >
+              <span class="option-id">#{{ incident.id }}</span>
+              <span class="incident-option-copy">
+                <strong>{{ incident.description }}</strong>
+                <small>
+                  {{ 'incidents.safety.expedition' | translate }} #{{ incident.activeTourId }}
+                  · {{ 'incidents.safety.participant' | translate }} #{{ incident.reportedByUserId }}
+                </small>
+              </span>
+              <span
+                class="severity-badge"
+                [class.severity-critical]="incident.severity === 'CRITICAL'"
+                [class.severity-high]="incident.severity === 'HIGH'"
+                [class.severity-medium]="incident.severity === 'MEDIUM'"
+                [class.severity-low]="incident.severity === 'LOW'"
+              >
+                {{ 'incidents.severity_values.' + incident.severity | translate }}
+              </span>
+            </button>
+          }
+        </div>
+      }
+    </details>
+  </label>
+  @if (selectedIncident(); as incident) {
+    <div class="context-summary">
+      <span class="context-marker" aria-hidden="true">#{{ incident.id }}</span>
+      <div class="context-details">
+        <strong>{{ incident.description }}</strong>
+        <span>
+          {{ 'incidents.safety.expedition' | translate }} #{{ incident.activeTourId }} ·
+          {{ 'incidents.safety.participant' | translate }} #{{ incident.reportedByUserId }}
+        </span>
+      </div>
+      <div class="context-badges">
+        <span class="status-badge">{{
+          'incidents.status_values.' + incident.status | translate
+        }}</span>
+        <span
+          class="severity-badge"
+          [class.severity-critical]="incident.severity === 'CRITICAL'"
+          [class.severity-high]="incident.severity === 'HIGH'"
+          [class.severity-medium]="incident.severity === 'MEDIUM'"
+          [class.severity-low]="incident.severity === 'LOW'"
+        >
+          {{ 'incidents.severity_values.' + incident.severity | translate }}
+        </span>
+      </div>
+    </div>
+  } @else {
+    <p class="empty">{{ 'incidents.safety.no_incidents_for_monitoring' | translate }}</p>
+    <a class="secondary-button" routerLink="/safety-and-incident-management/incidents/new">
+      {{ 'incidents.new' | translate }}
+    </a>
+  }
+</section>
+
+<section class="summary-grid" [attr.aria-label]="'incidents.safety.dashboard_title' | translate">
+  <article class="summary-card">
+    <span>{{ 'incidents.safety.locations' | translate }}</span>
+    <strong>{{ incidentLocations().length }}</strong>
+  </article>
+  <article class="summary-card">
+    <span>{{ 'incidents.safety.active_alerts' | translate }}</span>
+    <strong>{{ activeIncidentAlertCount() }}</strong>
+  </article>
+  <article class="summary-card">
+    <span>{{ 'incidents.safety.participants_monitored' | translate }}</span>
+    <strong>{{ incidentTelemetry().length }}</strong>
+  </article>
+  <article class="summary-card">
+    <span>{{ 'incidents.safety.registered_wearables' | translate }}</span>
+    <strong>{{ incidentWearables().length }}</strong>
+  </article>
+</section>
+
+<div class="monitoring-grid">
+  <section class="data-card">
+    <header>
+      <div>
+        <h2>{{ 'incidents.safety.locations' | translate }}</h2>
+        <p>{{ 'incidents.safety.location_hint' | translate }}</p>
+      </div>
+    </header>
+    <form class="record-form" (ngSubmit)="submitLocation()">
+      <label>
+        {{ 'incidents.latitude' | translate }}
+        <input
+          type="number"
+          name="locationLatitude"
+          min="-90"
+          max="90"
+          step="any"
+          required
+          [(ngModel)]="location.latitude"
+        />
+      </label>
+      <label>
+        {{ 'incidents.longitude' | translate }}
+        <input
+          type="number"
+          name="locationLongitude"
+          min="-180"
+          max="180"
+          step="any"
+          required
+          [(ngModel)]="location.longitude"
+        />
+      </label>
+      @if (!editingIncidentLocation) {
+        <label>
+          {{ 'incidents.safety.route_latitude' | translate }}
+          <input
+            type="number"
+            name="expectedLatitude"
+            min="-90"
+            max="90"
+            step="any"
+            [(ngModel)]="location.expectedLatitude"
+          />
+        </label>
+        <label>
+          {{ 'incidents.safety.route_longitude' | translate }}
+          <input
+            type="number"
+            name="expectedLongitude"
+            min="-180"
+            max="180"
+            step="any"
+            [(ngModel)]="location.expectedLongitude"
+          />
+        </label>
+      }
+      <button type="submit" class="primary-button" [disabled]="!selectedIncident()">
+        {{
+          (editingIncidentLocation
+            ? 'incidents.safety.update_incident_location'
+            : location.id === null
+              ? 'incidents.safety.record_location'
+              : 'incidents.safety.update_location'
+          ) | translate
+        }}
+      </button>
+    </form>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ 'incidents.safety.expedition_id' | translate }}</th>
+            <th>{{ 'incidents.safety.tourist_id' | translate }}</th>
+            <th>{{ 'incidents.latitude' | translate }}</th>
+            <th>{{ 'incidents.longitude' | translate }}</th>
+            <th>{{ 'incidents.reported_at' | translate }}</th>
+            <th>{{ 'incidents.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (location of incidentLocations(); track location.id) {
+            <tr>
+              <td>{{ location.expeditionId }}</td>
+              <td>{{ location.touristId }}</td>
+              <td>{{ location.latitude }}</td>
+              <td>{{ location.longitude }}</td>
+              <td>{{ location.recordedAt | date: 'medium' }}</td>
+              <td>
+                <button type="button" class="secondary-button" (click)="editLocation(location)">
+                  {{ 'incidents.edit' | translate }}
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6">{{ 'incidents.safety.no_locations' | translate }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="data-card">
+    <header>
+      <div>
+        <h2>{{ 'incidents.safety.alerts' | translate }}</h2>
+        <p>{{ 'incidents.safety.alerts_hint' | translate }}</p>
+      </div>
+    </header>
+    <div class="record-list">
+      @for (alert of incidentAlerts(); track alert.id) {
+        <article class="record-item">
+          <div>
+            <strong>{{ 'incidents.safety.alert_types.' + alert.type | translate }}</strong>
+            <span
+              class="severity-badge"
+              [class.severity-critical]="alert.severity === 'CRITICAL'"
+              [class.severity-high]="alert.severity === 'HIGH'"
+              [class.severity-medium]="alert.severity === 'MEDIUM'"
+              [class.severity-low]="alert.severity === 'LOW'"
+            >
+              {{ 'incidents.severity_values.' + alert.severity | translate }}
+            </span>
+            <span>{{ alert.message | translate }}</span>
+            <small>
+              {{ 'incidents.safety.expedition_id' | translate }} #{{ alert.expeditionId }} ·
+              {{ 'incidents.safety.tourist_id' | translate }} #{{ alert.touristId }} ·
+              <span class="status-badge">{{
+                'incidents.safety.alert_status.' + alert.status | translate
+              }}</span>
+            </small>
+          </div>
+          @if (alert.status === 'ACTIVE') {
+            <button type="button" class="secondary-button" (click)="acknowledge(alert)">
+              {{ 'incidents.safety.acknowledge' | translate }}
+            </button>
+          }
+        </article>
+      } @empty {
+        <p class="empty">{{ 'incidents.safety.no_alerts' | translate }}</p>
+      }
+    </div>
+  </section>
+
+  <section class="data-card">
+    <header>
+      <div>
+        <h2>{{ 'incidents.safety.health_status' | translate }}</h2>
+        <p>{{ 'incidents.safety.health_hint' | translate }}</p>
+      </div>
+    </header>
+    <form class="record-form" (ngSubmit)="submitTelemetry()">
+      <label>
+        {{ 'incidents.safety.device_id' | translate }}
+        <details class="select-dropdown form-dropdown" #telemetryDeviceDropdown>
+          <summary>
+            <span>{{ telemetry.wearableId || ('incidents.safety.choose_device' | translate) }}</span>
+            <span class="dropdown-chevron" aria-hidden="true"></span>
+          </summary>
+          @if (incidentWearables().length) {
+            <div class="select-menu" role="list">
+              @for (wearable of incidentWearables(); track wearable.id) {
+                <button
+                  type="button"
+                  class="select-option device-option"
+                  [class.is-selected]="telemetry.wearableId === wearable.deviceId"
+                  (click)="telemetry.wearableId = wearable.deviceId; telemetryDeviceDropdown.open = false"
+                >
+                  <span class="device-indicator" [class.is-disconnected]="wearable.connectivity === 'DISCONNECTED'"></span>
+                  <span>{{ wearable.deviceId }}</span>
+                  <small>{{ wearable.batteryLevel }}%</small>
+                </button>
+              }
+            </div>
+          }
+        </details>
+      </label>
+      <label>
+        {{ 'incidents.safety.heart_rate' | translate }}
+        <input
+          type="number"
+          name="heartRate"
+          min="25"
+          max="240"
+          required
+          [(ngModel)]="telemetry.heartRate"
+        />
+      </label>
+      <label>
+        {{ 'incidents.safety.blood_oxygen' | translate }} (%)
+        <input
+          type="number"
+          name="bloodOxygen"
+          min="50"
+          max="100"
+          required
+          [(ngModel)]="telemetry.bloodOxygen"
+        />
+      </label>
+      <label>
+        {{ 'incidents.safety.battery' | translate }} (%)
+        <input
+          type="number"
+          name="batteryLevel"
+          min="0"
+          max="100"
+          required
+          [(ngModel)]="telemetry.batteryLevel"
+        />
+      </label>
+      <label>
+        {{ 'incidents.safety.connectivity' | translate }}
+        <details class="select-dropdown form-dropdown" #telemetryConnectivityDropdown>
+          <summary>
+            <span class="connection-choice">
+              <span class="device-indicator" [class.is-disconnected]="telemetry.connectivity === 'DISCONNECTED'"></span>
+              {{ (telemetry.connectivity === 'CONNECTED' ? 'incidents.safety.connected' : 'incidents.safety.disconnected') | translate }}
+            </span>
+            <span class="dropdown-chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="select-menu" role="list">
+            <button
+              type="button"
+              class="select-option device-option"
+              [class.is-selected]="telemetry.connectivity === 'CONNECTED'"
+              (click)="telemetry.connectivity = 'CONNECTED'; telemetryConnectivityDropdown.open = false"
+            >
+              <span class="device-indicator"></span>
+              <span>{{ 'incidents.safety.connected' | translate }}</span>
+              @if (telemetry.connectivity === 'CONNECTED') { <span class="selected-check" aria-hidden="true">✓</span> }
+            </button>
+            <button
+              type="button"
+              class="select-option device-option"
+              [class.is-selected]="telemetry.connectivity === 'DISCONNECTED'"
+              (click)="telemetry.connectivity = 'DISCONNECTED'; telemetryConnectivityDropdown.open = false"
+            >
+              <span class="device-indicator is-disconnected"></span>
+              <span>{{ 'incidents.safety.disconnected' | translate }}</span>
+              @if (telemetry.connectivity === 'DISCONNECTED') { <span class="selected-check" aria-hidden="true">✓</span> }
+            </button>
+          </div>
+        </details>
+      </label>
+      <button type="submit" class="primary-button" [disabled]="!selectedIncident() || !telemetry.wearableId">
+        {{
+          (telemetry.id === null
+            ? 'incidents.safety.ingest_telemetry'
+            : 'incidents.safety.update_telemetry'
+          ) | translate
+        }}
+      </button>
+    </form>
+
+    <div class="record-list">
+      @for (record of incidentTelemetry(); track record.id) {
+        <article class="record-item">
+          <div>
+            <strong>{{ 'incidents.safety.tourist_id' | translate }} #{{ record.touristId }}</strong>
+            <span
+              >{{ 'incidents.safety.heart_rate' | translate }}: {{ record.heartRate }} bpm ·
+              {{ 'incidents.safety.blood_oxygen' | translate }}: {{ record.bloodOxygen }}%</span
+            >
+            <small
+              >{{ record.recordedAt | date: 'medium' }} ·
+              {{ record.connectivity | lowercase }}</small
+            >
+          </div>
+          <div class="record-actions">
+            <button type="button" class="secondary-button" (click)="editTelemetry(record)">
+              {{ 'incidents.edit' | translate }}
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <p class="empty">{{ 'incidents.safety.no_telemetry' | translate }}</p>
+      }
+    </div>
+  </section>
+
+  <section class="data-card">
+    <header>
+      <div>
+        <h2>{{ 'incidents.safety.wearables' | translate }}</h2>
+        <p>{{ 'incidents.safety.wearables_hint' | translate }}</p>
+      </div>
+    </header>
+    <form class="record-form" (ngSubmit)="linkWearable()">
+      <label>
+        {{ 'incidents.safety.device_id' | translate }}
+        <input name="deviceId" required [(ngModel)]="wearable.deviceId" />
+      </label>
+      <label>
+        {{ 'incidents.safety.battery' | translate }} (%)
+        <input
+          type="number"
+          name="wearableBattery"
+          min="0"
+          max="100"
+          [(ngModel)]="wearable.batteryLevel"
+        />
+      </label>
+      <label>
+        {{ 'incidents.safety.connectivity' | translate }}
+        <details class="select-dropdown form-dropdown" #wearableConnectivityDropdown>
+          <summary>
+            <span class="connection-choice">
+              <span class="device-indicator" [class.is-disconnected]="wearable.connectivity === 'DISCONNECTED'"></span>
+              {{ (wearable.connectivity === 'CONNECTED' ? 'incidents.safety.connected' : 'incidents.safety.disconnected') | translate }}
+            </span>
+            <span class="dropdown-chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="select-menu" role="list">
+            <button
+              type="button"
+              class="select-option device-option"
+              [class.is-selected]="wearable.connectivity === 'CONNECTED'"
+              (click)="wearable.connectivity = 'CONNECTED'; wearableConnectivityDropdown.open = false"
+            >
+              <span class="device-indicator"></span>
+              <span>{{ 'incidents.safety.connected' | translate }}</span>
+              @if (wearable.connectivity === 'CONNECTED') { <span class="selected-check" aria-hidden="true">✓</span> }
+            </button>
+            <button
+              type="button"
+              class="select-option device-option"
+              [class.is-selected]="wearable.connectivity === 'DISCONNECTED'"
+              (click)="wearable.connectivity = 'DISCONNECTED'; wearableConnectivityDropdown.open = false"
+            >
+              <span class="device-indicator is-disconnected"></span>
+              <span>{{ 'incidents.safety.disconnected' | translate }}</span>
+              @if (wearable.connectivity === 'DISCONNECTED') { <span class="selected-check" aria-hidden="true">✓</span> }
+            </button>
+          </div>
+        </details>
+      </label>
+      <button type="submit" class="primary-button" [disabled]="!selectedIncident()">
+        {{
+          (wearable.id === null
+            ? 'incidents.safety.link_wearable'
+            : 'incidents.safety.update_device'
+          ) | translate
+        }}
+      </button>
+    </form>
+    <div class="record-list">
+      @for (wearable of incidentWearables(); track wearable.id) {
+        <article class="record-item">
+          <div>
+            <strong>{{ wearable.deviceId }}</strong>
+            <span
+              >{{ 'incidents.safety.tourist_id' | translate }} #{{ wearable.touristId }} ·
+              {{ wearable.batteryLevel }}% ·
+              {{
+                'incidents.safety.connectivity_values.' + wearable.connectivity | translate
+              }}</span
+            >
+            <small
+              >{{ 'incidents.safety.last_sync' | translate }}:
+              {{ wearable.lastSyncAt | date: 'medium' }}</small
+            >
+          </div>
+          <div class="record-actions">
+            <button type="button" class="secondary-button" (click)="editWearable(wearable)">
+              {{ 'incidents.edit' | translate }}
+            </button>
+            <button type="button" class="secondary-button" (click)="unlink(wearable)">
+              {{ 'incidents.safety.unlink_wearable' | translate }}
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <p class="empty">{{ 'incidents.safety.no_wearables' | translate }}</p>
+      }
+    </div>
+  </section>
+</div>

@@ -1,18 +1,19 @@
 import { Component, computed, inject, viewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
-import { DatePipe, LowerCasePipe, NgIf } from '@angular/common';
+import { DatePipe, LowerCasePipe, NgClass } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { IncidentStore } from '../../../application/incident.store';
 import { Incident } from '../../../domain/model/aggregates/incident.entity';
 
 /**
- * Displays the incident collection with table actions.
+ * Displays the incident collection with table actions and manual offline synchronization triggers.
  */
 @Component({
   selector: 'app-incident-list',
@@ -24,9 +25,11 @@ import { Incident } from '../../../domain/model/aggregates/incident.entity';
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatSortModule,
+    RouterLink,
     DatePipe,
     LowerCasePipe,
-    TranslatePipe
+    TranslatePipe,
+    NgClass,
   ],
   templateUrl: './incident-list.html',
   styleUrl: './incident-list.css',
@@ -34,6 +37,7 @@ import { Incident } from '../../../domain/model/aggregates/incident.entity';
 export class IncidentList {
   readonly store = inject(IncidentStore);
   protected router = inject(Router);
+  private readonly translate = inject(TranslateService);
 
   displayedColumns: string[] = [
     'id',
@@ -61,12 +65,17 @@ export class IncidentList {
     return source;
   });
 
+  public triggerManualSync() {
+    this.store.syncOfflineIncidents();
+  }
+
   editIncident(id: number) {
-    this.router.navigate([`safety-and-incident-management/incidents/${id}/edit`]).then();
+    this.router.navigate([`/safety-and-incident-management/incidents/${id}/edit`]).then();
   }
 
   resolveIncident(incident: Incident) {
-    this.store.resolveIncident(incident);
+    const note = window.prompt(this.translate.instant('incidents.resolution_note_prompt'));
+    if (note !== null) this.store.resolveIncident(incident, note);
   }
 
   deleteIncident(id: number) {
@@ -74,6 +83,6 @@ export class IncidentList {
   }
 
   navigateToNew() {
-    this.router.navigate(['safety-and-incident-management/incidents/new-incident']).then();
+    this.router.navigate(['/safety-and-incident-management/incidents/new']).then();
   }
 }

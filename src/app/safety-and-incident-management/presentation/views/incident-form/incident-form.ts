@@ -5,14 +5,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { NgClass } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { IncidentStore } from '../../../application/incident.store';
 import { Incident } from '../../../domain/model/aggregates/incident.entity';
 import { IncidentStatus } from '../../../domain/model/value-object/incident-status';
-import { TranslatePipe } from '@ngx-translate/core';
-import { MatIconModule } from '@angular/material/icon';
 
 /**
- * Creates and edits incident entities.
+ * Creates and edits incident entities with live guided emergency protocols.
  */
 @Component({
   selector: 'app-incident-form',
@@ -26,7 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
     TranslatePipe,
     RouterLink,
-    TranslatePipe,
+    NgClass,
   ],
   templateUrl: './incident-form.html',
   styleUrl: './incident-form.css',
@@ -37,21 +38,27 @@ export class IncidentForm {
   private router = inject(Router);
   private store = inject(IncidentStore);
 
-  form = this.fb.group({
+  public form = this.fb.group({
     activeTourId: new FormControl<number>(1, {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.min(1)],
     }),
     reportedByUserId: new FormControl<number>(1, {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.min(1)],
     }),
     description: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.pattern(/\S/)],
     }),
-    latitude: new FormControl<number>(0, { nonNullable: true, validators: [Validators.required] }),
-    longitude: new FormControl<number>(0, { nonNullable: true, validators: [Validators.required] }),
+    latitude: new FormControl<number>(0, {
+      nonNullable: true,
+      validators: [Validators.required, Validators.min(-90), Validators.max(90)],
+    }),
+    longitude: new FormControl<number>(0, {
+      nonNullable: true,
+      validators: [Validators.required, Validators.min(-180), Validators.max(180)],
+    }),
     reportedAt: new FormControl<string>(this.toLocalDateTime(new Date().toISOString()), {
       nonNullable: true,
       validators: [Validators.required],
@@ -60,13 +67,32 @@ export class IncidentForm {
       nonNullable: true,
       validators: [Validators.required],
     }),
+    severity: new FormControl<string>('HIGH', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    reporterRole: new FormControl<'TOURIST' | 'GUIDE'>('TOURIST', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
-  statuses = Object.values(IncidentStatus);
-  isEdit = false;
-  incidentId: number | null = null;
+  public statuses: string[] = Object.values(IncidentStatus);
+  public readonly severities: string[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+  public activeProtocols: string[] = [];
+  public currentSeverity: string = 'HIGH';
+
+  public isEdit = false;
+  public incidentId: number | null = null;
 
   constructor() {
+    this.form.get('severity')?.valueChanges.subscribe((val) => {
+      if (val) {
+        this.currentSeverity = val;
+        this.updateProtocols(val);
+      }
+    });
+
     this.route.params.subscribe((params) => {
       this.incidentId = params['id'] ? +params['id'] : null;
       this.isEdit = !!this.incidentId;
@@ -82,24 +108,49 @@ export class IncidentForm {
             longitude: incident.longitude,
             reportedAt: this.toLocalDateTime(incident.reportedAt),
             status: incident.status,
+            severity: incident.severity ?? 'HIGH',
+            reporterRole: incident.reporterRole,
           });
+          this.currentSeverity = incident.severity ?? 'HIGH';
+          this.updateProtocols(this.currentSeverity);
         }
+      } else {
+        this.updateProtocols(this.currentSeverity);
       }
     });
   }
 
-  submit() {
-    if (this.form.invalid) return;
-    const reportedAt = this.form.value.reportedAt!;
+  private updateProtocols(severity: string) {
+    const protocolCount = severity === 'CRITICAL' || severity === 'HIGH' ? 3 : 2;
+    this.activeProtocols = Array.from(
+      { length: protocolCount },
+      (_, index) => `incidents.protocols.${severity.toLowerCase()}.${index + 1}`,
+    );
+  }
+
+  public submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const formValues = this.form.value;
+    const reportedAt = formValues.reportedAt
+      ? new Date(formValues.reportedAt).toISOString()
+      : new Date().toISOString();
+
     const incident: Incident = new Incident({
       id: this.incidentId ?? 0,
-      activeTourId: this.form.value.activeTourId!,
-      reportedByUserId: this.form.value.reportedByUserId!,
-      description: this.form.value.description!,
-      latitude: this.form.value.latitude!,
-      longitude: this.form.value.longitude!,
-      reportedAt: new Date(reportedAt).toISOString(),
-      status: this.form.value.status!,
+      activeTourId: Number(formValues.activeTourId ?? 1),
+      reportedByUserId: Number(formValues.reportedByUserId ?? 1),
+      description: formValues.description ?? '',
+      latitude: Number(formValues.latitude ?? 0),
+      longitude: Number(formValues.longitude ?? 0),
+      reportedAt: reportedAt,
+      status: (formValues.status as IncidentStatus) ?? IncidentStatus.OPEN,
+      severity: formValues.severity ?? 'HIGH',
+      reporterRole: formValues.reporterRole ?? 'TOURIST',
+      isSynced: false,
     });
 
     if (this.isEdit) {
@@ -108,7 +159,11 @@ export class IncidentForm {
       this.store.addIncident(incident);
     }
 
-    this.router.navigate(['safety-and-incident-management/incidents']).then();
+    this.router.navigate(['/safety-and-incident-management/incidents']).then((success) => {
+      if (!success) {
+        console.warn('Navigation to incident list failed.');
+      }
+    });
   }
 
   private toLocalDateTime(value: string): string {
