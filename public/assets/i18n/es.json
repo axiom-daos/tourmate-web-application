@@ -284,7 +284,24 @@
     "traveler_experience": "Experiencia del viajero",
     "traveler_experience_help": "Ayuda a mejorar la calidad del servicio y del tour.",
     "select_tour_label": "Selecciona un tour",
-    "select_client_label": "Selecciona un cliente"
+    "select_client_label": "Selecciona un cliente",
+    "edit_description": "Actualiza los datos y el comentario de esta reseña.",
+    "new_description": "Comparte tu experiencia y ayuda a otros viajeros a conocer este tour.",
+    "saving": "Guardando...",
+    "loading_review": "Cargando reseña",
+    "loading_review_description": "Obteniendo los datos para editar...",
+    "comment_min_length": "El comentario debe tener al menos 5 caracteres.",
+    "load_error_title": "Error al cargar las reseñas",
+    "retry": "Reintentar",
+    "deleted_success": "Reseña eliminada correctamente.",
+    "close": "Cerrar",
+    "delete_error": "No se pudo eliminar la reseña.",
+    "invalid_review_id": "El identificador de la reseña es inválido.",
+    "invalid_rating": "La calificación debe estar entre 1 y 5.",
+    "duplicate_review": "Este usuario ya dejó una reseña para este tour.",
+    "review_load_error": "No se pudo cargar la reseña.",
+    "review_not_ready": "La reseña todavía no está disponible.",
+    "save_error": "No se pudo guardar la reseña."
   },
 
   "about": {

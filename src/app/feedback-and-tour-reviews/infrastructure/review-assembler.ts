@@ -1,41 +1,87 @@
-
 import { BaseAssembler } from '../../shared/infrastructure/base-assembler';
 import { Review } from '../domain/model/aggregates/review.entity';
 import { ReviewResource, ReviewsResponse } from './review-response';
 
 /**
- * Maps review entities to and from API resources.
+ * Converts API resources into Review entities
+ * and Review entities into API resources.
+ *
+ * Bounded Context: Feedback and Tour Reviews.
  */
-export class ReviewAssembler implements BaseAssembler<
-  Review,
-  ReviewResource,
-  ReviewsResponse
-> {
+export class ReviewAssembler implements BaseAssembler<Review, ReviewResource, ReviewsResponse> {
+  /**
+   * Converts an identifier from the API
+   * into a valid numeric identifier.
+   *
+   * Supports numeric IDs and numeric strings.
+   */
+  private parseId(value: number | string, field: string): number {
+    const normalized = typeof value === 'string' ? value.trim() : value;
 
-  // Convertimos la respuesta de la API en entidades
+    const id =
+      typeof normalized === 'string' && /^\d+$/.test(normalized)
+        ? Number(normalized)
+        : typeof normalized === 'number'
+          ? normalized
+          : NaN;
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+      throw new Error(`El campo ${field} contiene un identificador inválido.`);
+    }
+
+    return id;
+  }
+
+  /**
+   * Converts the rating into a valid number.
+   */
+  private parseRating(value: number | string): number {
+    const rating =
+      typeof value === 'string' && value.trim() !== ''
+        ? Number(value)
+        : typeof value === 'number'
+          ? value
+          : NaN;
+
+    Review.validateRating(rating);
+
+    return rating;
+  }
+
+  /**
+   * Converts an API response into Review entities.
+   */
   toEntitiesFromResponse = (response: ReviewsResponse): Review[] => {
-    return response.reviews.map(
-      resource => this.toEntityFromResource(resource)
-    );
+    if (!Array.isArray(response.reviews)) {
+      throw new Error('La respuesta de reseñas no tiene un formato válido.');
+    }
+
+    return response.reviews.map((resource) => this.toEntityFromResource(resource));
   };
 
-  // Convertimos un recurso en una entidad Review
-  toEntityFromResource = (resource: ReviewResource): Review =>
-    new Review({
-      id: resource.id,
-      userId: resource.userId,
-      tourId: resource.tourId,
-      rating: resource.rating,
-      createdAt: resource.createdAt
+  /**
+   * Converts an API resource into a Review entity.
+   */
+  toEntityFromResource = (resource: ReviewResource): Review => {
+    return new Review({
+      id: this.parseId(resource.id, 'id'),
+      userId: this.parseId(resource.userId, 'userId'),
+      tourId: this.parseId(resource.tourId, 'tourId'),
+      rating: this.parseRating(resource.rating),
+      createdAt: resource.createdAt,
     });
+  };
 
-  // Convertimos una entidad Review en un recurso
-  toResourceFromEntity = (entity: Review): ReviewResource => ({
-    id: entity.id,
-    userId: entity.userId,
-    tourId: entity.tourId,
-    rating: entity.rating,
-    createdAt: entity.createdAt
-  });
-
+  /**
+   * Converts a Review entity into an API resource.
+   */
+  toResourceFromEntity = (entity: Review): ReviewResource => {
+    return {
+      id: entity.id,
+      userId: entity.userId,
+      tourId: entity.tourId,
+      rating: entity.rating,
+      createdAt: entity.createdAt,
+    };
+  };
 }

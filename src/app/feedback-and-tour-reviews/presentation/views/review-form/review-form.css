@@ -1,8 +1,19 @@
+
+/* ==========================================
+   FEEDBACK AND TOUR REVIEWS
+   Estilos del formulario de reseñas
+   ========================================== */
+
+/* Estilos generales del componente */
 :host {
   display: block;
   min-height: calc(100vh - 140px);
   background:
-    radial-gradient(circle at top, rgba(201, 162, 90, 0.10), transparent 25%),
+    radial-gradient(
+      circle at top,
+      rgba(201, 162, 90, 0.10),
+      transparent 25%
+    ),
     linear-gradient(180deg, #f8f5f1 0%, #f4efe8 100%);
   color: #1a2d29;
   font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
@@ -14,18 +25,27 @@
   box-sizing: border-box;
 }
 
+/* ==========================================
+   CONTENEDOR PRINCIPAL
+   ========================================== */
+
 .review-shell {
-  width: min(980px, calc(100% - 28px));
+  width: calc(100% - 28px);
+  max-width: 980px;
   margin: 0 auto;
-  padding: 22px 0 44px;
+  padding: 28px 0 48px;
 }
+
+/* ==========================================
+   ENCABEZADO DEL FORMULARIO
+   ========================================== */
 
 .form-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .header-copy {
@@ -38,8 +58,8 @@
   color: #1c312e;
   font-size: clamp(2rem, 2.8vw, 2.7rem);
   font-weight: 900;
-  letter-spacing: -0.06em;
-  line-height: 1.1;
+  letter-spacing: -0.05em;
+  line-height: 1.15;
 }
 
 .header-copy p {
@@ -49,30 +69,40 @@
   line-height: 1.65;
 }
 
+/* ==========================================
+   PANEL DEL FORMULARIO
+   ========================================== */
+
 .review-panel {
-  background: rgba(255, 255, 255, 0.92);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(128, 145, 138, 0.16);
   border-radius: 28px;
-  box-shadow: 0 16px 36px rgba(24, 38, 32, 0.06);
-  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(24, 38, 32, 0.07);
 }
 
+/* Sección informativa superior */
 .panel-highlight {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 18px 22px;
-  background: linear-gradient(135deg, #f7f2e9 0%, #f9f6f3 100%);
+  padding: 20px 24px;
+  background: linear-gradient(
+    135deg,
+    #f7f2e9 0%,
+    #f9f6f3 100%
+  );
   border-bottom: 1px solid rgba(129, 144, 137, 0.14);
 }
 
 .panel-icon {
   display: grid;
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
   place-items: center;
   color: #2f5a4d;
-  background: linear-gradient(135deg, #edf5ee 0%, #f5f8f5 100%);
+  background: #edf5ee;
   border: 1px solid rgba(101, 140, 106, 0.15);
   border-radius: 14px;
 }
@@ -80,7 +110,7 @@
 .panel-copy {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
 }
 
@@ -88,7 +118,7 @@
   color: #1f342f;
   font-size: 0.82rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
@@ -98,11 +128,15 @@
   line-height: 1.5;
 }
 
+/* ==========================================
+   FORMULARIO Y CAMPOS
+   ========================================== */
+
 .review-form {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  padding: 26px 22px 22px;
+  padding: 26px 24px 24px;
 }
 
 .form-grid {
@@ -121,6 +155,7 @@
   min-width: 0;
 }
 
+/* Personalizamos los campos de Angular Material */
 :host ::ng-deep .mat-mdc-form-field {
   width: 100%;
 }
@@ -128,7 +163,6 @@
 :host ::ng-deep .mat-mdc-text-field-wrapper {
   background: rgba(255, 255, 255, 0.96) !important;
   border-radius: 16px !important;
-  box-shadow: inset 0 0 0 1px rgba(129, 149, 141, 0.15);
 }
 
 :host ::ng-deep .mdc-notched-outline__leading,
@@ -138,22 +172,24 @@
   transition: border-color 0.2s ease;
 }
 
+/* Color del borde cuando se pasa el cursor */
 :host ::ng-deep .mat-mdc-form-field:hover
 .mdc-notched-outline__leading,
 :host ::ng-deep .mat-mdc-form-field:hover
 .mdc-notched-outline__notch,
 :host ::ng-deep .mat-mdc-form-field:hover
 .mdc-notched-outline__trailing {
-  border-color: rgba(35, 75, 67, 0.8);
+  border-color: #376d5b;
 }
 
+/* Color del borde cuando hay un error */
 :host ::ng-deep .mat-mdc-form-field.mat-form-field-invalid
 .mdc-notched-outline__leading,
 :host ::ng-deep .mat-mdc-form-field.mat-form-field-invalid
 .mdc-notched-outline__notch,
 :host ::ng-deep .mat-mdc-form-field.mat-form-field-invalid
 .mdc-notched-outline__trailing {
-  border-color: #d14d47;
+  border-color: #c84d47;
 }
 
 :host ::ng-deep .mat-mdc-input-element,
@@ -167,24 +203,39 @@
   font-size: 0.9rem;
 }
 
-:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-label.mdc-floating-label--float-above {
-  color: #1f433a !important;
-  font-weight: 700;
+/* Mejoramos la visibilidad de los mensajes de error */
+:host ::ng-deep .mat-mdc-form-field-error {
+  color: #b42318;
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
+
+/* ==========================================
+   CAMPO DE COMENTARIOS
+   ========================================== */
 
 .comment-field textarea {
   min-height: 128px;
+  max-height: 350px;
   resize: vertical;
   line-height: 1.7;
 }
+
+/* ==========================================
+   CUADROS INFORMATIVOS
+   ========================================== */
 
 .info-box {
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  padding: 14px 16px;
-  background: linear-gradient(135deg, #edf6ef 0%, #f4faf4 100%);
-  border: 1px solid rgba(125, 166, 133, 0.18);
+  padding: 15px 17px;
+  background: linear-gradient(
+    135deg,
+    #edf6ef 0%,
+    #f4faf4 100%
+  );
+  border: 1px solid rgba(125, 166, 133, 0.20);
   border-radius: 16px;
 }
 
@@ -199,15 +250,15 @@
 .info-content {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
 }
 
 .info-content strong {
   color: #23463d;
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
@@ -217,32 +268,44 @@
   line-height: 1.5;
 }
 
+/* ==========================================
+   MENSAJES DE ERROR
+   ========================================== */
+
 .form-error {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
   color: #9d453a;
-  background: linear-gradient(135deg, #fff3f1 0%, #fff8f6 100%);
-  border: 1px solid rgba(198, 120, 100, 0.25);
+  background: #fff3f1;
+  border: 1px solid rgba(198, 120, 100, 0.3);
   border-radius: 12px;
   font-size: 0.88rem;
   font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .form-error mat-icon {
   flex-shrink: 0;
+  color: #bc4c40;
 }
+
+/* ==========================================
+   BOTONES DEL FORMULARIO
+   ========================================== */
 
 .footer-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  padding-top: 16px;
+  padding-top: 18px;
   border-top: 1px solid #edf0ea;
 }
 
+/* Botón para cancelar */
 .secondary-btn {
   min-height: 44px !important;
   padding: 0 18px !important;
@@ -253,51 +316,130 @@
   font-weight: 700 !important;
 }
 
+.secondary-btn:hover:not(:disabled) {
+  background: #f3f7f3 !important;
+  border-color: #376d5b !important;
+}
+
+/* Botón para guardar o actualizar */
 .submit-btn {
   min-height: 46px !important;
   padding: 0 22px !important;
-  background: linear-gradient(135deg, #234c43 0%, #17352f 100%) !important;
   color: #fff !important;
+  background: linear-gradient(
+    135deg,
+    #234c43 0%,
+    #17352f 100%
+  ) !important;
   border: none !important;
   border-radius: 12px !important;
-  box-shadow: 0 16px 26px rgba(33, 76, 67, 0.18) !important;
+  box-shadow: 0 12px 24px rgba(33, 76, 67, 0.18) !important;
   font-weight: 800 !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease !important;
 }
 
-.submit-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 18px 30px rgba(33, 76, 67, 0.22) !important;
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 28px rgba(33, 76, 67, 0.24) !important;
 }
 
+/* Evitamos efectos visuales al deshabilitar botones */
+.submit-btn:disabled,
+.secondary-btn:disabled {
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.65;
+}
+
+/* Resaltamos los botones al navegar con teclado */
+.submit-btn:focus-visible,
+.secondary-btn:focus-visible {
+  outline: 3px solid #8cb9a6;
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   DISEÑO RESPONSIVE
+   ========================================== */
+
+/* Pantallas medianas */
+@media (max-width: 768px) {
+  .review-shell {
+    padding-top: 20px;
+  }
+
+  .review-form {
+    padding: 22px 18px;
+  }
+
+  .form-grid {
+    gap: 14px;
+  }
+}
+
+/* Celulares */
 @media (max-width: 640px) {
   .review-shell {
-    width: min(100% - 18px, 980px);
-    padding-top: 14px;
+    width: calc(100% - 20px);
+    padding: 16px 0 32px;
   }
 
   .form-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
+    gap: 12px;
+  }
+
+  .header-copy h1 {
+    font-size: 1.85rem;
+  }
+
+  .review-panel {
+    border-radius: 20px;
+  }
+
+  .panel-highlight {
+    padding: 16px;
+  }
+
+  .panel-icon {
+    width: 42px;
+    height: 42px;
   }
 
   .review-form {
-    padding: 18px 16px 16px;
+    gap: 14px;
+    padding: 18px 14px;
   }
 
   .form-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;
   }
 
   .footer-actions {
     flex-direction: column-reverse;
     align-items: stretch;
+    gap: 10px;
   }
 
   .secondary-btn,
   .submit-btn {
     width: 100%;
+  }
+}
+
+/* Respetamos las preferencias de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .submit-btn,
+  .secondary-btn {
+    transition: none !important;
+  }
+
+  .submit-btn:hover {
+    transform: none;
   }
 }

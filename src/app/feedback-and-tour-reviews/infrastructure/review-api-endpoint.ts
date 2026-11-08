@@ -1,13 +1,19 @@
-
 import { HttpClient } from '@angular/common/http';
+
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
+
 import { Review } from '../domain/model/aggregates/review.entity';
+
 import { ReviewResource, ReviewsResponse } from './review-response';
+
 import { ReviewAssembler } from './review-assembler';
+
 import { environment } from '../../../environments/environment';
 
 /**
- * Endpoint client for review CRUD operations.
+ * Clase que configura la comunicación con la API de reseñas.
+ *
+ * Hereda las operaciones CRUD de BaseApiEndpoint.
  */
 export class ReviewApiEndpoint extends BaseApiEndpoint<
   Review,
@@ -15,12 +21,17 @@ export class ReviewApiEndpoint extends BaseApiEndpoint<
   ReviewsResponse,
   ReviewAssembler
 > {
-
+  /**
+   * Inicializa el endpoint de reseñas.
+   *
+   * @param http Cliente HTTP de Angular.
+   */
   constructor(http: HttpClient) {
-    super(
-      http,
-      `${environment.reviewsApiBaseUrl}/reviews`,
-      new ReviewAssembler()
-    );
+    // Obtenemos la dirección base configurada en environment.
+    const endpointUrl = `${environment.reviewsApiBaseUrl}/reviews`;
+
+    // Enviamos a la clase padre el cliente HTTP,
+    // la URL de la API y el assembler de reseñas.
+    super(http, endpointUrl, new ReviewAssembler());
   }
 }
