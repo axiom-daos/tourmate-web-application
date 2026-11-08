@@ -5,13 +5,14 @@
       <p>{{ 'reviews.list_subtitle' | translate }}</p>
     </div>
 
-    <a
+    <button
       mat-flat-button
+      type="button"
       class="primary-cta"
-      routerLink="new">
-      <mat-icon aria-hidden="true">rate_review</mat-icon>
+      (click)="addReview()">
+      <mat-icon>rate_review</mat-icon>
       <span>{{ 'reviews.add_new' | translate }}</span>
-    </a>
+    </button>
   </header>
 
   @if (loading()) {
@@ -48,16 +49,13 @@
       <h2>{{ 'reviews.empty_title' | translate }}</h2>
       <p>{{ 'reviews.empty_description' | translate }}</p>
 
-      <a mat-stroked-button class="empty-btn" routerLink="new">
+      <button mat-stroked-button type="button" class="empty-btn" (click)="addReview()">
         {{ 'reviews.add_new' | translate }}
-      </a>
+      </button>
     </section>
 
   } @else {
-    <section
-      class="review-feed"
-      [attr.aria-label]="'reviews.list_title' | translate">
-
+    <section class="review-feed" [attr.aria-label]="'reviews.list_title' | translate">
       <div class="feed-header">
         <span class="feed-title">
           {{ 'reviews.review_count' | translate: { count: reviews().length } }}
@@ -67,55 +65,52 @@
       <div class="review-grid">
         @for (review of reviews(); track review.id) {
           <article class="review-card">
-            <div class="review-card-top">
-              <span class="review-avatar" aria-hidden="true">
+            <div class="tour-image-wrap">
+              <img
+                [src]="tourImage(review.tourId)"
+                [alt]="tourName(review.tourId)"
+                class="tour-image"
+              />
+            </div>
+
+            <div class="review-card-header">
+              <div class="review-avatar" aria-hidden="true">
                 <mat-icon>person</mat-icon>
-              </span>
+              </div>
 
               <div class="review-author">
                 <h2>{{ reviewerName(review.userId) }}</h2>
-                <p>
-                  {{ 'reviews.date' | translate }}
-                  · {{ review.createdAt | date:'mediumDate' }}
-                </p>
+                <p>{{ review.createdAt | date:'mediumDate' }}</p>
               </div>
 
               <span class="review-id">#{{ review.id }}</span>
             </div>
 
+            <div class="tour-name-row">
+              <span class="tour-pill">{{ tourName(review.tourId) }}</span>
+            </div>
+
             <div
               class="star-rating"
               role="img"
-              [attr.aria-label]="'reviews.rating_aria' | translate: {
-                rating: review.rating
-              }">
+              [attr.aria-label]="'reviews.rating_aria' | translate: { rating: review.rating }">
 
-              @for (
-                filled of ratingStars(review.rating);
-                track $index
-                ) {
+              @for (filled of ratingStars(review.rating); track $index) {
                 <mat-icon aria-hidden="true">
                   {{ filled ? 'star' : 'star_border' }}
                 </mat-icon>
               }
 
               <span class="rating-value">
-                {{ review.rating }}
-                <span class="rating-scale">/5</span>
+                {{ review.rating }}<span class="rating-scale">/5</span>
               </span>
             </div>
 
             <blockquote>
-              <mat-icon class="quote-icon" aria-hidden="true">format_quote</mat-icon>
               <p>{{ review.comment || ('reviews.no_comment' | translate) }}</p>
             </blockquote>
 
             <footer class="review-card-footer">
-              <span class="tour-reference">
-                <mat-icon aria-hidden="true">travel_explore</mat-icon>
-                {{ tourName(review.tourId) }}
-              </span>
-
               <div class="review-actions">
                 <button
                   mat-stroked-button
@@ -124,7 +119,6 @@
                   [disabled]="loading()"
                   [attr.aria-label]="'reviews.edit' | translate"
                   (click)="editReview(review.id)">
-
                   <mat-icon aria-hidden="true">edit</mat-icon>
                   {{ 'reviews.edit' | translate }}
                 </button>
