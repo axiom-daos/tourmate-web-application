@@ -1,4 +1,3 @@
-
 import { BaseEntity } from '../../../../shared/domain/model/base-entity';
 
 /**
@@ -24,6 +23,33 @@ export class Review implements BaseEntity {
     this.#tourId = review.tourId;
     this.#rating = review.rating;
     this.#createdAt = review.createdAt;
+
+    Review.validateIds(this.#userId, this.#tourId);
+    Review.validateRating(this.#rating);
+  }
+
+  static validateIds(userId: number, tourId: number): void {
+    if (!Number.isInteger(userId) || userId <= 0) {
+      throw new Error('El usuario de la reseña es inválido.');
+    }
+
+    if (!Number.isInteger(tourId) || tourId <= 0) {
+      throw new Error('El tour de la reseña es inválido.');
+    }
+  }
+
+  static validateRating(rating: number): void {
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+      throw new Error('La calificación debe estar entre 1 y 5.');
+    }
+  }
+
+  static validateComment(comment: string): void {
+    const cleanComment = comment?.trim() ?? '';
+
+    if (cleanComment.length < 5) {
+      throw new Error('El comentario debe tener al menos 5 caracteres.');
+    }
   }
 
   get id(): number {
@@ -39,6 +65,7 @@ export class Review implements BaseEntity {
   }
 
   set userId(value: number) {
+    Review.validateIds(value, this.#tourId);
     this.#userId = value;
   }
 
@@ -47,6 +74,7 @@ export class Review implements BaseEntity {
   }
 
   set tourId(value: number) {
+    Review.validateIds(this.#userId, value);
     this.#tourId = value;
   }
 
@@ -55,6 +83,7 @@ export class Review implements BaseEntity {
   }
 
   set rating(value: number) {
+    Review.validateRating(value);
     this.#rating = value;
   }
 

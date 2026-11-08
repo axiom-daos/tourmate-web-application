@@ -113,7 +113,7 @@
 
 .review-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
 }
 
@@ -121,7 +121,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 22px 20px 18px;
+  overflow: hidden;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(124, 141, 133, 0.14);
   border-radius: 24px;
@@ -135,22 +135,37 @@
   box-shadow: 0 20px 40px rgba(29, 45, 40, 0.08);
 }
 
-.review-card-top {
+.tour-image-wrap {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: #e9f0eb;
+}
+
+.tour-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.review-card-header {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 16px 18px 0;
 }
 
 .review-avatar {
   display: grid;
-  width: 48px;
-  height: 48px;
+  width: 42px;
+  height: 42px;
   place-items: center;
   flex: 0 0 auto;
   color: #315b4d;
   background: linear-gradient(135deg, #ebf2eb 0%, #eef6ee 100%);
   border: 1px solid rgba(102, 142, 112, 0.15);
-  border-radius: 14px;
+  border-radius: 12px;
 }
 
 .review-author {
@@ -159,7 +174,7 @@
 }
 
 .review-author h2 {
-  margin: 0 0 5px;
+  margin: 0 0 4px;
   color: #1d312e;
   font-size: 1rem;
   font-weight: 800;
@@ -171,13 +186,13 @@
 .review-author p {
   margin: 0;
   color: #6d7e79;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   line-height: 1.5;
 }
 
 .review-id {
   align-self: flex-start;
-  padding: 6px 8px;
+  padding: 5px 8px;
   color: #61776f;
   background: #f3f6f3;
   border-radius: 10px;
@@ -185,11 +200,27 @@
   font-weight: 800;
 }
 
+.tour-name-row {
+  padding: 12px 18px 0;
+}
+
+.tour-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 10px;
+  color: #214d43;
+  background: rgba(33, 77, 67, 0.08);
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .star-rating {
   display: flex;
   align-items: center;
   gap: 3px;
-  margin: 18px 0 14px;
+  margin: 14px 18px 10px;
   color: #c7953d;
 }
 
@@ -212,13 +243,11 @@
 }
 
 blockquote {
-  position: relative;
-  flex: 1;
-  margin: 0;
-  padding: 16px 18px 16px 16px;
+  margin: 0 18px;
+  padding: 14px 16px;
   background: linear-gradient(180deg, #faf7f1 0%, #f7f0e5 100%);
   border-left: 3px solid #d7b16d;
-  border-radius: 0 16px 16px 0;
+  border-radius: 0 14px 14px 0;
   overflow: hidden;
 }
 
@@ -226,48 +255,24 @@ blockquote p {
   margin: 0;
   color: #4f5f59;
   font-size: 0.92rem;
-  line-height: 1.75;
+  line-height: 1.7;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
-.quote-icon {
-  display: none;
-}
-
 .review-card-footer {
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  margin-top: 18px;
-  padding-top: 14px;
-  border-top: 1px solid #edf0eb;
-}
-
-.tour-reference {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 0;
-  color: #5d736b;
-  font-size: 0.76rem;
-  font-weight: 800;
-  overflow-wrap: anywhere;
-}
-
-.tour-reference mat-icon {
-  width: 16px;
-  height: 16px;
-  color: #496f5d;
-  font-size: 16px;
+  margin-top: 14px;
+  padding: 0 18px 18px;
 }
 
 .review-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex: 0 0 auto;
+  gap: 8px;
 }
 
 .edit-btn {
@@ -347,6 +352,12 @@ blockquote p {
   background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(255,248,246,0.82));
 }
 
+@media (max-width: 1100px) {
+  .review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 720px) {
   .review-page {
     padding: 22px 14px 42px;
@@ -368,11 +379,15 @@ blockquote p {
   }
 
   .review-card {
-    padding: 18px 16px 16px;
+    padding: 0;
   }
 
+  .review-card-header,
+  .tour-name-row,
+  .star-rating,
+  blockquote,
   .review-card-footer {
-    flex-wrap: wrap;
-    align-items: flex-start;
+    margin-left: 0;
+    margin-right: 0;
   }
 }

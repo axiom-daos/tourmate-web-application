@@ -61,7 +61,7 @@ export class ReviewForm implements OnInit {
     tourId: ['', [Validators.required, Validators.min(1)]],
     userId: ['', [Validators.required, Validators.min(1)]],
     rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
-    comment: ['', [Validators.required]],
+    comment: ['', [Validators.required, Validators.minLength(5)]],
   });
 
   constructor() {
@@ -157,9 +157,10 @@ export class ReviewForm implements OnInit {
       !Number.isInteger(rating) ||
       rating < 1 ||
       rating > 5 ||
-      comment.length === 0
+      comment.length < 5
     ) {
-      this.errorMessage = 'Verifica los datos ingresados en el formulario.';
+      this.errorMessage =
+        'La reseña no es válida: rating entre 1 y 5 y comentario mínimo de 5 caracteres.';
       return;
     }
 
@@ -188,9 +189,10 @@ export class ReviewForm implements OnInit {
         this.isSaving = false;
         this.router.navigate(['/feedback-and-tour-reviews/reviews']);
       },
-      error: () => {
+      error: (error: unknown) => {
         this.isSaving = false;
-        this.errorMessage = 'No se pudo guardar la reseña.';
+        this.errorMessage =
+          error instanceof Error ? error.message : 'No se pudo guardar la reseña.';
       },
     });
   }

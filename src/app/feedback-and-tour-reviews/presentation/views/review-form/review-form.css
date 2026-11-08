@@ -2,7 +2,7 @@
   display: block;
   min-height: calc(100vh - 140px);
   background:
-    radial-gradient(circle at top, rgba(201, 162, 90, 0.1), transparent 25%),
+    radial-gradient(circle at top, rgba(201, 162, 90, 0.10), transparent 25%),
     linear-gradient(180deg, #f8f5f1 0%, #f4efe8 100%);
   color: #1a2d29;
   font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
@@ -112,6 +112,10 @@
   width: 100%;
 }
 
+.form-grid.single {
+  grid-template-columns: 1fr;
+}
+
 .full-width {
   width: 100%;
   min-width: 0;
@@ -169,7 +173,7 @@
 }
 
 .comment-field textarea {
-  min-height: 120px;
+  min-height: 128px;
   resize: vertical;
   line-height: 1.7;
 }
