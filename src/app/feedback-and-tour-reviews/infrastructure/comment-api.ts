@@ -1,50 +1,81 @@
-
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 import { BaseApi } from '../../shared/infrastructure/base-api';
 import { Comment } from '../domain/model/aggregates/comment.entity';
 import { CommentApiEndpoint } from './comment-api-endpoint';
 
 /**
- * Infrastructure facade for comment CRUD operations.
+ * Infrastructure service responsible for
+ * communicating with the Comments REST API.
+ *
+ * Bounded Context: Feedback and Tour Reviews.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommentApi extends BaseApi {
-
   private readonly http = inject(HttpClient);
 
-  private readonly commentsEndpoint =
-    new CommentApiEndpoint(this.http);
+  private readonly commentsEndpoint = new CommentApiEndpoint(this.http);
 
-  // Obtenemos todos los comentarios
+  /**
+   * Validates an identifier before making
+   * a request to the API.
+   */
+  private isValidId(id: number): boolean {
+    return Number.isSafeInteger(id) && id > 0;
+  }
+
+  /**
+   * Retrieves all comments.
+   */
   getComments(): Observable<Comment[]> {
     return this.commentsEndpoint.getAll();
   }
 
-  // Obtenemos un comentario por su ID
+  /**
+   * Retrieves a comment by its identifier.
+   */
   getComment(id: number): Observable<Comment> {
+    if (!this.isValidId(id)) {
+      return throwError(() => new Error('El identificador del comentario es inválido.'));
+    }
+
     return this.commentsEndpoint.getById(id);
   }
 
-  // Creamos un nuevo comentario
+  /**
+   * Creates a new comment.
+   */
   createComment(comment: Comment): Observable<Comment> {
+    if (!this.isValidId(comment.reviewId)) {
+      return throwError(() => new Error('El comentario debe pertenecer a una reseña válida.'));
+    }
+
     return this.commentsEndpoint.create(comment);
   }
 
-  // Actualizamos un comentario existente
+  /**
+   * Updates an existing comment.
+   */
   updateComment(comment: Comment): Observable<Comment> {
-    return this.commentsEndpoint.update(
-      comment,
-      comment.id
-    );
+    if (!this.isValidId(comment.id)) {
+      return throwError(() => new Error('No se puede actualizar un comentario sin ID válido.'));
+    }
+
+    return this.commentsEndpoint.update(comment, comment.id);
   }
 
-  // Eliminamos un comentario por su ID
+  /**
+   * Deletes a comment by its identifier.
+   */
   deleteComment(id: number): Observable<void> {
+    if (!this.isValidId(id)) {
+      return throwError(() => new Error('No se puede eliminar un comentario sin ID válido.'));
+    }
+
     return this.commentsEndpoint.delete(id);
   }
 }

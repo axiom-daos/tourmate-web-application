@@ -1,8 +1,16 @@
 import { BaseEntity } from '../../../../shared/domain/model/base-entity';
 
+export interface ReviewData {
+  id: number;
+  userId: number;
+  tourId: number;
+  rating: number;
+  createdAt: string;
+}
+
 /**
- * Represents a Review aggregate in the
- * feedback and tour reviews domain model.
+ * Review aggregate of the Feedback and Tour Reviews
+ * bounded context.
  */
 export class Review implements BaseEntity {
   #id: number;
@@ -11,29 +19,31 @@ export class Review implements BaseEntity {
   #rating: number;
   #createdAt: string;
 
-  constructor(review: {
-    id: number;
-    userId: number;
-    tourId: number;
-    rating: number;
-    createdAt: string;
-  }) {
+  constructor(review: ReviewData) {
+    Review.validateId(review.id);
+    Review.validateIds(review.userId, review.tourId);
+    Review.validateRating(review.rating);
+
     this.#id = review.id;
     this.#userId = review.userId;
     this.#tourId = review.tourId;
     this.#rating = review.rating;
     this.#createdAt = review.createdAt;
+  }
 
-    Review.validateIds(this.#userId, this.#tourId);
-    Review.validateRating(this.#rating);
+  static validateId(id: number): void {
+    // ID 0 is allowed for a review not yet persisted.
+    if (!Number.isSafeInteger(id) || id < 0) {
+      throw new Error('El identificador de la reseña es inválido.');
+    }
   }
 
   static validateIds(userId: number, tourId: number): void {
-    if (!Number.isInteger(userId) || userId <= 0) {
+    if (!Number.isSafeInteger(userId) || userId <= 0) {
       throw new Error('El usuario de la reseña es inválido.');
     }
 
-    if (!Number.isInteger(tourId) || tourId <= 0) {
+    if (!Number.isSafeInteger(tourId) || tourId <= 0) {
       throw new Error('El tour de la reseña es inválido.');
     }
   }
@@ -57,6 +67,7 @@ export class Review implements BaseEntity {
   }
 
   set id(value: number) {
+    Review.validateId(value);
     this.#id = value;
   }
 

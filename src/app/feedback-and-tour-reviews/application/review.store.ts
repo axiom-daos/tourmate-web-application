@@ -1,15 +1,15 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
 import {
   Observable,
+  catchError,
+  finalize,
   forkJoin,
+  map,
   of,
   switchMap,
-  map,
   tap,
-  catchError,
   throwError,
-  finalize,
 } from 'rxjs';
 
 import { Review } from '../domain/model/aggregates/review.entity';
@@ -17,6 +17,9 @@ import { Comment } from '../domain/model/aggregates/comment.entity';
 import { ReviewApi } from '../infrastructure/review-api';
 import { CommentApi } from '../infrastructure/comment-api';
 
+/**
+ * View model that combines a review and its comment.
+ */
 export interface ReviewItem {
   id: number;
   userId: number;
@@ -27,6 +30,9 @@ export interface ReviewItem {
   comment: string;
 }
 
+/**
+ * Data required to create or update a review.
+ */
 export interface ReviewInput {
   id?: number;
   userId: number;
@@ -38,8 +44,10 @@ export interface ReviewInput {
 }
 
 /**
- * Manages review and comment application state.
- * Includes business rules for reviews.
+ * Application store for Feedback and Tour Reviews.
+ *
+ * Coordinates API operations, validation,
+ * and application state.
  */
 @Injectable({
   providedIn: 'root',
@@ -48,21 +56,66 @@ export class ReviewStore {
   private readonly reviewApi = inject(ReviewApi);
   private readonly commentApi = inject(CommentApi);
 
+  // Private state
   private readonly reviewsSignal = signal<ReviewItem[]>([]);
   private readonly loadingSignal = signal(false);
   private readonly errorSignal = signal<string | null>(null);
 
+  // Public read-only state
   readonly reviews = this.reviewsSignal.asReadonly();
   readonly loading = this.loadingSignal.asReadonly();
   readonly error = this.errorSignal.asReadonly();
 
   readonly reviewCount = computed(() => this.reviews().length);
 
+  /**
+   * Updates the error state.
+   */
   private setError(error: unknown, fallback: string): void {
-    this.errorSignal.set(error instanceof Error ? error.message : fallback);
+    const message = error instanceof Error ? error.message : fallback;
+
+    this.errorSignal.set(message);
   }
 
-  // READ
+  /**
+   * Combines a review with its associated comment.
+   */
+  private mapReview(review: Review, comments: Comment[]): ReviewItem {
+    const comment = comments.find((item) => item.reviewId === review.id);
+
+    return {
+      id: review.id,
+      userId: review.userId,
+      tourId: review.tourId,
+      rating: review.rating,
+      createdAt: review.createdAt,
+      commentId: comment?.id ?? null,
+      comment: comment?.content ?? '',
+    };
+  }
+
+  /**
+   * Inserts or replaces a review in the local state.
+   */
+  private upsert(item: ReviewItem): void {
+    this.reviewsSignal.update((reviews) => {
+      const exists = reviews.some((review) => review.id === item.id);
+
+      if (exists) {
+        return reviews.map((review) => (review.id === item.id ? item : review));
+      }
+
+      return [...reviews, item];
+    });
+  }
+
+  // ==========================================
+  // READ OPERATIONS
+  // ==========================================
+
+  /**
+   * Loads all reviews and comments from the API.
+   */
   loadData(): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
@@ -78,79 +131,100 @@ export class ReviewStore {
 
           this.reviewsSignal.set(result);
         },
+
         error: (error: unknown) => {
-          this.setError(error, 'Error al cargar las reseñas');
+          this.setError(error, 'Error al cargar las reseñas.');
         },
       });
   }
 
-  private mapReview(review: Review, comments: Comment[]): ReviewItem {
-    const comment = comments.find((item) => Number(item.reviewId) === Number(review.id));
-
-    return {
-      id: Number(review.id),
-      userId: Number(review.userId),
-      tourId: Number(review.tourId),
-      rating: Number(review.rating),
-      createdAt: review.createdAt,
-      commentId: comment ? Number(comment.id) : null,
-      comment: comment?.content ?? '',
-    };
-  }
-
+  /**
+   * Finds a review in the current local state.
+   */
   getReviewById(id: number) {
-    return computed(() => this.reviews().find((review) => review.id === Number(id)));
+    return computed(() => this.reviews().find((review) => review.id === id));
   }
 
+  /**
+   * Gets a review directly from the API.
+   */
   getReview(id: number): Observable<Review> {
     return this.reviewApi.getReview(id);
   }
 
-  // BUSINESS RULE 1: validación del rating y comentario
-  private validateReviewInput(input: ReviewInput): void {
-    if (!Number.isInteger(input.userId) || input.userId <= 0) {
-      throw new Error('El usuario es obligatorio.');
+  /**
+   * Fetches a review and its comment by ID.
+   *
+   * This is useful when the review is not
+   * available in the local state.
+   */
+  loadReviewById(id: number): Observable<ReviewItem> {
+    if (!Number.isSafeInteger(id) || id <= 0) {
+      return throwError(() => new Error('Identificador de reseña inválido.'));
     }
 
-    if (!Number.isInteger(input.tourId) || input.tourId <= 0) {
-      throw new Error('El tour es obligatorio.');
-    }
+    this.errorSignal.set(null);
 
-    if (!Number.isInteger(input.rating) || input.rating < 1 || input.rating > 5) {
-      throw new Error('La calificación debe estar entre 1 y 5.');
-    }
+    return forkJoin({
+      review: this.reviewApi.getReview(id),
+      comments: this.commentApi.getComments(),
+    }).pipe(
+      map(({ review, comments }) => this.mapReview(review, comments)),
 
-    const comment = (input.comment ?? '').trim();
-    if (comment.length < 5) {
-      throw new Error('El comentario debe tener al menos 5 caracteres.');
-    }
+      tap((item) => this.upsert(item)),
+
+      catchError((error: unknown) => {
+        this.setError(error, 'No se pudo cargar la reseña.');
+
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  // ==========================================
+  // VALIDATION
+  // ==========================================
+
+  /**
+   * Checks whether a user has already reviewed
+   * the selected tour in the loaded data.
+   */
+  private hasUserReviewedTour(userId: number, tourId: number, excludeId?: number): boolean {
+    return this.reviews().some(
+      (review) => review.userId === userId && review.tourId === tourId && review.id !== excludeId,
+    );
+  }
+
+  /**
+   * Validates the information entered by the user.
+   */
+  private validateInput(input: ReviewInput): void {
+    Review.validateIds(input.userId, input.tourId);
+
+    Review.validateRating(input.rating);
+
+    Review.validateComment(input.comment);
 
     if (this.hasUserReviewedTour(input.userId, input.tourId, input.id)) {
       throw new Error('Este usuario ya ha dejado una reseña para este tour.');
     }
   }
 
-  // BUSINESS RULE 2: una reseña por usuario y tour
-  private hasUserReviewedTour(userId: number, tourId: number, excludeId?: number): boolean {
-    return this.reviews().some((review) => {
-      const sameUser = Number(review.userId) === Number(userId);
-      const sameTour = Number(review.tourId) === Number(tourId);
-      const differentReview = excludeId == null || Number(review.id) !== Number(excludeId);
+  // ==========================================
+  // CREATE OPERATION
+  // ==========================================
 
-      return sameUser && sameTour && differentReview;
-    });
-  }
-
-  // CREATE
+  /**
+   * Creates a review and its associated comment.
+   */
   addReview(input: ReviewInput): Observable<ReviewItem> {
     this.errorSignal.set(null);
-    this.loadingSignal.set(true);
 
     try {
-      this.validateReviewInput(input);
+      this.validateInput(input);
     } catch (error) {
-      this.loadingSignal.set(false);
-      this.errorSignal.set(error instanceof Error ? error.message : 'Error al validar la reseña.');
+      this.setError(error, 'No se pudo validar la reseña.');
+
       return throwError(() => error);
     }
 
@@ -158,153 +232,175 @@ export class ReviewStore {
 
     const review = new Review({
       id: 0,
-      userId: Number(input.userId),
-      tourId: Number(input.tourId),
-      rating: Number(input.rating),
+      userId: input.userId,
+      tourId: input.tourId,
+      rating: input.rating,
       createdAt,
     });
+
+    this.loadingSignal.set(true);
 
     return this.reviewApi.createReview(review).pipe(
       switchMap((createdReview) => {
         const comment = new Comment({
           id: 0,
-          reviewId: Number(createdReview.id),
-          content: input.comment.trim(),
+          reviewId: createdReview.id,
+          content: input.comment,
           createdAt,
         });
 
         return this.commentApi.createComment(comment).pipe(
-          map(
-            (createdComment) =>
-              ({
-                id: Number(createdReview.id),
-                userId: Number(createdReview.userId),
-                tourId: Number(createdReview.tourId),
-                rating: Number(createdReview.rating),
-                createdAt: createdReview.createdAt,
-                commentId: Number(createdComment.id),
-                comment: createdComment.content,
-              }) as ReviewItem,
+          map((createdComment) => this.mapReview(createdReview, [createdComment])),
+
+          // Best-effort rollback if comment creation fails.
+          catchError((error) =>
+            this.reviewApi.deleteReview(createdReview.id).pipe(
+              catchError(() => of(void 0)),
+              switchMap(() => throwError(() => error)),
+            ),
           ),
         );
       }),
-      tap((item) => {
-        this.reviewsSignal.update((reviews) => [...reviews, item]);
-      }),
+
+      tap((item) => this.upsert(item)),
+
       catchError((error: unknown) => {
-        this.setError(error, 'Error al crear la reseña');
+        this.setError(error, 'No se pudo crear la reseña.');
+
         return throwError(() => error);
       }),
+
       finalize(() => this.loadingSignal.set(false)),
     );
   }
 
-  // UPDATE
+  // ==========================================
+  // UPDATE OPERATION
+  // ==========================================
+
+  /**
+   * Updates a review and its comment.
+   */
   updateReview(input: ReviewInput): Observable<ReviewItem> {
     this.errorSignal.set(null);
 
-    if (input.id == null) {
-      return throwError(() => new Error('Review ID is required'));
-    }
+    if (input.id === undefined || !Number.isSafeInteger(input.id) || input.id <= 0) {
+      const error = new Error('Identificador de reseña inválido.');
 
-    try {
-      this.validateReviewInput(input);
-    } catch (error) {
-      this.errorSignal.set(error instanceof Error ? error.message : 'Error al validar la reseña.');
+      this.setError(error, error.message);
+
       return throwError(() => error);
     }
 
-    this.loadingSignal.set(true);
+    try {
+      this.validateInput(input);
+    } catch (error) {
+      this.setError(error, 'No se pudo validar la reseña.');
 
-    const existing = this.reviews().find((review) => review.id === Number(input.id));
+      return throwError(() => error);
+    }
 
-    const createdAt = existing?.createdAt ?? input.createdAt ?? new Date().toISOString();
+    const previous = this.reviews().find((review) => review.id === input.id);
+
+    const createdAt = previous?.createdAt ?? input.createdAt ?? new Date().toISOString();
 
     const review = new Review({
-      id: Number(input.id),
-      userId: Number(input.userId),
-      tourId: Number(input.tourId),
-      rating: Number(input.rating),
+      id: input.id,
+      userId: input.userId,
+      tourId: input.tourId,
+      rating: input.rating,
       createdAt,
     });
 
+    this.loadingSignal.set(true);
+
     return this.reviewApi.updateReview(review).pipe(
       switchMap((updatedReview) => {
-        const commentId = input.commentId ?? existing?.commentId;
+        const commentId = input.commentId ?? previous?.commentId ?? null;
 
         const comment = new Comment({
-          id: commentId != null ? Number(commentId) : 0,
-          reviewId: Number(updatedReview.id),
-          content: input.comment.trim(),
+          id: commentId ?? 0,
+          reviewId: updatedReview.id,
+          content: input.comment,
           createdAt,
         });
 
-        const commentRequest =
-          commentId != null
-            ? this.commentApi.updateComment(comment)
-            : this.commentApi.createComment(comment);
+        const request =
+          commentId === null
+            ? this.commentApi.createComment(comment)
+            : this.commentApi.updateComment(comment);
 
-        return commentRequest.pipe(
-          map(
-            (savedComment) =>
-              ({
-                id: Number(updatedReview.id),
-                userId: Number(updatedReview.userId),
-                tourId: Number(updatedReview.tourId),
-                rating: Number(updatedReview.rating),
-                createdAt: updatedReview.createdAt,
-                commentId: Number(savedComment.id),
-                comment: savedComment.content,
-              }) as ReviewItem,
-          ),
-        );
+        return request.pipe(map((savedComment) => this.mapReview(updatedReview, [savedComment])));
       }),
-      tap((updated) => {
-        this.reviewsSignal.update((reviews) =>
-          reviews.map((review) => (review.id === updated.id ? updated : review)),
-        );
-      }),
+
+      tap((item) => this.upsert(item)),
+
       catchError((error: unknown) => {
-        this.setError(error, 'Error al actualizar la reseña');
+        this.setError(error, 'No se pudo actualizar la reseña.');
+
         return throwError(() => error);
       }),
+
       finalize(() => this.loadingSignal.set(false)),
     );
   }
 
-  // DELETE: Eliminamos comentarios y reseña
-  deleteReview(id: number): void {
+  // ==========================================
+  // DELETE OPERATION
+  // ==========================================
+
+  /**
+   * Deletes related comments and then the review.
+   *
+   * Returns an Observable so the UI can
+   * handle success and error responses.
+   */
+  deleteReviewRequest(id: number): Observable<void> {
+    if (!Number.isSafeInteger(id) || id <= 0) {
+      return throwError(() => new Error('Identificador de reseña inválido.'));
+    }
+
     this.errorSignal.set(null);
     this.loadingSignal.set(true);
 
-    this.commentApi
-      .getComments()
-      .pipe(
-        switchMap((comments) => {
-          const relatedComments = comments.filter(
-            (comment) => Number(comment.reviewId) === Number(id),
-          );
+    return this.commentApi.getComments().pipe(
+      switchMap((comments) => {
+        const relatedComments = comments.filter((comment) => comment.reviewId === id);
 
-          if (relatedComments.length === 0) {
-            return of([]);
-          }
+        if (relatedComments.length === 0) {
+          return of([]);
+        }
 
-          return forkJoin(
-            relatedComments.map((comment) => this.commentApi.deleteComment(Number(comment.id))),
-          );
-        }),
-        switchMap(() => this.reviewApi.deleteReview(id)),
-        finalize(() => this.loadingSignal.set(false)),
-      )
-      .subscribe({
-        next: () => {
-          this.reviewsSignal.update((reviews) =>
-            reviews.filter((review) => review.id !== Number(id)),
-          );
-        },
-        error: (error: unknown) => {
-          this.setError(error, 'Error al eliminar la reseña');
-        },
-      });
+        return forkJoin(
+          relatedComments.map((comment) => this.commentApi.deleteComment(comment.id)),
+        );
+      }),
+
+      switchMap(() => this.reviewApi.deleteReview(id)),
+
+      tap(() => {
+        this.reviewsSignal.update((reviews) => reviews.filter((review) => review.id !== id));
+      }),
+
+      catchError((error: unknown) => {
+        this.setError(error, 'No se pudo eliminar la reseña.');
+
+        return throwError(() => error);
+      }),
+
+      finalize(() => this.loadingSignal.set(false)),
+    );
+  }
+
+  /**
+   * Keeps compatibility with the existing
+   * ReviewList component.
+   */
+  deleteReview(id: number): void {
+    this.deleteReviewRequest(id).subscribe({
+      error: () => {
+        // The error is already stored in errorSignal.
+      },
+    });
   }
 }
