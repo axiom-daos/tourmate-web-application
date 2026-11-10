@@ -56,6 +56,30 @@ export class SubscriptionStore {
       .sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime());
   });
 
+  /**
+   * Computed signal calculating total expenditure made by the current agency.
+   */
+  readonly totalAgencyExpenditure: Signal<number> = computed(() => {
+    return this.currentAgencyPayments().reduce((total, p) => total + (p.amount || 0), 0);
+  });
+
+  /**
+   * Computed signal estimating next renewal date (30 days from activation).
+   */
+  readonly nextRenewalDate: Signal<string | null> = computed(() => {
+    const sub = this.currentSubscription();
+    if (!sub || sub.status !== SubscriptionStatus.ACTIVE || !sub.activatedAt) {
+      return null;
+    }
+    const activation = new Date(sub.activatedAt);
+    if (isNaN(activation.getTime())) {
+      return null;
+    }
+    const renewal = new Date(activation);
+    renewal.setDate(renewal.getDate() + 30);
+    return renewal.toISOString();
+  });
+
   constructor() {
     this.loadAll();
   }
@@ -193,9 +217,10 @@ export class SubscriptionStore {
   }
 
   /**
-   * Cancels the active subscription.
+   * Cancels the active subscription with an optional reason.
+   * @param reason Optional feedback reason for cancellation.
    */
-  cancelSubscription(): void {
+  cancelSubscription(reason?: string): void {
     const sub = this.currentSubscription();
     if (!sub) return;
 
@@ -203,6 +228,9 @@ export class SubscriptionStore {
     this.errorSignal.set(null);
 
     sub.cancel();
+    if (reason) {
+      console.info(`[SubscriptionStore] Subscription ${sub.id} cancelled with reason: ${reason}`);
+    }
 
     this.api
       .updateSubscription(sub)

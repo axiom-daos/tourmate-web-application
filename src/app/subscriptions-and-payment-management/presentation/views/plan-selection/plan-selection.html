@@ -42,7 +42,7 @@
             @for (feature of getFeaturesForPlan(plan.id); track feature) {
               <li>
                 <mat-icon>check_circle</mat-icon>
-                <span>{{ feature }}</span>
+                <span>{{ feature | translate }}</span>
               </li>
             }
           </ul>
@@ -54,7 +54,7 @@
               <mat-icon aria-hidden="true">verified</mat-icon> {{ 'subscription.current_plan_badge' | translate }}
             </button>
           } @else {
-            <button mat-flat-button type="button" class="btn-select-plan" (click)="selectPlan(plan)">
+            <button mat-flat-button type="button" class="btn-select-plan" (click)="openCheckout(plan)">
               {{ 'subscription.select_plan_btn' | translate }}
             </button>
           }
@@ -62,4 +62,58 @@
       </div>
     }
   </div>
+
+  <!-- Interactive Checkout Confirmation Modal -->
+  @if (selectedPlanForCheckout) {
+    <div class="modal-backdrop" (click)="closeCheckout()">
+      <div class="modal-card checkout-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <h3>{{ 'subscription.checkout_modal_title' | translate }}</h3>
+            <p>{{ 'subscription.checkout_modal_subtitle' | translate }}</p>
+          </div>
+          <button type="button" class="modal-close-btn" (click)="closeCheckout()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="checkout-summary-row">
+            <span class="summary-label">{{ 'subscription.checkout_plan_label' | translate }}</span>
+            <span class="summary-value plan-name-highlight">{{ selectedPlanForCheckout.name }}</span>
+          </div>
+
+          <div class="checkout-summary-row">
+            <span class="summary-label">{{ 'subscription.checkout_billing_cycle' | translate }}</span>
+            <span class="summary-value">1 {{ 'subscription.month' | translate }}</span>
+          </div>
+
+          <div class="checkout-summary-row">
+            <span class="summary-label">{{ 'subscription.checkout_payment_method' | translate }}</span>
+            <span class="summary-value payment-method-tag">
+              <mat-icon>credit_card</mat-icon>
+              <span>{{ 'subscription.checkout_simulated_card' | translate }} (•••• 4242)</span>
+            </span>
+          </div>
+
+          <div class="checkout-price-divider"></div>
+
+          <div class="checkout-total-row">
+            <span class="total-label">{{ 'subscription.amount' | translate }}</span>
+            <span class="total-amount">${{ selectedPlanForCheckout.priceAmount }} {{ selectedPlanForCheckout.priceCurrency }}</span>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button mat-stroked-button type="button" class="btn-modal-cancel" (click)="closeCheckout()">
+            {{ 'subscription.checkout_cancel_btn' | translate }}
+          </button>
+          <button mat-flat-button type="button" class="btn-modal-confirm" (click)="confirmCheckout()">
+            <mat-icon>lock</mat-icon>
+            {{ 'subscription.checkout_confirm_btn' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

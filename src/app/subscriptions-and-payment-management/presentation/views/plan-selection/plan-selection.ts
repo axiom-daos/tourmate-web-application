@@ -27,28 +27,33 @@ export class PlanSelection {
   private readonly router = inject(Router);
 
   /**
-   * Mocked feature set per tier aligned with TourMate specification.
+   * Plan currently selected for confirmation in the checkout modal.
+   */
+  selectedPlanForCheckout: Plan | null = null;
+
+  /**
+   * Feature set per tier using i18n keys aligned with TourMate specification.
    */
   private readonly planFeatureSets: Record<number, string[]> = {
     1: [
-      'Up to 5 active tours simultaneously',
-      'Basic GPS route monitoring',
-      'Incident reporting & logging',
-      'Standard email support',
+      'subscription.features_tier_1_1',
+      'subscription.features_tier_1_2',
+      'subscription.features_tier_1_3',
+      'subscription.features_tier_1_4',
     ],
     2: [
-      'Up to 25 active tours simultaneously',
-      'Real-time biometric & IoT telemetry',
-      'Automated health anomaly alerts',
-      'Offline map synchronization',
-      'Priority 24/7 technical support',
+      'subscription.features_tier_2_1',
+      'subscription.features_tier_2_2',
+      'subscription.features_tier_2_3',
+      'subscription.features_tier_2_4',
+      'subscription.features_tier_2_5',
     ],
     3: [
-      'Unlimited active tours & guides',
-      'Dedicated satellite dispatch & SOS link',
-      'Custom expedition analytics & reports',
-      'Multi-agency team management',
-      'Dedicated customer success manager',
+      'subscription.features_tier_3_1',
+      'subscription.features_tier_3_2',
+      'subscription.features_tier_3_3',
+      'subscription.features_tier_3_4',
+      'subscription.features_tier_3_5',
     ],
   };
 
@@ -59,9 +64,9 @@ export class PlanSelection {
   getFeaturesForPlan(planId: number): string[] {
     return (
       this.planFeatureSets[planId] || [
-        'Standard tour management',
-        'Real-time tracking',
-        'Security alerts',
+        'subscription.features_tier_1_1',
+        'subscription.features_tier_1_2',
+        'subscription.features_tier_1_3',
       ]
     );
   }
@@ -76,18 +81,29 @@ export class PlanSelection {
   }
 
   /**
-   * Upgrades or subscribes to the selected plan.
+   * Opens the checkout confirmation modal for the chosen plan.
    * @param plan
    */
-  selectPlan(plan: Plan): void {
-    if (
-      confirm(
-        `Do you want to activate the "${plan.name}" plan for $${plan.priceAmount} ${plan.priceCurrency}/mo?`,
-      )
-    ) {
-      this.store.subscribeToPlan(plan);
-      this.router.navigate(['subscriptions/dashboard']).then();
-    }
+  openCheckout(plan: Plan): void {
+    this.selectedPlanForCheckout = plan;
+  }
+
+  /**
+   * Closes the checkout modal.
+   */
+  closeCheckout(): void {
+    this.selectedPlanForCheckout = null;
+  }
+
+  /**
+   * Confirms the checkout and activates the chosen plan.
+   */
+  confirmCheckout(): void {
+    if (!this.selectedPlanForCheckout) return;
+    const plan = this.selectedPlanForCheckout;
+    this.selectedPlanForCheckout = null;
+    this.store.subscribeToPlan(plan);
+    this.router.navigate(['subscriptions/dashboard']).then();
   }
 
   /**
