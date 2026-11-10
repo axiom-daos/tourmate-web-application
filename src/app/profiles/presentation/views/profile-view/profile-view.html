@@ -1,0 +1,123 @@
+<section class="profile-page">
+  <header class="page-heading">
+    <p class="eyebrow">{{ 'profiles.eyebrow' | translate }}</p>
+    <h1>{{ 'profiles.page_title' | translate }}</h1>
+    <p>{{ 'profiles.page_description' | translate }}</p>
+  </header>
+
+  <section class="profile-picker" [attr.aria-label]="'profiles.profile_selector' | translate">
+    <div class="picker-icon" aria-hidden="true">
+      <mat-icon>person_search</mat-icon>
+    </div>
+    <div class="picker-copy">
+      <label for="profile-select">{{ 'profiles.select_profile' | translate }}</label>
+      <p id="profile-select-help">{{ 'profiles.selector_help' | translate }}</p>
+    </div>
+    <select
+      id="profile-select"
+      [value]="selectedProfile()?.id ?? ''"
+      [disabled]="loading() || profiles().length === 0"
+      [attr.aria-describedby]="'profile-select-help'"
+      (change)="selectProfileFromEvent($event)"
+    >
+      <option value="">{{ 'profiles.select_placeholder' | translate }}</option>
+      @for (profile of profiles(); track profile.id) {
+        <option [value]="profile.id">{{ profile.fullName }} · {{ roleLabel(profile.role) }}</option>
+      }
+    </select>
+  </section>
+
+  @if (loading() && profiles().length === 0) {
+    <div class="state-panel" role="status">
+      <mat-spinner diameter="28" [attr.aria-label]="'common.loading' | translate" />
+      <span>{{ 'common.loading' | translate }}</span>
+    </div>
+  } @else if (error() && profiles().length === 0) {
+    <div class="state-panel error-panel" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <p>{{ 'profiles.load_error' | translate }}</p>
+      <button type="button" class="retry-button" (click)="loadProfiles()">
+        <mat-icon aria-hidden="true">refresh</mat-icon>
+        {{ 'profiles.retry' | translate }}
+      </button>
+    </div>
+  } @else if (profiles().length === 0) {
+    <div class="state-panel empty-panel" role="status">
+      <mat-icon aria-hidden="true">person_off</mat-icon>
+      <h2>{{ 'profiles.no_profiles_title' | translate }}</h2>
+      <p>{{ 'profiles.no_profiles_description' | translate }}</p>
+    </div>
+  } @else if (selectedProfile(); as profile) {
+    @if (error()) {
+      <p class="refresh-warning" role="alert">{{ 'profiles.refresh_error' | translate }}</p>
+    }
+
+    <article class="profile-card" aria-live="polite">
+      <div class="profile-banner" aria-hidden="true"></div>
+      <div class="profile-content">
+        <div class="identity">
+          <div class="avatar" aria-hidden="true">{{ initials(profile) }}</div>
+          <div class="identity-copy">
+            <p class="identity-label">{{ 'profiles.account_profile' | translate }}</p>
+            <h2>{{ profile.fullName }}</h2>
+            <span class="role-badge" [class]="'role-badge role-' + profile.role.toLowerCase()">
+              <mat-icon aria-hidden="true">verified_user</mat-icon>
+              {{ roleLabel(profile.role) }}
+            </span>
+          </div>
+        </div>
+
+        <section class="details-section" [attr.aria-label]="'profiles.account_details' | translate">
+          <h3>{{ 'profiles.account_details' | translate }}</h3>
+          <dl class="details-list">
+            <div class="detail-row">
+              <dt>
+                <mat-icon aria-hidden="true">mail</mat-icon>
+                {{ 'profiles.email' | translate }}
+              </dt>
+              <dd><a [href]="'mailto:' + profile.email">{{ profile.email }}</a></dd>
+            </div>
+            <div class="detail-row">
+              <dt>
+                <mat-icon aria-hidden="true">badge</mat-icon>
+                {{ 'profiles.profile_id_label' | translate }}
+              </dt>
+              <dd>#{{ profile.id }}</dd>
+            </div>
+            <div class="detail-row">
+              <dt>
+                <mat-icon aria-hidden="true">shield_person</mat-icon>
+                {{ 'profiles.role' | translate }}
+              </dt>
+              <dd>{{ roleLabel(profile.role) }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <a
+          class="assigned-tours-link"
+          [routerLink]="['/profiles', profile.id, 'tours']"
+          [queryParams]="{ profileId: profile.id }"
+          [attr.aria-label]="'profiles.view_assigned_tours_for' | translate: { name: profile.fullName }"
+        >
+          <span>
+            <mat-icon aria-hidden="true">hiking</mat-icon>
+            {{ 'profiles.view_assigned_tours' | translate }}
+          </span>
+          <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+        </a>
+      </div>
+    </article>
+  } @else {
+    <div class="state-panel empty-panel selection-panel" role="status">
+      <mat-icon aria-hidden="true">account_circle</mat-icon>
+      <h2>{{ 'profiles.choose_profile_title' | translate }}</h2>
+      <p>{{ 'profiles.choose_profile_description' | translate }}</p>
+    </div>
+  }
+
+  <p class="provisional-note">
+    <mat-icon aria-hidden="true">info</mat-icon>
+    {{ 'profiles.provisional_notice' | translate }}
+  </p>
+</section>
