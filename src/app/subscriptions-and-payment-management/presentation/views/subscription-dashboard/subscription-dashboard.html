@@ -180,6 +180,24 @@
           </td>
         </ng-container>
 
+        <!-- Receipt Action Column -->
+        <ng-container matColumnDef="receipt">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'subscription.receipt_action' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let payment">
+            <button
+              mat-icon-button
+              type="button"
+              class="btn-receipt-action"
+              [attr.aria-label]="'subscription.receipt_action' | translate"
+              (click)="openReceipt(payment)"
+            >
+              <mat-icon>receipt_long</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
@@ -233,6 +251,90 @@
           <button mat-flat-button type="button" class="btn-danger-confirm" (click)="confirmCancellation()">
             <mat-icon>delete_forever</mat-icon>
             {{ 'subscription.cancel_confirm_btn' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Digital Payment Receipt Modal -->
+  @if (selectedPaymentForReceipt) {
+    <div class="modal-backdrop" (click)="closeReceipt()">
+      <div class="modal-card receipt-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header receipt-header">
+          <div class="receipt-branding">
+            <div class="receipt-logo">
+              <mat-icon>terrain</mat-icon>
+              <span>TourMate</span>
+            </div>
+            <span class="receipt-voucher-type">
+              {{ 'subscription.receipt_dialog_title' | translate }}
+            </span>
+          </div>
+          <button type="button" class="modal-close-btn no-print" (click)="closeReceipt()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="modal-body receipt-body">
+          <div class="receipt-meta-grid">
+            <div class="receipt-meta-item">
+              <span class="meta-label">{{ 'subscription.receipt_number' | translate }}</span>
+              <span class="meta-value">REC-{{ selectedPaymentForReceipt.id.toString().padStart(6, '0') }}</span>
+            </div>
+            <div class="receipt-meta-item">
+              <span class="meta-label">{{ 'subscription.date' | translate }}</span>
+              <span class="meta-value">{{ selectedPaymentForReceipt.requestedAt | date: 'mediumDate' }}</span>
+            </div>
+            <div class="receipt-meta-item">
+              <span class="meta-label">{{ 'subscription.receipt_client' | translate }}</span>
+              <span class="meta-value">{{ 'subscription.agency' | translate }} #{{ store.currentAgencyId() }}</span>
+            </div>
+            <div class="receipt-meta-item">
+              <span class="meta-label">{{ 'subscription.status' | translate }}</span>
+              <span class="status-badge paid">{{ selectedPaymentForReceipt.status }}</span>
+            </div>
+          </div>
+
+          <div class="receipt-line-items">
+            <div class="receipt-table-header">
+              <span>{{ 'subscription.receipt_concept' | translate }}</span>
+              <span class="text-right">{{ 'subscription.amount' | translate }}</span>
+            </div>
+            <div class="receipt-table-row">
+              <div>
+                <div class="item-name">{{ getPlanName(selectedPaymentForReceipt.planId) }}</div>
+                <div class="item-desc">{{ 'subscription.receipt_period_val' | translate }}</div>
+              </div>
+              <div class="item-price text-right">
+                ${{ selectedPaymentForReceipt.amount }} {{ selectedPaymentForReceipt.currency }}
+              </div>
+            </div>
+          </div>
+
+          <div class="receipt-breakdown">
+            <div class="breakdown-row">
+              <span>{{ 'subscription.receipt_subtotal' | translate }}:</span>
+              <span>${{ calculateSubtotal(selectedPaymentForReceipt.amount) }} {{ selectedPaymentForReceipt.currency }}</span>
+            </div>
+            <div class="breakdown-row">
+              <span>{{ 'subscription.receipt_tax' | translate }}:</span>
+              <span>${{ calculateTax(selectedPaymentForReceipt.amount) }} {{ selectedPaymentForReceipt.currency }}</span>
+            </div>
+            <div class="breakdown-total">
+              <span>{{ 'subscription.receipt_total' | translate }}:</span>
+              <span>${{ selectedPaymentForReceipt.amount }} {{ selectedPaymentForReceipt.currency }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer receipt-footer no-print">
+          <button mat-stroked-button type="button" class="btn-modal-cancel" (click)="closeReceipt()">
+            {{ 'subscription.receipt_close' | translate }}
+          </button>
+          <button mat-flat-button type="button" class="btn-primary" (click)="printReceipt()">
+            <mat-icon>print</mat-icon>
+            {{ 'subscription.receipt_print' | translate }}
           </button>
         </div>
       </div>

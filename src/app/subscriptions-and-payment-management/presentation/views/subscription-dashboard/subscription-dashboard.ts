@@ -37,7 +37,14 @@ export class SubscriptionDashboard {
   readonly store = inject(SubscriptionStore);
   private readonly router = inject(Router);
 
-  readonly displayedColumns: string[] = ['id', 'planId', 'amount', 'requestedAt', 'status'];
+  readonly displayedColumns: string[] = [
+    'id',
+    'planId',
+    'amount',
+    'requestedAt',
+    'status',
+    'receipt',
+  ];
 
   readonly sort = viewChild(MatSort);
   readonly paginator = viewChild(MatPaginator);
@@ -47,6 +54,11 @@ export class SubscriptionDashboard {
    */
   isCancelModalOpen = false;
   selectedCancelReason = 'pause';
+
+  /**
+   * Payment receipt modal state.
+   */
+  selectedPaymentForReceipt: Payment | null = null;
 
   readonly dataSource = computed(() => {
     const source = new MatTableDataSource<Payment>(this.store.currentAgencyPayments());
@@ -98,5 +110,44 @@ export class SubscriptionDashboard {
   confirmCancellation(): void {
     this.store.cancelSubscription(this.selectedCancelReason);
     this.closeCancelModal();
+  }
+
+  /**
+   * Opens the digital receipt modal for a specific payment.
+   * @param payment
+   */
+  openReceipt(payment: Payment): void {
+    this.selectedPaymentForReceipt = payment;
+  }
+
+  /**
+   * Closes the digital receipt modal.
+   */
+  closeReceipt(): void {
+    this.selectedPaymentForReceipt = null;
+  }
+
+  /**
+   * Triggers the browser print dialog for the receipt.
+   */
+  printReceipt(): void {
+    window.print();
+  }
+
+  /**
+   * Computes subtotal excluding 18% tax.
+   * @param amount
+   */
+  calculateSubtotal(amount: number): number {
+    return Math.round((amount / 1.18) * 100) / 100;
+  }
+
+  /**
+   * Computes 18% VAT/tax portion.
+   * @param amount
+   */
+  calculateTax(amount: number): number {
+    const subtotal = this.calculateSubtotal(amount);
+    return Math.round((amount - subtotal) * 100) / 100;
   }
 }
