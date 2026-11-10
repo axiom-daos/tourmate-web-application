@@ -1,22 +1,12 @@
 
 <div class="review-page">
 
-  <!-- Encabezado de la lista de reseñas -->
   <header class="review-hero">
-
     <div class="hero-copy">
-
-      <h1>
-        {{ 'reviews.list_title' | translate }}
-      </h1>
-
-      <p>
-        {{ 'reviews.list_subtitle' | translate }}
-      </p>
-
+      <h1>{{ 'reviews.list_title' | translate }}</h1>
+      <p>{{ 'reviews.list_subtitle' | translate }}</p>
     </div>
 
-    <!-- Botón para registrar una reseña -->
     <button
       mat-flat-button
       type="button"
@@ -24,98 +14,50 @@
       [disabled]="loading()"
       (click)="addReview()">
 
-      <mat-icon aria-hidden="true">
-        rate_review
-      </mat-icon>
-
-      <span>
-        {{ 'reviews.add_new' | translate }}
-      </span>
-
+      <mat-icon aria-hidden="true">rate_review</mat-icon>
+      <span>{{ 'reviews.add_new' | translate }}</span>
     </button>
-
   </header>
 
-  <!-- Estado de carga inicial -->
   @if (loading() && reviews().length === 0) {
-
-    <div
-      class="feedback-message"
-      role="status">
-
+    <div class="feedback-message" role="status">
       <mat-spinner
         diameter="26"
         [attr.aria-label]="'common.loading' | translate">
       </mat-spinner>
 
-      <span>
-        {{ 'common.loading' | translate }}
-      </span>
-
+      <span>{{ 'common.loading' | translate }}</span>
     </div>
-
-  }
-
-  <!-- Error cuando no existen reseñas cargadas -->
-  @else if (error() && reviews().length === 0) {
-
-    <section
-      class="empty-state error-state"
-      role="alert">
+  } @else if (error() && reviews().length === 0) {
+    <section class="empty-state error-state" role="alert">
 
       <span class="empty-icon" aria-hidden="true">
-        <mat-icon>
-          error_outline
-        </mat-icon>
+        <mat-icon>error_outline</mat-icon>
       </span>
 
-      <h2>
-        {{ 'reviews.load_error_title' | translate }}
-      </h2>
+      <h2>{{ 'reviews.load_error_title' | translate }}</h2>
+      <p>{{ 'reviews.review_load_error' | translate }}</p>
 
-      <p>
-        {{ 'reviews.review_load_error' | translate }}
-      </p>
-
-      <!-- Botón para volver a cargar -->
       <button
         mat-stroked-button
         type="button"
         class="retry-btn"
         (click)="reviewStore.loadData()">
 
-        <mat-icon aria-hidden="true">
-          refresh
-        </mat-icon>
-
+        <mat-icon aria-hidden="true">refresh</mat-icon>
         {{ 'reviews.retry' | translate }}
-
       </button>
 
     </section>
-
-  }
-
-  <!-- Estado cuando todavía no existen reseñas -->
-  @else if (reviews().length === 0) {
-
-    <section
-      class="empty-state"
-      aria-live="polite">
+  } @else if (reviews().length === 0) {
+    <section class="empty-state" aria-live="polite">
 
       <span class="empty-icon" aria-hidden="true">
-        <mat-icon>
-          rate_review
-        </mat-icon>
+        <mat-icon>rate_review</mat-icon>
       </span>
 
-      <h2>
-        {{ 'reviews.empty_title' | translate }}
-      </h2>
-
-      <p>
-        {{ 'reviews.empty_description' | translate }}
-      </p>
+      <h2>{{ 'reviews.empty_title' | translate }}</h2>
+      <p>{{ 'reviews.empty_description' | translate }}</p>
 
       <button
         mat-stroked-button
@@ -124,30 +66,16 @@
         (click)="addReview()">
 
         {{ 'reviews.add_new' | translate }}
-
       </button>
 
     </section>
+  } @else {
 
-  }
-
-  <!-- Listado de reseñas disponibles -->
-  @else {
-
-    <!-- Mostramos errores sin ocultar los datos existentes -->
     @if (error()) {
+      <div class="feedback-message" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
 
-      <div
-        class="feedback-message"
-        role="alert">
-
-        <mat-icon aria-hidden="true">
-          error_outline
-        </mat-icon>
-
-        <span>
-          {{ 'reviews.review_load_error' | translate }}
-        </span>
+        <span>{{ 'reviews.review_load_error' | translate }}</span>
 
         <button
           mat-stroked-button
@@ -155,143 +83,86 @@
           [disabled]="loading()"
           (click)="reviewStore.loadData()">
 
-          <mat-icon aria-hidden="true">
-            refresh
-          </mat-icon>
-
+          <mat-icon aria-hidden="true">refresh</mat-icon>
           {{ 'reviews.retry' | translate }}
-
         </button>
-
       </div>
-
     }
 
     <section
       class="review-feed"
       [attr.aria-label]="'reviews.list_title' | translate">
 
-      <!-- Mostramos la cantidad de reseñas -->
       <div class="feed-header">
-
         <span class="feed-title">
-          {{
-            'reviews.review_count'
-              | translate: { count: reviews().length }
-          }}
+          {{ 'reviews.review_count' | translate: { count: reviews().length } }}
         </span>
-
       </div>
 
-      <!-- Cuadrícula de tarjetas de reseñas -->
       <div class="review-grid">
 
         @for (review of orderedReviews(); track review.id) {
-
           <article class="review-card">
 
-            <!-- Imagen del tour -->
             <div class="tour-image-wrap">
-
               <img
                 class="tour-image"
                 [src]="tourImage(review.tourId)"
                 [alt]="tourName(review.tourId)"
-                loading="lazy"
-              />
-
+                loading="lazy" />
             </div>
 
-            <!-- Información del viajero -->
             <div class="review-card-header">
 
-              <div
-                class="review-avatar"
-                aria-hidden="true">
-
-                <mat-icon>
-                  person
-                </mat-icon>
-
+              <div class="review-avatar" aria-hidden="true">
+                <mat-icon>person</mat-icon>
               </div>
 
               <div class="review-author">
-
-                <h2>
-                  {{ reviewerName(review.userId) }}
-                </h2>
-
-                <p>
-                  {{ review.createdAt | date:'mediumDate' }}
-                </p>
-
+                <h2>{{ reviewerName(review.userId) }}</h2>
+                <p>{{ review.createdAt | date:'mediumDate' }}</p>
               </div>
 
-              <!-- Identificador de la reseña -->
               <span class="review-id">
                 #{{ review.id }}
               </span>
 
             </div>
 
-            <!-- Nombre del tour relacionado -->
             <div class="tour-name-row">
-
               <span class="tour-pill">
                 {{ tourName(review.tourId) }}
               </span>
-
             </div>
 
-            <!-- Calificación visual con estrellas -->
             <div
               class="star-rating"
               role="img"
-              [attr.aria-label]="
-                'reviews.rating_aria'
-                  | translate: { rating: review.rating }
-              ">
+              [attr.aria-label]="'reviews.rating_aria' | translate: { rating: review.rating }"
+              [attr.title]="review.rating === 0 ? ('reviews.rating_zero' | translate) : null">
 
-              @for (
-                filled of ratingStars(review.rating);
-                track $index
-                ) {
-
+              @for (filled of ratingStars(review.rating); track $index) {
                 <mat-icon aria-hidden="true">
                   {{ filled ? 'star' : 'star_border' }}
                 </mat-icon>
-
               }
 
               <span class="rating-value">
                 {{ review.rating }}
-
-                <span class="rating-scale">
-                  /5
-                </span>
-
+                <span class="rating-scale">/5</span>
               </span>
 
             </div>
 
-            <!-- Comentario del viajero -->
             <blockquote>
-
               <p>
-                {{
-                  review.comment ||
-                  ('reviews.no_comment' | translate)
-                }}
+                {{ review.comment || ('reviews.no_comment' | translate) }}
               </p>
-
             </blockquote>
 
-            <!-- Acciones para editar o eliminar -->
             <footer class="review-card-footer">
-
               <div class="review-actions">
 
-                <!-- Editar reseña -->
                 <button
                   mat-stroked-button
                   type="button"
@@ -300,15 +171,10 @@
                   [attr.aria-label]="'reviews.edit' | translate"
                   (click)="editReview(review.id)">
 
-                  <mat-icon aria-hidden="true">
-                    edit
-                  </mat-icon>
-
+                  <mat-icon aria-hidden="true">edit</mat-icon>
                   {{ 'reviews.edit' | translate }}
-
                 </button>
 
-                <!-- Eliminar reseña -->
                 <button
                   mat-icon-button
                   type="button"
@@ -318,33 +184,25 @@
                   (click)="deleteReview(review.id)">
 
                   @if (deletingId() === review.id) {
-
                     <mat-icon aria-hidden="true">
                       hourglass_top
                     </mat-icon>
-
                   } @else {
-
                     <mat-icon aria-hidden="true">
                       delete_outline
                     </mat-icon>
-
                   }
 
                 </button>
 
               </div>
-
             </footer>
 
           </article>
-
         }
 
       </div>
-
     </section>
-
   }
 
 </div>

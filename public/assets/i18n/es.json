@@ -283,6 +283,7 @@
     "no_active_expeditions_hint": "Cuando un tour esté en curso, aquí aparecerán su ruta y sus participantes.",
     "loading_route": "Cargando ruta..."
   },
+
   "reviews": {
     "list_title": "Reseñas y Valoraciones",
     "list_subtitle": "Consulta las experiencias, opiniones y calificaciones que los viajeros comparten sobre sus tours.",
@@ -322,6 +323,7 @@
     "rating_good": "Bueno",
     "rating_fair": "Regular",
     "rating_poor": "Malo",
+    "rating_zero": "Pésimo",
     "select_tour": "Selecciona un tour",
     "select_client": "Selecciona un cliente",
     "select_tour_required": "Debes seleccionar un tour.",
@@ -332,7 +334,7 @@
     "traveler_experience_help": "Ayuda a mejorar la calidad del servicio y del tour.",
     "select_tour_label": "Selecciona un tour",
     "select_client_label": "Selecciona un cliente",
-    "edit_description": "Actualiza los datos y el comentario de esta reseña.",
+    "edit_description": "Actualiza la calificación y el comentario de esta reseña.",
     "new_description": "Comparte tu experiencia y ayuda a otros viajeros a conocer este tour.",
     "saving": "Guardando...",
     "loading_review": "Cargando reseña",
@@ -344,12 +346,13 @@
     "close": "Cerrar",
     "delete_error": "No se pudo eliminar la reseña.",
     "invalid_review_id": "El identificador de la reseña es inválido.",
-    "invalid_rating": "La calificación debe estar entre 1 y 5.",
+    "invalid_rating": "La calificación debe estar entre 0 y 5.",
     "duplicate_review": "Este usuario ya dejó una reseña para este tour.",
     "review_load_error": "No se pudo cargar la reseña.",
     "review_not_ready": "La reseña todavía no está disponible.",
     "save_error": "No se pudo guardar la reseña."
   },
+
   "about": {
     "title": "Acerca de",
     "content": "Tourmate , parte de AXIOM Corporation."

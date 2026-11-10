@@ -1,10 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 
 import { ReviewStore } from './review.store';
-
 import { Review } from '../domain/model/aggregates/review.entity';
 import { Comment } from '../domain/model/aggregates/comment.entity';
 
@@ -14,26 +12,19 @@ import { CommentApi } from '../infrastructure/comment-api';
 /**
  * Pruebas unitarias de ReviewStore.
  *
- * Verificamos las operaciones CRUD y las
- * reglas de negocio de reseñas y comentarios.
+ * Verifican las operaciones CRUD y las reglas
+ * de negocio utilizando MockAPI simuladas.
  *
- * No se realizan peticiones reales a MockAPI.
- * Utilizamos servicios simulados para las pruebas.
- *
- * Bounded Context: Feedback and Tour Reviews.
+ * No se hacen peticiones HTTP reales.
  */
 describe('ReviewStore', () => {
   let store: ReviewStore;
 
-  // Fecha fija para mantener resultados consistentes.
-  const fecha = '2026-11-08T12:00:00Z';
+  // Fechas fijas para comprobar su conservación.
+  const fechaReview = '2026-11-08T12:00:00Z';
+  const fechaComment = '2026-11-09T12:00:00Z';
 
-  /**
-   * Simulamos las operaciones de ReviewApi.
-   *
-   * vi.fn() permite comprobar si un método
-   * fue llamado y qué información recibió.
-   */
+  // Mock de la API de reseñas.
   const reviewApiMock = {
     getReviews: vi.fn(),
     getReview: vi.fn(),
@@ -42,9 +33,7 @@ describe('ReviewStore', () => {
     deleteReview: vi.fn(),
   };
 
-  /**
-   * Simulamos las operaciones de CommentApi.
-   */
+  // Mock de la API de comentarios.
   const commentApiMock = {
     getComments: vi.fn(),
     getComment: vi.fn(),
@@ -54,43 +43,62 @@ describe('ReviewStore', () => {
   };
 
   /**
-   * Creamos una reseña válida para las pruebas.
+   * Crea una reseña válida para las pruebas.
    */
-  function crearResena(id = 1, rating = 5): Review {
+  function crearResena(id = 1, rating = 5, userId = 2, tourId = 3): Review {
     return new Review({
       id,
-      userId: 2,
-      tourId: 3,
+      userId,
+      tourId,
       rating,
-      createdAt: fecha,
+      createdAt: fechaReview,
     });
   }
 
   /**
-   * Creamos un comentario relacionado con
-   * la reseña indicada.
+   * Crea un comentario asociado a una reseña.
    */
-  function crearComentario(
-    id = 10,
-    reviewId = 1,
-    content = 'Excelente experiencia turística',
-  ): Comment {
+  function crearComentario(id = 10, reviewId = 1, content = 'Excelente experiencia'): Comment {
     return new Comment({
       id,
       reviewId,
       content,
-      createdAt: fecha,
+      createdAt: fechaComment,
     });
   }
 
   /**
-   * Antes de cada prueba:
-   * 1. Reiniciamos los mocks.
-   * 2. Configuramos las dependencias.
-   * 3. Creamos una instancia nueva del Store.
+   * Genera datos válidos para una operación.
+   */
+  function input(rating = 5, comment = 'Excelente experiencia') {
+    return {
+      userId: 2,
+      tourId: 3,
+      rating,
+      comment,
+    };
+  }
+
+  /**
+   * Carga una reseña en el Store.
+   */
+  function cargarResena(): void {
+    reviewApiMock.getReviews.mockReturnValue(of([crearResena()]));
+
+    commentApiMock.getComments.mockReturnValue(of([crearComentario()]));
+
+    store.loadData();
+  }
+
+  /**
+   * Preparamos las dependencias antes
+   * de ejecutar cada prueba.
    */
   beforeEach(() => {
     vi.resetAllMocks();
+
+    reviewApiMock.getReviews.mockReturnValue(of([]));
+    commentApiMock.getComments.mockReturnValue(of([]));
 
     TestBed.configureTestingModule({
       providers: [
@@ -113,278 +121,409 @@ describe('ReviewStore', () => {
 
   /**
    * PRUEBA 1:
-   * El Store debe comenzar sin reseñas,
-   * sin errores y sin operaciones pendientes.
+   * Verificamos el estado inicial.
    */
-  it('debe iniciar con el estado vacío', () => {
+  it('1. comienza con el estado vacío', () => {
     expect(store.reviews()).toEqual([]);
-
     expect(store.reviewCount()).toBe(0);
-
     expect(store.loading()).toBe(false);
-
     expect(store.error()).toBeNull();
   });
 
   /**
    * PRUEBA 2:
-   * Verificamos que se carguen las reseñas
-   * junto con sus comentarios relacionados.
+   * Carga reseñas y comentarios por reviewId.
    */
-  it('debe cargar reseñas y comentarios', () => {
-    reviewApiMock.getReviews.mockReturnValue(of([crearResena()]));
-
-    commentApiMock.getComments.mockReturnValue(of([crearComentario()]));
-
-    store.loadData();
-
-    expect(store.reviews()).toHaveLength(1);
-
-    expect(store.reviews()[0].rating).toBe(5);
-
-    expect(store.reviews()[0].comment).toBe('Excelente experiencia turística');
-
-    expect(store.reviewCount()).toBe(1);
-
-    expect(store.loading()).toBe(false);
-  });
-
-  /**
-   * PRUEBA 3:
-   * Comprobamos que un error de la API
-   * se registre correctamente en el Store.
-   */
-  it('debe manejar errores al cargar reseñas', () => {
-    reviewApiMock.getReviews.mockReturnValue(throwError(() => new Error('Error de conexión')));
-
-    commentApiMock.getComments.mockReturnValue(of([]));
-
-    store.loadData();
-
-    expect(store.error()).toBe('Error de conexión');
-
-    expect(store.loading()).toBe(false);
-
-    expect(store.reviews()).toEqual([]);
-  });
-
-  /**
-   * PRUEBA 4:
-   * Consultamos una reseña directamente por ID,
-   * aunque no esté cargada en la lista.
-   */
-  it('debe cargar una reseña por su ID', () => {
-    reviewApiMock.getReview.mockReturnValue(of(crearResena()));
-
-    commentApiMock.getComments.mockReturnValue(of([crearComentario()]));
-
-    let resultadoId: number | null = null;
-
-    store.loadReviewById(1).subscribe({
-      next: (review) => {
-        resultadoId = review.id;
-      },
-    });
-
-    expect(resultadoId).toBe(1);
+  it('2. carga reseñas y sus comentarios relacionados por reviewId', () => {
+    cargarResena();
 
     expect(store.reviews()).toHaveLength(1);
 
     expect(store.reviews()[0].commentId).toBe(10);
 
-    expect(reviewApiMock.getReview).toHaveBeenCalledWith(1);
+    expect(store.reviews()[0].comment).toBe('Excelente experiencia');
+
+    expect(store.reviewCount()).toBe(1);
+    expect(store.loading()).toBe(false);
+  });
+
+  /**
+   * PRUEBA 3:
+   * Comprueba el manejo de errores de carga.
+   */
+  it('3. informa errores al cargar las reseñas', () => {
+    reviewApiMock.getReviews.mockReturnValue(throwError(() => new Error('Error de conexión')));
+
+    store.loadData();
+
+    expect(store.error()).toBe('Error de conexión');
+    expect(store.loading()).toBe(false);
+  });
+
+  /**
+   * PRUEBA 4:
+   * Recupera una reseña aunque no esté
+   * cargada previamente en el Store.
+   */
+  it('4. recupera una reseña por ID aunque no estuviera en memoria', () => {
+    reviewApiMock.getReview.mockReturnValue(of(crearResena()));
+
+    commentApiMock.getComments.mockReturnValue(of([crearComentario()]));
+
+    let resultId: number | null = null;
+
+    store.loadReviewById(1).subscribe((item) => {
+      resultId = item.id;
+    });
+
+    expect(resultId).toBe(1);
+    expect(store.reviews()[0].commentId).toBe(10);
   });
 
   /**
    * PRUEBA 5:
-   * Comprobamos la creación de una reseña
-   * junto con su comentario.
+   * Permite registrar una reseña con 0 estrellas.
    */
-  it('debe crear una reseña correctamente', () => {
-    const nuevaResena = crearResena(15);
+  it('5. crea una reseña con 0 estrellas y un comentario', () => {
+    reviewApiMock.createReview.mockReturnValue(of(crearResena(15, 0)));
 
-    const nuevoComentario = crearComentario(25, 15, 'Un tour realmente maravilloso');
+    commentApiMock.createComment.mockReturnValue(of(crearComentario(25, 15, 'Experiencia pésima')));
 
-    reviewApiMock.createReview.mockReturnValue(of(nuevaResena));
+    store.addReview(input(0, 'Experiencia pésima')).subscribe();
 
-    commentApiMock.createComment.mockReturnValue(of(nuevoComentario));
-
-    store
-      .addReview({
-        userId: 2,
-        tourId: 3,
-        rating: 5,
-        comment: 'Un tour realmente maravilloso',
-      })
-      .subscribe();
+    expect(reviewApiMock.getReviews).toHaveBeenCalledOnce();
 
     expect(reviewApiMock.createReview).toHaveBeenCalledOnce();
 
     expect(commentApiMock.createComment).toHaveBeenCalledOnce();
 
-    expect(store.reviews()).toHaveLength(1);
-
-    expect(store.reviews()[0].id).toBe(15);
-
+    expect(store.reviews()[0].rating).toBe(0);
     expect(store.reviews()[0].commentId).toBe(25);
-
     expect(store.loading()).toBe(false);
   });
 
   /**
    * PRUEBA 6:
-   * No permitimos crear reseñas con
-   * calificaciones fuera del rango de 1 a 5.
+   * Rechaza estrellas fuera del rango permitido.
    */
-  it('debe rechazar una calificación inválida', () => {
-    let errorObtenido: unknown;
+  it('6. rechaza calificaciones inválidas sin llamar a la API', () => {
+    let error: unknown;
 
-    store
-      .addReview({
-        userId: 2,
-        tourId: 3,
-        rating: 8,
-        comment: 'Excelente experiencia',
-      })
-      .subscribe({
-        error: (error) => {
-          errorObtenido = error;
-        },
-      });
+    store.addReview(input(6)).subscribe({
+      error: (e) => {
+        error = e;
+      },
+    });
 
-    expect(errorObtenido).toBeInstanceOf(Error);
+    expect(error).toBeInstanceOf(Error);
+
+    expect(reviewApiMock.getReviews).not.toHaveBeenCalled();
 
     expect(reviewApiMock.createReview).not.toHaveBeenCalled();
-
-    expect(store.reviews()).toHaveLength(0);
   });
 
   /**
    * PRUEBA 7:
-   * Un usuario no debe crear dos reseñas
-   * para el mismo tour dentro del estado cargado.
+   * Rechaza una reseña duplicada
+   * que ya está cargada en el Store.
    */
-  it('debe impedir reseñas duplicadas', () => {
-    reviewApiMock.getReviews.mockReturnValue(of([crearResena()]));
+  it('7. impide duplicados ya cargados en el Store', () => {
+    cargarResena();
 
-    commentApiMock.getComments.mockReturnValue(of([crearComentario()]));
+    let error: unknown;
 
-    store.loadData();
+    store.addReview(input(4)).subscribe({
+      error: (e) => {
+        error = e;
+      },
+    });
 
-    let errorObtenido: unknown;
-
-    store
-      .addReview({
-        userId: 2,
-        tourId: 3,
-        rating: 4,
-        comment: 'Segunda reseña del mismo tour',
-      })
-      .subscribe({
-        error: (error) => {
-          errorObtenido = error;
-        },
-      });
-
-    expect(errorObtenido).toBeInstanceOf(Error);
-
-    expect((errorObtenido as Error).message).toContain('ya ha dejado una reseña');
+    expect((error as Error).message).toContain('ya ha dejado una reseña');
 
     expect(reviewApiMock.createReview).not.toHaveBeenCalled();
-
-    expect(store.reviews()).toHaveLength(1);
   });
 
   /**
    * PRUEBA 8:
-   * Si falla la creación del comentario,
-   * comprobamos que el Store intente
-   * eliminar la reseña recién creada.
+   * Rechaza duplicados que están en MockAPI,
+   * aunque todavía no estén cargados en pantalla.
    */
-  it('debe intentar revertir una creación incompleta', () => {
-    reviewApiMock.createReview.mockReturnValue(of(crearResena(20)));
+  it('8. impide duplicados que existen en MockAPI aunque la lista local esté vacía', () => {
+    reviewApiMock.getReviews.mockReturnValue(of([crearResena()]));
 
-    commentApiMock.createComment.mockReturnValue(
-      throwError(() => new Error('Error al crear comentario')),
-    );
+    let error: unknown;
 
-    reviewApiMock.deleteReview.mockReturnValue(of(void 0));
+    store.addReview(input(4)).subscribe({
+      error: (e) => {
+        error = e;
+      },
+    });
 
-    let errorObtenido: unknown;
+    expect((error as Error).message).toContain('ya ha dejado una reseña');
 
-    store
-      .addReview({
-        userId: 2,
-        tourId: 3,
-        rating: 5,
-        comment: 'Una experiencia excelente',
-      })
-      .subscribe({
-        error: (error) => {
-          errorObtenido = error;
-        },
-      });
+    expect(reviewApiMock.createReview).not.toHaveBeenCalled();
 
-    expect(reviewApiMock.deleteReview).toHaveBeenCalledWith(20);
-
-    expect(errorObtenido).toBeInstanceOf(Error);
-
-    expect(store.reviews()).toHaveLength(0);
-
-    expect(store.loading()).toBe(false);
+    expect(store.reviews()).toEqual([]);
   });
 
   /**
    * PRUEBA 9:
-   * Actualizamos la calificación de una reseña
-   * y el contenido de su comentario existente.
+   * Dos usuarios diferentes pueden
+   * reseñar el mismo tour.
    */
-  it('debe actualizar una reseña y su comentario', () => {
+  it('9. admite usuarios distintos en un mismo tour', () => {
     reviewApiMock.getReviews.mockReturnValue(of([crearResena()]));
 
-    commentApiMock.getComments.mockReturnValue(of([crearComentario()]));
+    reviewApiMock.createReview.mockReturnValue(of(crearResena(20, 3, 9, 3)));
 
-    store.loadData();
+    commentApiMock.createComment.mockReturnValue(of(crearComentario(30, 20)));
 
-    reviewApiMock.updateReview.mockReturnValue(of(crearResena(1, 4)));
+    store
+      .addReview({
+        userId: 9,
+        tourId: 3,
+        rating: 3,
+        comment: 'Recorrido aceptable',
+      })
+      .subscribe();
+
+    expect(reviewApiMock.createReview).toHaveBeenCalledOnce();
+
+    expect(store.reviews()[0].userId).toBe(9);
+  });
+
+  /**
+   * PRUEBA 10:
+   * Evita dos creaciones simultáneas iguales
+   * dentro de una misma instancia del Store.
+   */
+  it('10. evita dos creaciones simultáneas del mismo usuario y tour', () => {
+    const pendientes = new Subject<Review[]>();
+
+    reviewApiMock.getReviews.mockReturnValue(pendientes.asObservable());
+
+    let error: unknown;
+
+    const first = store.addReview(input()).subscribe({
+      error: () => {},
+    });
+
+    store.addReview(input()).subscribe({
+      error: (e) => {
+        error = e;
+      },
+    });
+
+    expect((error as Error).message).toContain('ya ha dejado una reseña');
+
+    expect(reviewApiMock.getReviews).toHaveBeenCalledOnce();
+
+    first.unsubscribe();
+  });
+
+  /**
+   * PRUEBA 11:
+   * Si falla la creación del comentario,
+   * intenta borrar la reseña recién creada.
+   */
+  it('11. intenta borrar la reseña si falla la creación del comentario', () => {
+    reviewApiMock.createReview.mockReturnValue(of(crearResena(20)));
+
+    commentApiMock.createComment.mockReturnValue(throwError(() => new Error('Falló comentario')));
+
+    reviewApiMock.deleteReview.mockReturnValue(of(void 0));
+
+    let error: unknown;
+
+    store.addReview(input()).subscribe({
+      error: (e) => {
+        error = e;
+      },
+    });
+
+    expect(reviewApiMock.deleteReview).toHaveBeenCalledWith(20);
+
+    expect(error).toBeInstanceOf(Error);
+
+    expect(store.reviews()).toHaveLength(0);
+    expect(store.loading()).toBe(false);
+  });
+
+  /**
+   * PRUEBA 12:
+   * Al editar solo cambian las estrellas
+   * y el texto del comentario.
+   */
+  it('12. edita solo estrellas y comentario manteniendo usuario, tour y fechas', () => {
+    cargarResena();
+
+    reviewApiMock.getReview.mockReturnValue(of(crearResena()));
+
+    reviewApiMock.updateReview.mockReturnValue(of(crearResena(1, 0)));
 
     commentApiMock.updateComment.mockReturnValue(
-      of(crearComentario(10, 1, 'Muy buena experiencia turística')),
+      of(crearComentario(10, 1, 'Muy mala experiencia')),
     );
 
     store
       .updateReview({
         id: 1,
-        userId: 2,
-        tourId: 3,
-        rating: 4,
+        ...input(0, 'Muy mala experiencia'),
         commentId: 10,
-        comment: 'Muy buena experiencia turística',
       })
       .subscribe();
 
+    expect(reviewApiMock.getReview).toHaveBeenCalledWith(1);
+
     expect(reviewApiMock.updateReview).toHaveBeenCalledOnce();
 
-    expect(commentApiMock.updateComment).toHaveBeenCalledOnce();
+    const sentReview = reviewApiMock.updateReview.mock.calls[0][0] as Review;
 
-    expect(store.reviews()[0].rating).toBe(4);
+    const sentComment = commentApiMock.updateComment.mock.calls[0][0] as Comment;
 
-    expect(store.reviews()[0].comment).toBe('Muy buena experiencia turística');
+    expect(sentReview.userId).toBe(2);
+    expect(sentReview.tourId).toBe(3);
+    expect(sentReview.createdAt).toBe(fechaReview);
+    expect(sentReview.rating).toBe(0);
 
-    expect(store.loading()).toBe(false);
+    expect(sentComment.reviewId).toBe(1);
+    expect(sentComment.createdAt).toBe(fechaComment);
+
+    expect(store.reviews()[0].rating).toBe(0);
+    expect(store.reviews()[0].comment).toBe('Muy mala experiencia');
   });
 
   /**
-   * PRUEBA 10:
-   * Comprobamos que una reseña pueda
-   * eliminarse junto con su comentario.
+   * PRUEBA 13:
+   * No permite cambiar el usuario
+   * durante la edición de una reseña.
    */
-  it('debe eliminar una reseña correctamente', () => {
-    reviewApiMock.getReviews.mockReturnValue(of([crearResena()]));
+  it('13. rechaza cambiar el usuario durante la edición', () => {
+    reviewApiMock.getReview.mockReturnValue(of(crearResena()));
+
+    let error: unknown;
+
+    store
+      .updateReview({
+        id: 1,
+        ...input(4),
+        userId: 99,
+      })
+      .subscribe({
+        error: (e) => {
+          error = e;
+        },
+      });
+
+    expect((error as Error).message).toContain('No se puede cambiar el usuario ni el tour');
+
+    expect(reviewApiMock.updateReview).not.toHaveBeenCalled();
+
+    expect(commentApiMock.updateComment).not.toHaveBeenCalled();
+  });
+
+  /**
+   * PRUEBA 14:
+   * No permite cambiar el tour
+   * durante la edición de una reseña.
+   */
+  it('14. rechaza cambiar el tour durante la edición', () => {
+    reviewApiMock.getReview.mockReturnValue(of(crearResena()));
+
+    let error: unknown;
+
+    store
+      .updateReview({
+        id: 1,
+        ...input(4),
+        tourId: 99,
+      })
+      .subscribe({
+        error: (e) => {
+          error = e;
+        },
+      });
+
+    expect((error as Error).message).toContain('No se puede cambiar el usuario ni el tour');
+
+    expect(reviewApiMock.updateReview).not.toHaveBeenCalled();
+  });
+
+  /**
+   * PRUEBA 15:
+   * Permite editar una reseña que todavía
+   * no estaba cargada en el estado local.
+   */
+  it('15. edita una reseña sin requerir que se haya cargado en la lista', () => {
+    reviewApiMock.getReview.mockReturnValue(of(crearResena()));
 
     commentApiMock.getComments.mockReturnValue(of([crearComentario()]));
 
-    store.loadData();
+    reviewApiMock.updateReview.mockReturnValue(of(crearResena(1, 4)));
+
+    commentApiMock.updateComment.mockReturnValue(of(crearComentario(10, 1, 'Experiencia buena')));
+
+    store
+      .updateReview({
+        id: 1,
+        ...input(4, 'Experiencia buena'),
+      })
+      .subscribe();
+
+    expect(store.reviews()[0].commentId).toBe(10);
+
+    expect(commentApiMock.createComment).not.toHaveBeenCalled();
+  });
+
+  /**
+   * PRUEBA 16:
+   * Si falla la segunda petición,
+   * intenta restaurar la calificación anterior.
+   */
+  it('16. intenta restaurar la calificación si falla la actualización del comentario', () => {
+    reviewApiMock.getReview.mockReturnValue(of(crearResena()));
+
+    commentApiMock.getComments.mockReturnValue(of([crearComentario()]));
+
+    reviewApiMock.updateReview.mockImplementation((review: Review) => of(review));
+
+    commentApiMock.updateComment.mockReturnValue(
+      throwError(() => new Error('Error de comentario')),
+    );
+
+    let error: unknown;
+
+    store
+      .updateReview({
+        id: 1,
+        ...input(3, 'Comentario editado'),
+      })
+      .subscribe({
+        error: (e) => {
+          error = e;
+        },
+      });
+
+    expect(reviewApiMock.updateReview).toHaveBeenCalledTimes(2);
+
+    const restored = reviewApiMock.updateReview.mock.calls[1][0] as Review;
+
+    expect(restored.rating).toBe(5);
+
+    expect(error).toBeInstanceOf(Error);
+
+    expect(store.error()).toBe('Error de comentario');
+  });
+
+  /**
+   * PRUEBA 17:
+   * Elimina los comentarios relacionados
+   * y posteriormente elimina la reseña.
+   */
+  it('17. elimina los comentarios asociados y después la reseña', () => {
+    cargarResena();
+
+    commentApiMock.getComments.mockReturnValue(of([crearComentario()]));
 
     commentApiMock.deleteComment.mockReturnValue(of(void 0));
 
@@ -399,33 +538,29 @@ describe('ReviewStore', () => {
     expect(store.reviews()).toHaveLength(0);
 
     expect(store.reviewCount()).toBe(0);
-
-    expect(store.loading()).toBe(false);
   });
 
   /**
-   * PRUEBA 11:
-   * Si la API falla al eliminar una reseña,
-   * verificamos que se conserve en la lista.
+   * PRUEBA 18:
+   * Conserva el estado local si falla
+   * la eliminación de la reseña.
    */
-  it('debe conservar la reseña si falla la eliminación', () => {
-    reviewApiMock.getReviews.mockReturnValue(of([crearResena()]));
+  it('18. conserva la reseña en la lista si falla su eliminación', () => {
+    cargarResena();
 
     commentApiMock.getComments.mockReturnValue(of([]));
 
-    store.loadData();
-
     reviewApiMock.deleteReview.mockReturnValue(throwError(() => new Error('Error del servidor')));
 
-    let errorObtenido: unknown;
+    let error: unknown;
 
     store.deleteReviewRequest(1).subscribe({
-      error: (error) => {
-        errorObtenido = error;
+      error: (e) => {
+        error = e;
       },
     });
 
-    expect(errorObtenido).toBeInstanceOf(Error);
+    expect(error).toBeInstanceOf(Error);
 
     expect(store.error()).toBe('Error del servidor');
 
