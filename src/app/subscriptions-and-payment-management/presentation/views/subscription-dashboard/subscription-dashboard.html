@@ -26,6 +26,47 @@
     <div class="error-banner">{{ store.error() }}</div>
   }
 
+  <!-- Financial KPI Metrics Section -->
+  <section class="kpi-metrics-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap">
+        <mat-icon>payments</mat-icon>
+      </div>
+      <div class="kpi-content">
+        <span class="kpi-label">{{ 'subscription.total_spent_metric' | translate }}</span>
+        <span class="kpi-value">${{ store.totalAgencyExpenditure() }} USD</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap">
+        <mat-icon>event_repeat</mat-icon>
+      </div>
+      <div class="kpi-content">
+        <span class="kpi-label">{{ 'subscription.next_renewal_metric' | translate }}</span>
+        <span class="kpi-value">
+          {{
+            store.nextRenewalDate()
+              ? (store.nextRenewalDate() | date: 'mediumDate')
+              : ('subscription.not_available' | translate)
+          }}
+        </span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap status-icon">
+        <mat-icon>verified_user</mat-icon>
+      </div>
+      <div class="kpi-content">
+        <span class="kpi-label">{{ 'subscription.account_status_metric' | translate }}</span>
+        <span class="kpi-value badge-highlight">
+          {{ 'subscription.status_in_good_standing' | translate }}
+        </span>
+      </div>
+    </div>
+  </section>
+
   <!-- Current Plan Section -->
   <section class="current-plan-card">
     <div class="card-title-row">
@@ -69,7 +110,7 @@
 
       <div class="plan-actions-row">
         @if (store.currentSubscription()?.status === 'ACTIVE') {
-          <button mat-stroked-button type="button" class="btn-danger" (click)="cancelCurrentSubscription()">
+          <button mat-stroked-button type="button" class="btn-danger" (click)="openCancelModal()">
             <mat-icon aria-hidden="true">cancel</mat-icon> {{ 'subscription.cancel_btn' | translate }}
           </button>
         }
@@ -95,49 +136,49 @@
 
     <div class="table-scroll" role="region" [attr.aria-label]="'subscription.payment_history_heading' | translate" tabindex="0">
       <table mat-table [dataSource]="dataSource()" matSort class="mat-table">
-      <!-- ID Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
-        <td mat-cell *matCellDef="let payment">{{ payment.id }}</td>
-      </ng-container>
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+          <td mat-cell *matCellDef="let payment">{{ payment.id }}</td>
+        </ng-container>
 
-      <!-- Plan Column -->
-      <ng-container matColumnDef="planId">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ 'subscription.plan' | translate }}
-        </th>
-        <td mat-cell *matCellDef="let payment">{{ getPlanName(payment.planId) }}</td>
-      </ng-container>
+        <!-- Plan Column -->
+        <ng-container matColumnDef="planId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ 'subscription.plan' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let payment">{{ getPlanName(payment.planId) }}</td>
+        </ng-container>
 
-      <!-- Amount Column -->
-      <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ 'subscription.amount' | translate }}
-        </th>
-        <td mat-cell *matCellDef="let payment">
-          <strong>${{ payment.amount }} {{ payment.currency }}</strong>
-        </td>
-      </ng-container>
+        <!-- Amount Column -->
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ 'subscription.amount' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let payment">
+            <strong>${{ payment.amount }} {{ payment.currency }}</strong>
+          </td>
+        </ng-container>
 
-      <!-- Date Column -->
-      <ng-container matColumnDef="requestedAt">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ 'subscription.date' | translate }}
-        </th>
-        <td mat-cell *matCellDef="let payment">{{ payment.requestedAt | date: 'medium' }}</td>
-      </ng-container>
+        <!-- Date Column -->
+        <ng-container matColumnDef="requestedAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ 'subscription.date' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let payment">{{ payment.requestedAt | date: 'medium' }}</td>
+        </ng-container>
 
-      <!-- Status Column -->
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ 'subscription.status' | translate }}
-        </th>
-        <td mat-cell *matCellDef="let payment">
-          <span class="status-badge {{ payment.status | lowercase }}">
-            {{ payment.status }}
-          </span>
-        </td>
-      </ng-container>
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ 'subscription.status' | translate }}
+          </th>
+          <td mat-cell *matCellDef="let payment">
+            <span class="status-badge {{ payment.status | lowercase }}">
+              {{ payment.status }}
+            </span>
+          </td>
+        </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
@@ -152,4 +193,49 @@
 
     <mat-paginator [pageSizeOptions]="[5, 10]" [showFirstLastButtons]="true"></mat-paginator>
   </section>
+
+  <!-- Cancellation Confirmation Modal -->
+  @if (isCancelModalOpen) {
+    <div class="modal-backdrop" (click)="closeCancelModal()">
+      <div class="modal-card cancel-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header danger-header">
+          <div class="modal-title-group">
+            <h3>{{ 'subscription.cancel_modal_title' | translate }}</h3>
+            <p>{{ 'subscription.cancel_modal_warning' | translate }}</p>
+          </div>
+          <button type="button" class="modal-close-btn" (click)="closeCancelModal()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <label class="cancel-reason-label" for="cancelReasonSelect">
+            {{ 'subscription.cancel_reason_label' | translate }}
+          </label>
+          <div class="select-wrapper">
+            <select
+              id="cancelReasonSelect"
+              class="cancel-select"
+              [(ngModel)]="selectedCancelReason"
+            >
+              <option value="pause">{{ 'subscription.cancel_reason_pause' | translate }}</option>
+              <option value="cost">{{ 'subscription.cancel_reason_cost' | translate }}</option>
+              <option value="features">{{ 'subscription.cancel_reason_features' | translate }}</option>
+              <option value="other">{{ 'subscription.cancel_reason_other' | translate }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button mat-stroked-button type="button" class="btn-modal-cancel" (click)="closeCancelModal()">
+            {{ 'subscription.cancel_back_btn' | translate }}
+          </button>
+          <button mat-flat-button type="button" class="btn-danger-confirm" (click)="confirmCancellation()">
+            <mat-icon>delete_forever</mat-icon>
+            {{ 'subscription.cancel_confirm_btn' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

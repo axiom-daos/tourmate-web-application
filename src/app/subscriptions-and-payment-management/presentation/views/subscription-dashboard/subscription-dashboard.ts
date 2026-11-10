@@ -1,6 +1,7 @@
 import { Component, computed, inject, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatePipe, LowerCasePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +28,7 @@ import { Payment } from '../../../domain/model/payment.entity';
     DatePipe,
     LowerCasePipe,
     TranslatePipe,
+    FormsModule,
   ],
   templateUrl: './subscription-dashboard.html',
   styleUrl: './subscription-dashboard.css',
@@ -39,6 +41,12 @@ export class SubscriptionDashboard {
 
   readonly sort = viewChild(MatSort);
   readonly paginator = viewChild(MatPaginator);
+
+  /**
+   * Modal state for subscription cancellation.
+   */
+  isCancelModalOpen = false;
+  selectedCancelReason = 'pause';
 
   readonly dataSource = computed(() => {
     const source = new MatTableDataSource<Payment>(this.store.currentAgencyPayments());
@@ -70,11 +78,25 @@ export class SubscriptionDashboard {
   }
 
   /**
-   * Cancels active subscription.
+   * Opens cancellation confirmation modal.
    */
-  cancelCurrentSubscription(): void {
-    if (confirm('Are you sure you want to cancel your current subscription?')) {
-      this.store.cancelSubscription();
-    }
+  openCancelModal(): void {
+    this.isCancelModalOpen = true;
+    this.selectedCancelReason = 'pause';
+  }
+
+  /**
+   * Closes cancellation modal.
+   */
+  closeCancelModal(): void {
+    this.isCancelModalOpen = false;
+  }
+
+  /**
+   * Confirms cancellation with selected reason.
+   */
+  confirmCancellation(): void {
+    this.store.cancelSubscription(this.selectedCancelReason);
+    this.closeCancelModal();
   }
 }
