@@ -53,7 +53,7 @@
       "count": "{{count}} tours",
       "tour_id": "Tour #{{id}}",
       "duration": "Duration",
-      "difficulty": "Difficulty",
+      "difficulty_label": "Difficulty",
       "price": "Price",
       "tour_status": "Tour status",
       "departures": "Departures",
