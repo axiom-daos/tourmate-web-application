@@ -22,6 +22,8 @@ const subscriptionsRoutes = () =>
   );
 const feedbackReviewRoutes = () =>
   import('./feedback-and-tour-reviews/feedback-review.routes').then((m) => m.FEEDBACK_REVIEW_ROUTES);
+const profilesRoutes = () =>
+  import('./profiles/presentation/profiles.routes').then((m) => m.profilesRoutes);
 
 const baseTitle = 'Tour Mate';
 
@@ -37,6 +39,7 @@ export const routes: Routes = [
     title: `${baseTitle} - Subscriptions & Payments`,
   },
   { path: 'feedback-and-tour-reviews', loadChildren: feedbackReviewRoutes },
+  { path: 'profiles', loadChildren: profilesRoutes, title: `${baseTitle} - My Profile` },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', loadComponent: pageNotFound, title: `${baseTitle} - Page Not Found` },
 ];
