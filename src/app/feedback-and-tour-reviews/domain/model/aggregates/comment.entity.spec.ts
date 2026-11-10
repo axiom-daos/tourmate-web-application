@@ -5,13 +5,13 @@ import { Comment } from './comment.entity';
 /**
  * Pruebas unitarias de la entidad Comment.
  *
- * Verificamos que las reglas de negocio
- * relacionadas con los comentarios funcionen.
+ * Verificamos sus validaciones y que durante
+ * la edición solamente pueda cambiar el texto.
  *
  * Bounded Context: Feedback and Tour Reviews.
  */
 describe('Comment Entity', () => {
-  // Datos válidos para nuestras pruebas.
+  // Datos válidos utilizados en las pruebas.
   const validComment = {
     id: 1,
     reviewId: 2,
@@ -21,25 +21,21 @@ describe('Comment Entity', () => {
 
   /**
    * PRUEBA 1:
-   * Verificamos que se pueda crear un comentario
-   * cuando todos sus datos son válidos.
+   * Se debe crear un comentario válido.
    */
-  it('debe crear un comentario válido', () => {
+  it('debe crear un comentario con datos válidos', () => {
     const comment = new Comment(validComment);
 
     expect(comment.id).toBe(1);
-
     expect(comment.reviewId).toBe(2);
-
     expect(comment.content).toBe('El tour estuvo excelente');
-
     expect(comment.createdAt).toBe(validComment.createdAt);
   });
 
   /**
    * PRUEBA 2:
-   * Comprobamos que un comentario con menos
-   * de cinco caracteres sea rechazado.
+   * No permitimos comentarios con menos
+   * de cinco caracteres útiles.
    */
   it('debe rechazar comentarios demasiado cortos', () => {
     expect(() => {
@@ -52,8 +48,8 @@ describe('Comment Entity', () => {
 
   /**
    * PRUEBA 3:
-   * Verificamos que no se acepten comentarios
-   * vacíos o que solamente tengan espacios.
+   * No permitimos comentarios vacíos
+   * ni formados solamente por espacios.
    */
   it('debe rechazar comentarios vacíos', () => {
     expect(() => {
@@ -73,10 +69,10 @@ describe('Comment Entity', () => {
 
   /**
    * PRUEBA 4:
-   * Comprobamos que se eliminen los espacios
-   * al inicio y al final del comentario.
+   * Se deben eliminar los espacios
+   * innecesarios del comentario.
    */
-  it('debe eliminar espacios innecesarios', () => {
+  it('debe eliminar espacios externos', () => {
     const comment = new Comment({
       ...validComment,
       content: '  Excelente experiencia  ',
@@ -87,29 +83,31 @@ describe('Comment Entity', () => {
 
   /**
    * PRUEBA 5:
-   * El comentario debe estar asociado
-   * con una reseña que tenga un ID válido.
+   * El comentario debe pertenecer
+   * a una reseña con ID válido.
    */
   it('debe rechazar identificadores de reseña inválidos', () => {
     expect(() => {
-      new Comment({
-        ...validComment,
-        reviewId: 0,
-      });
+      Comment.validateReviewId(0);
     }).toThrow();
 
     expect(() => {
-      new Comment({
-        ...validComment,
-        reviewId: -1,
-      });
+      Comment.validateReviewId(-1);
+    }).toThrow();
+
+    expect(() => {
+      Comment.validateReviewId(1.5);
+    }).toThrow();
+
+    expect(() => {
+      Comment.validateReviewId(NaN);
     }).toThrow();
   });
 
   /**
    * PRUEBA 6:
-   * Permitimos ID cero cuando un comentario
-   * todavía no ha sido guardado en la API.
+   * El ID cero está permitido cuando
+   * todavía no se guardó el comentario.
    */
   it('debe permitir crear comentarios con ID cero', () => {
     const comment = new Comment({
@@ -122,10 +120,28 @@ describe('Comment Entity', () => {
 
   /**
    * PRUEBA 7:
-   * Verificamos que el contenido de un
-   * comentario pueda actualizarse correctamente.
+   * No permitimos identificadores inválidos.
    */
-  it('debe permitir actualizar un comentario válido', () => {
+  it('debe rechazar IDs de comentario inválidos', () => {
+    expect(() => {
+      Comment.validateId(-1);
+    }).toThrow();
+
+    expect(() => {
+      Comment.validateId(1.5);
+    }).toThrow();
+
+    expect(() => {
+      Comment.validateId(Infinity);
+    }).toThrow();
+  });
+
+  /**
+   * PRUEBA 8:
+   * Se debe poder modificar el contenido
+   * de un comentario existente.
+   */
+  it('debe permitir actualizar el comentario', () => {
     const comment = new Comment(validComment);
 
     comment.content = 'Muy buena experiencia';
@@ -134,38 +150,139 @@ describe('Comment Entity', () => {
   });
 
   /**
-   * PRUEBA 8:
-   * Impedimos modificar un comentario con un
-   * texto que no cumple la longitud mínima.
+   * PRUEBA 9:
+   * Un contenido inválido no debe modificar
+   * el texto que ya estaba guardado.
    */
-  it('debe impedir actualizar con contenido inválido', () => {
+  it('debe conservar el contenido si la edición es inválida', () => {
     const comment = new Comment(validComment);
 
     expect(() => {
       comment.content = 'Mal';
     }).toThrow();
 
-    // El contenido anterior debe conservarse.
     expect(comment.content).toBe(validComment.content);
   });
 
   /**
-   * PRUEBA 9:
-   * Comprobamos que se pueda actualizar la
-   * reseña asociada utilizando un ID válido.
+   * PRUEBA 10:
+   * El texto editado debe guardarse
+   * sin espacios externos.
    */
-  it('debe permitir actualizar el ID de la reseña', () => {
+  it('debe limpiar espacios al editar el comentario', () => {
     const comment = new Comment(validComment);
 
-    comment.reviewId = 5;
+    comment.content = '  Recorrido muy agradable  ';
 
-    expect(comment.reviewId).toBe(5);
+    expect(comment.content).toBe('Recorrido muy agradable');
+  });
 
-    // No debe aceptar IDs negativos.
+  /**
+   * PRUEBA 11:
+   * La reseña relacionada debe conservarse
+   * después de editar el comentario.
+   */
+  it('debe conservar reviewId durante la edición', () => {
+    const comment = new Comment(validComment);
+
+    comment.content = 'Experiencia mejorable';
+
+    expect(comment.reviewId).toBe(2);
+  });
+
+  /**
+   * PRUEBA 12:
+   * La entidad no debe tener un setter
+   * que permita cambiar reviewId.
+   */
+  it('no debe permitir reasignar la reseña', () => {
+    const property = Object.getOwnPropertyDescriptor(Comment.prototype, 'reviewId');
+
+    expect(property?.get).toBeTypeOf('function');
+
+    expect(property?.set).toBeUndefined();
+  });
+
+  /**
+   * PRUEBA 13:
+   * La fecha original de creación debe
+   * conservarse después de editar.
+   */
+  it('debe conservar la fecha de creación', () => {
+    const comment = new Comment(validComment);
+
+    comment.content = 'Muy buen recorrido';
+
+    expect(comment.createdAt).toBe(validComment.createdAt);
+  });
+
+  /**
+   * PRUEBA 14:
+   * No debe existir un setter público
+   * para modificar createdAt.
+   */
+  it('no debe permitir cambiar createdAt', () => {
+    const property = Object.getOwnPropertyDescriptor(Comment.prototype, 'createdAt');
+
+    expect(property?.get).toBeTypeOf('function');
+
+    expect(property?.set).toBeUndefined();
+  });
+
+  /**
+   * PRUEBA 15:
+   * Permitimos asignar el identificador
+   * generado por la API.
+   */
+  it('debe permitir asignar un ID válido', () => {
+    const comment = new Comment({
+      ...validComment,
+      id: 0,
+    });
+
+    comment.id = 25;
+
+    expect(comment.id).toBe(25);
+  });
+
+  /**
+   * PRUEBA 16:
+   * Una asignación inválida de ID no
+   * debe modificar el identificador anterior.
+   */
+  it('debe conservar el ID si el nuevo es inválido', () => {
+    const comment = new Comment(validComment);
+
     expect(() => {
-      comment.reviewId = -3;
+      comment.id = -5;
     }).toThrow();
 
-    expect(comment.reviewId).toBe(5);
+    expect(comment.id).toBe(1);
+  });
+
+  /**
+   * PRUEBA 17:
+   * Comprobamos que exactamente cinco
+   * caracteres útiles sean suficientes.
+   */
+  it('debe aceptar el mínimo de cinco caracteres', () => {
+    expect(() => {
+      Comment.validateContent('Malo!');
+    }).not.toThrow();
+  });
+
+  /**
+   * PRUEBA 18:
+   * Los valores que no son texto
+   * no deben aceptarse como comentario.
+   */
+  it('debe rechazar contenido que no sea texto', () => {
+    expect(() => {
+      Comment.validateContent(null as unknown as string);
+    }).toThrow();
+
+    expect(() => {
+      Comment.validateContent(12345 as unknown as string);
+    }).toThrow();
   });
 });

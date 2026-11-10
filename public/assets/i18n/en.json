@@ -282,6 +282,7 @@
     "no_active_expeditions_hint": "When a tour is in progress, its route and participants will appear here.",
     "loading_route": "Loading route..."
   },
+
   "reviews": {
     "list_title": "Reviews and Ratings",
     "list_subtitle": "Explore the experiences, opinions, and ratings shared by travelers about their tours.",
@@ -321,6 +322,7 @@
     "rating_good": "Good",
     "rating_fair": "Fair",
     "rating_poor": "Poor",
+    "rating_zero": "Terrible",
     "select_tour": "Select a tour",
     "select_client": "Select a client",
     "select_tour_required": "You must select a tour.",
@@ -331,7 +333,7 @@
     "traveler_experience_help": "Help improve the quality of the service and tour.",
     "select_tour_label": "Select a tour",
     "select_client_label": "Select a client",
-    "edit_description": "Update the details and comment of this review.",
+    "edit_description": "Update the rating and comment of this review.",
     "new_description": "Share your experience and help other travelers learn about this tour.",
     "saving": "Saving...",
     "loading_review": "Loading review",
@@ -343,12 +345,13 @@
     "close": "Close",
     "delete_error": "The review could not be deleted.",
     "invalid_review_id": "The review identifier is invalid.",
-    "invalid_rating": "The rating must be between 1 and 5.",
+    "invalid_rating": "The rating must be between 0 and 5.",
     "duplicate_review": "This user has already reviewed this tour.",
     "review_load_error": "The review could not be loaded.",
     "review_not_ready": "The review is not available yet.",
     "save_error": "The review could not be saved."
   },
+
   "about": {
     "title": "About us",
     "content": "Tourmate , part of AXIOM Corporation."

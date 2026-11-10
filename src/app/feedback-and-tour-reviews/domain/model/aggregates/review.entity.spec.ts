@@ -3,15 +3,11 @@ import { describe, it, expect } from 'vitest';
 import { Review } from './review.entity';
 
 /**
- * Pruebas unitarias de la entidad Review.
+ * Pruebas unitarias del agregado Review.
  *
- * Verificamos que las reglas de negocio de las
- * reseñas funcionen correctamente.
- *
- * Bounded Context: Feedback and Tour Reviews.
  */
 describe('Review Entity', () => {
-  // Datos válidos que utilizaremos en las pruebas.
+  // Datos válidos utilizados en las pruebas.
   const validReview = {
     id: 1,
     userId: 2,
@@ -22,8 +18,7 @@ describe('Review Entity', () => {
 
   /**
    * PRUEBA 1:
-   * Comprobamos que se pueda crear una reseña
-   * cuando todos sus datos son correctos.
+   * Verificamos que se pueda crear una reseña válida.
    */
   it('debe crear una reseña con datos válidos', () => {
     const review = new Review(validReview);
@@ -37,11 +32,10 @@ describe('Review Entity', () => {
 
   /**
    * PRUEBA 2:
-   * Verificamos que se acepten calificaciones
-   * desde 1 hasta 5 estrellas.
+   * Se aceptan calificaciones enteras de 0 a 5.
    */
-  it('debe aceptar calificaciones entre 1 y 5', () => {
-    for (let rating = 1; rating <= 5; rating++) {
+  it('debe aceptar calificaciones de 0 a 5 estrellas', () => {
+    for (let rating = 0; rating <= 5; rating++) {
       expect(() => {
         Review.validateRating(rating);
       }).not.toThrow();
@@ -50,40 +44,67 @@ describe('Review Entity', () => {
 
   /**
    * PRUEBA 3:
-   * Comprobamos que no se permitan calificaciones
-   * menores que 1, mayores que 5 o decimales.
+   * Verificamos que 0 estrellas sea una
+   * calificación válida al crear una reseña.
    */
-  it('debe rechazar calificaciones inválidas', () => {
-    expect(() => Review.validateRating(0)).toThrow();
+  it('debe permitir crear una reseña con 0 estrellas', () => {
+    const review = new Review({
+      ...validReview,
+      rating: 0,
+    });
 
-    expect(() => Review.validateRating(6)).toThrow();
-
-    expect(() => Review.validateRating(-1)).toThrow();
-
-    expect(() => Review.validateRating(2.5)).toThrow();
-
-    expect(() => Review.validateRating(NaN)).toThrow();
+    expect(review.rating).toBe(0);
   });
 
   /**
    * PRUEBA 4:
-   * Los identificadores de usuario y tour
-   * deben ser números enteros positivos.
+   * Rechazamos calificaciones fuera del rango
+   * permitido o con valores decimales.
    */
-  it('debe rechazar identificadores inválidos', () => {
-    expect(() => Review.validateIds(0, 1)).toThrow();
+  it('debe rechazar calificaciones inválidas', () => {
+    expect(() => Review.validateRating(-1)).toThrow();
 
-    expect(() => Review.validateIds(1, -1)).toThrow();
+    expect(() => Review.validateRating(6)).toThrow();
 
-    expect(() => Review.validateIds(1.5, 2)).toThrow();
+    expect(() => Review.validateRating(2.5)).toThrow();
 
-    expect(() => Review.validateIds(1, 0)).toThrow();
+    expect(() => Review.validateRating(NaN)).toThrow();
+
+    expect(() => Review.validateRating(Infinity)).toThrow();
   });
 
   /**
    * PRUEBA 5:
-   * Permitimos ID igual a cero cuando una reseña
-   * todavía no ha sido guardada en la API.
+   * Un valor nulo no debe interpretarse
+   * como una calificación de cero estrellas.
+   */
+  it('debe rechazar una calificación no seleccionada', () => {
+    expect(() => {
+      Review.validateRating(null as unknown as number);
+    }).toThrow();
+  });
+
+  /**
+   * PRUEBA 6:
+   * Verificamos que el usuario y el tour
+   * tengan identificadores válidos.
+   */
+  it('debe rechazar identificadores inválidos', () => {
+    expect(() => Review.validateIds(0, 1)).toThrow();
+
+    expect(() => Review.validateIds(1, 0)).toThrow();
+
+    expect(() => Review.validateIds(-1, 2)).toThrow();
+
+    expect(() => Review.validateIds(2, -1)).toThrow();
+
+    expect(() => Review.validateIds(1.5, 2)).toThrow();
+  });
+
+  /**
+   * PRUEBA 7:
+   * Permitimos ID cero para una reseña
+   * que todavía no ha sido persistida.
    */
   it('debe permitir una reseña nueva con ID cero', () => {
     const review = new Review({
@@ -95,13 +116,26 @@ describe('Review Entity', () => {
   });
 
   /**
-   * PRUEBA 6:
-   * Comprobamos que los comentarios demasiado
-   * cortos o vacíos sean rechazados.
+   * PRUEBA 8:
+   * Los identificadores negativos no son válidos.
+   */
+  it('debe rechazar un ID de reseña inválido', () => {
+    expect(() => {
+      new Review({
+        ...validReview,
+        id: -1,
+      });
+    }).toThrow();
+  });
+
+  /**
+   * PRUEBA 9:
+   * No permitimos comentarios demasiado
+   * cortos, vacíos o formados por espacios.
    */
   it('debe rechazar comentarios inválidos', () => {
     expect(() => {
-      Review.validateComment('Hola');
+      Review.validateComment('Mal');
     }).toThrow();
 
     expect(() => {
@@ -114,24 +148,24 @@ describe('Review Entity', () => {
   });
 
   /**
-   * PRUEBA 7:
-   * Verificamos que los comentarios que tengan
-   * cinco caracteres o más sean aceptados.
+   * PRUEBA 10:
+   * Permitimos comentarios que tengan
+   * como mínimo cinco caracteres útiles.
    */
   it('debe aceptar comentarios válidos', () => {
     expect(() => {
-      Review.validateComment('Excelente tour');
+      Review.validateComment('Malo!');
     }).not.toThrow();
 
     expect(() => {
-      Review.validateComment('Muy bueno');
+      Review.validateComment('Excelente experiencia');
     }).not.toThrow();
   });
 
   /**
-   * PRUEBA 8:
-   * Comprobamos que se pueda modificar
-   * correctamente la calificación.
+   * PRUEBA 11:
+   * Verificamos que la calificación
+   * pueda modificarse correctamente.
    */
   it('debe actualizar una calificación válida', () => {
     const review = new Review(validReview);
@@ -142,11 +176,24 @@ describe('Review Entity', () => {
   });
 
   /**
-   * PRUEBA 9:
-   * Si se intenta colocar una calificación
-   * inválida, conservamos la anterior.
+   * PRUEBA 12:
+   * Debe permitirse cambiar una calificación
+   * de 5 estrellas a 0 estrellas.
    */
-  it('debe impedir actualizar con una calificación inválida', () => {
+  it('debe permitir actualizar la calificación a cero', () => {
+    const review = new Review(validReview);
+
+    review.rating = 0;
+
+    expect(review.rating).toBe(0);
+  });
+
+  /**
+   * PRUEBA 13:
+   * Una calificación inválida no debe
+   * modificar el valor anterior.
+   */
+  it('debe conservar la calificación si la nueva es inválida', () => {
     const review = new Review(validReview);
 
     expect(() => {
@@ -154,5 +201,49 @@ describe('Review Entity', () => {
     }).toThrow();
 
     expect(review.rating).toBe(5);
+  });
+
+  /**
+   * PRUEBA 14:
+   * Al modificar las estrellas, el usuario,
+   * el tour y la fecha deben permanecer iguales.
+   */
+  it('debe conservar usuario, tour y fecha al editar', () => {
+    const review = new Review(validReview);
+
+    review.rating = 2;
+
+    expect(review.userId).toBe(2);
+    expect(review.tourId).toBe(3);
+    expect(review.createdAt).toBe(validReview.createdAt);
+  });
+
+  /**
+   * PRUEBA 15:
+   * El agregado no debe ofrecer métodos setter
+   * para modificar el usuario o el tour.
+   */
+  it('no debe permitir reasignar usuario ni tour', () => {
+    const userProperty = Object.getOwnPropertyDescriptor(Review.prototype, 'userId');
+
+    const tourProperty = Object.getOwnPropertyDescriptor(Review.prototype, 'tourId');
+
+    expect(userProperty?.get).toBeTypeOf('function');
+    expect(tourProperty?.get).toBeTypeOf('function');
+
+    expect(userProperty?.set).toBeUndefined();
+    expect(tourProperty?.set).toBeUndefined();
+  });
+
+  /**
+   * PRUEBA 16:
+   * El agregado no debe permitir modificar
+   * la fecha original mediante un setter.
+   */
+  it('no debe permitir modificar la fecha de creación', () => {
+    const dateProperty = Object.getOwnPropertyDescriptor(Review.prototype, 'createdAt');
+
+    expect(dateProperty?.get).toBeTypeOf('function');
+    expect(dateProperty?.set).toBeUndefined();
   });
 });
