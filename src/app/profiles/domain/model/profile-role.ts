@@ -1,6 +1,8 @@
 export enum ProfileRole {
-  ADMIN = 'ADMIN',
-  AGENCY = 'AGENCY',
-  GUIDE = 'GUIDE',
-  TOURIST = 'TOURIST',
+  ADMIN = 'ROLE_ADMIN',
+  AGENCY = 'ROLE_AGENCY_OWNER',
+  GUIDE = 'ROLE_TOUR_GUIDE',
+  TOURIST = 'ROLE_USER'
 }
+
+
