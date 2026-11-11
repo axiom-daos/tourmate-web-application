@@ -2,8 +2,8 @@ import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-res
 
 export interface TourGuideResource extends BaseResource {
   id: number;
-  userId: number;
-  agencyId: number;
+  userId: number | string;
+  agencyId: number | string;
   languages: string[];
   phoneNumber: string;
 }

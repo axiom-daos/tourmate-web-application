@@ -5,11 +5,19 @@ import { TourGuideResource, TourGuidesResponse } from './tour-guide-response';
 export class TourGuideAssembler
   implements BaseAssembler<TourGuide, TourGuideResource, TourGuidesResponse>
 {
+  private parseId(value: number | string, field: string): number {
+    const id = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
+    if (typeof id !== 'number' || !Number.isSafeInteger(id) || id <= 0) {
+      throw new Error(`El campo ${field} contiene un identificador inválido.`);
+    }
+    return id;
+  }
+
   toEntityFromResource(resource: TourGuideResource): TourGuide {
     return new TourGuide({
-      id: resource.id,
-      userId: resource.userId,
-      agencyId: resource.agencyId,
+      id: this.parseId(resource.id, 'id'),
+      userId: this.parseId(resource.userId, 'userId'),
+      agencyId: this.parseId(resource.agencyId, 'agencyId'),
       languages: resource.languages,
       phoneNumber: resource.phoneNumber,
     });

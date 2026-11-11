@@ -12,7 +12,7 @@ describe('IAM assemblers', () => {
     const serverUser = {
       id: 4,
       email: 'guide@example.com',
-      role: UserRole.GUIDE,
+      role: 'GUIDE',
       firstName: 'Alex',
       lastName: 'Ramos',
       passwordHash: 'server-managed-secret',
@@ -24,11 +24,28 @@ describe('IAM assemblers', () => {
     expect(resource).toEqual({
       id: 4,
       email: 'guide@example.com',
-      role: UserRole.GUIDE,
+      role: 'GUIDE',
       firstName: 'Alex',
       lastName: 'Ramos',
     });
     expect('passwordHash' in resource).toBe(false);
+  });
+
+  it.each([
+    ['ADMIN', UserRole.ADMIN],
+    ['AGENCY_OWNER', UserRole.AGENCY_OWNER],
+    ['GUIDE', UserRole.GUIDE],
+    ['TOURIST', UserRole.TOURIST],
+  ])('normalizes the MockAPI role %s', (apiRole, expectedRole) => {
+    const user = new UserAssembler().toEntityFromResource({
+      id: 9,
+      email: 'traveler@example.com',
+      role: apiRole,
+      firstName: 'Alex',
+      lastName: 'Ramos',
+    });
+
+    expect(user.role).toBe(expectedRole);
   });
 
   it('maps agency details in both directions', () => {
@@ -52,14 +69,16 @@ describe('IAM assemblers', () => {
     const languages = ['Spanish', 'Quechua'];
     const guide = assembler.toEntityFromResource({
       id: 3,
-      userId: 8,
-      agencyId: 2,
+      userId: '8',
+      agencyId: '2',
       languages,
       phoneNumber: '+51 981 000 222',
     });
     languages.push('English');
 
     expect(guide).toBeInstanceOf(TourGuide);
+    expect(guide.userId).toBe(8);
+    expect(guide.agencyId).toBe(2);
     expect(guide.languages).toEqual(['Spanish', 'Quechua']);
     expect(assembler.toResourceFromEntity(guide).languages).toEqual(['Spanish', 'Quechua']);
   });
