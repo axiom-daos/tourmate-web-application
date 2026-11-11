@@ -26,6 +26,8 @@ export class SubscriptionsAndPaymentApi extends BaseApi {
 
   // Subscription operations
   getSubscriptions = (): Observable<Subscription[]> => this.subscriptionsEndpoint.getAll();
+  getSubscriptionsByAgency = (agencyId: number): Observable<Subscription[]> =>
+    this.subscriptionsEndpoint.getByAgencyId(agencyId);
   getSubscription = (id: number): Observable<Subscription> =>
     this.subscriptionsEndpoint.getById(id);
   createSubscription = (subscription: Subscription): Observable<Subscription> =>
@@ -36,6 +38,8 @@ export class SubscriptionsAndPaymentApi extends BaseApi {
 
   // Payment operations
   getPayments = (): Observable<Payment[]> => this.paymentsEndpoint.getAll();
+  getPaymentsByAgency = (agencyId: number): Observable<Payment[]> =>
+    this.paymentsEndpoint.getByAgencyId(agencyId);
   getPayment = (id: number): Observable<Payment> => this.paymentsEndpoint.getById(id);
   createPayment = (payment: Payment): Observable<Payment> => this.paymentsEndpoint.create(payment);
   updatePayment = (payment: Payment): Observable<Payment> =>
