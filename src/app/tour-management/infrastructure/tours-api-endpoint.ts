@@ -11,7 +11,7 @@ export class ToursApiEndpoint extends BaseApiEndpoint<Tour, TourResource, ToursR
   constructor(http: HttpClient) {
     super
     (http,
-      `${environment.tourmateProviderApiBaseUrl + environment.tourmateProviderToursEndpointPath}`, new TourAssembler());
+      `${environment.toursApiBaseUrl + environment.tourmateProviderToursEndpointPath}`, new TourAssembler());
   }
 
 }

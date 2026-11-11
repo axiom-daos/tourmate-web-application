@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
-  tourmateProviderApiBaseUrl: 'http://localhost:8092/api/v1',
+  //tourmateProviderApiBaseUrl: 'http://localhost:8092/api/v1',
+  tourmateProviderApiBaseUrl: 'https://tourmate-platform.onrender.com/api/v1',
   tourmateProviderUsersEndpointPath: '/users',
   tourmateProviderAgenciesEndpointPath: '/agencies',
   tourmateProviderCheckpointsEndpointPath: '/checkpoints',
@@ -20,14 +21,15 @@ export const environment = {
   agenciesApiBaseUrl: 'https://6ac5699354a61668c5f7294a.mockapi.io/api/v1' ,
   tourSchedulesApiBaseUrl: 'https://6ac551d354a61668c5f71aa1.mockapi.io/api/v1/',
   participantsApiBaseUrl: 'https://6ac55bd454a61668c5f72410.mockapi.io/api/v1',
-  checkpointsApiBaseUrl: 'https://6ac5699354a61668c5f7294a.mockapi.io/api/v1'
+  checkpointsApiBaseUrl: 'https://6ac5699354a61668c5f7294a.mockapi.io/api/v1',
+  toursApiBaseUrl: 'https://6ac551d354a61668c5f71aa1.mockapi.io/api/v1' ,
   /*
   activeToursApiBaseUrl: 'https://6ac55bd454a61668c5f72410.mockapi.io/api/v1',
   ,
    ,
 
    ,
-  toursApiBaseUrl: 'https://6ac551d354a61668c5f71aa1.mockapi.io/api/v1' ,
+
   plansApiBaseUrl: 'https://6ac5531c54a61668c5f71bc5.mockapi.io/api/v1',
   subscriptionsApiBaseUrl: 'https://6ac5531c54a61668c5f71bc5.mockapi.io/api/v1' ,
   paymentsApiBaseUrl: 'https://6ac5596354a61668c5f72167.mockapi.io/api/v1' ,
