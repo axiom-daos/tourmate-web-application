@@ -63,7 +63,7 @@ describe('UsersApiEndpoint', () => {
     expect(request.request.body).toEqual({
       id: 5,
       email: 'new-email@example.com',
-      role: UserRole.GUIDE,
+      role: 'GUIDE',
       firstName: 'Ana',
       lastName: 'Ramos',
     });

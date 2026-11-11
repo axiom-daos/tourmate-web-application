@@ -29,7 +29,7 @@ export class ReviewApiEndpoint extends BaseApiEndpoint<
    */
   constructor(http: HttpClient) {
     // Obtenemos la dirección base configurada en environment.
-    const endpointUrl = `${environment.reviewsApiBaseUrl}/reviews`;
+    const endpointUrl = `${environment.tourmateProviderApiBaseUrl}/reviews`;
 
     // Enviamos a la clase padre el cliente HTTP,
     // la URL de la API y el assembler de reseñas.

@@ -70,13 +70,13 @@ export class IamStore {
   }
 
   getUserById = (id: number): Signal<User | undefined> =>
-    computed(() => this.users().find((user) => user.id === id));
+    computed(() => this.users().find((user) => Number(user.id) === Number(id)));
 
   getAgencyById = (id: number): Signal<Agency | undefined> =>
-    computed(() => this.agencies().find((agency) => agency.id === id));
+    computed(() => this.agencies().find((agency) => Number(agency.id) === Number(id)));
 
   getTourGuideById = (id: number): Signal<TourGuide | undefined> =>
-    computed(() => this.tourGuides().find((tourGuide) => tourGuide.id === id));
+    computed(() => this.tourGuides().find((tourGuide) => Number(tourGuide.id) === Number(id)));
 
   addUser(user: User): void {
     this.#execute(
@@ -159,9 +159,11 @@ export class IamStore {
 
   private assignUserToTourGuide = (tourGuide: TourGuide): TourGuide => {
     const userId = tourGuide.userId ?? 0;
-    tourGuide.user = userId ? this.getUserById(userId)() ?? null : null;
+    tourGuide.user = userId
+      ? this.users().find(user => Number(user.id) === Number(userId)) ?? null
+      : null;
     return tourGuide;
-  }
+  };
 
   deleteTourGuide(id: number): void {
     this.#execute(

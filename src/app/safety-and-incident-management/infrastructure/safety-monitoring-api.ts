@@ -40,7 +40,7 @@ interface SafetyMonitoringData {
 @Injectable({ providedIn: 'root' })
 export class SafetyMonitoringApi {
   private readonly http = inject(HttpClient);
-  private readonly locationsUrl = `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/locations`;
+  private readonly locationsUrl = `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/locations`;
 
   getSafetyData(): Observable<SafetyMonitoringData> {
     return this.http.get<MockApiLocation[]>(this.locationsUrl).pipe(

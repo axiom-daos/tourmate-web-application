@@ -53,7 +53,7 @@ describe('IncidentStore - Offline-First Resilience & Sync Bursts', () => {
     const postReqs = httpMock.match((req) => req.method === 'POST');
     expect(postReqs.length).toBe(1);
     expect(postReqs[0].request.url).toBe(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`,
     );
     postReqs.forEach((req) => req.flush({ ...newIncident, id: 99, isSynced: true }));
 
@@ -97,7 +97,7 @@ describe('IncidentStore - Offline-First Resilience & Sync Bursts', () => {
 
     store.addIncident(newIncident);
     const request = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`,
     );
     request.flush({ id: '99' });
 
@@ -109,7 +109,7 @@ describe('IncidentStore - Offline-First Resilience & Sync Bursts', () => {
     store.refreshIncidents();
 
     const request = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`,
     );
     expect(request.request.method).toBe('GET');
 
@@ -153,14 +153,14 @@ describe('IncidentStore - Offline-First Resilience & Sync Bursts', () => {
     store.deleteIncident(42);
 
     const request = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents/42`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents/42`,
     );
     expect(request.request.method).toBe('DELETE');
     request.flush(null);
 
     store.refreshIncidents();
     httpMock
-      .expectOne(`${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`)
+      .expectOne(`${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`)
       .flush([]);
 
     expect(store.incidents()).toEqual([]);
@@ -184,7 +184,7 @@ describe('IncidentStore - Offline-First Resilience & Sync Bursts', () => {
     store.deleteIncident(43);
 
     const request = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents/43`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents/43`,
     );
     request.flush({ message: 'Delete failed' }, { status: 500, statusText: 'Server Error' });
 
@@ -221,7 +221,7 @@ describe('IncidentStore - Offline-First Resilience & Sync Bursts', () => {
     store.updateIncident(updated);
 
     const request = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents/44`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents/44`,
     );
     expect(request.request.method).toBe('PUT');
     expect(request.request.body.description).toBe('Updated description');
@@ -263,12 +263,12 @@ describe('IncidentStore - Offline-First Resilience & Sync Bursts', () => {
     store.resolveIncident(incident, ' ');
     expect(store.error()).toBe('incidents.resolution_note_required');
     httpMock.expectNone(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents/45`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents/45`,
     );
 
     store.resolveIncident(incident, 'First aid provided.');
     const request = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents/45`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents/45`,
     );
     expect(request.request.method).toBe('PUT');
     expect(request.request.body.resolutionNote).toBe('First aid provided.');
@@ -330,14 +330,14 @@ describe('IncidentStore - Offline-First Resilience & Sync Bursts', () => {
 
     store.addIncident(pendingIncident);
     const failedCreate = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`,
     );
     failedCreate.error(new ProgressEvent('error'));
     expect(store.pendingSyncIncidents().length).toBe(1);
     store.syncOfflineIncidents();
 
     const duplicateCheck = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`,
     );
     expect(duplicateCheck.request.method).toBe('GET');
     duplicateCheck.flush([]);

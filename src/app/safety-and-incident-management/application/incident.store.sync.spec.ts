@@ -53,7 +53,7 @@ describe('IncidentStore - Sync Bursts & Automatic Synchronization', () => {
     store.syncOfflineIncidents();
 
     const duplicateCheck = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`,
     );
     expect(duplicateCheck.request.method).toBe('GET');
     duplicateCheck.flush([]);
@@ -87,7 +87,7 @@ describe('IncidentStore - Sync Bursts & Automatic Synchronization', () => {
 
     store.refreshIncidents();
     httpMock
-      .expectOne(`${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`)
+      .expectOne(`${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`)
       .flush([{ ...syncedServerResponse, isSynced: false }]);
 
     expect(store.pendingSyncIncidents().length).toBe(0);
@@ -95,7 +95,7 @@ describe('IncidentStore - Sync Bursts & Automatic Synchronization', () => {
 
     store.deleteIncident(501);
     const deleteRequest = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents/501`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents/501`,
     );
     expect(deleteRequest.request.method).toBe('DELETE');
     deleteRequest.flush(null);
@@ -124,7 +124,7 @@ describe('IncidentStore - Sync Bursts & Automatic Synchronization', () => {
     store.syncOfflineIncidents();
 
     const duplicateCheck = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`,
     );
     duplicateCheck.flush([
       {
@@ -148,12 +148,12 @@ describe('IncidentStore - Sync Bursts & Automatic Synchronization', () => {
     httpMock.expectNone(
       (request) =>
         request.method === 'POST' &&
-        request.url === `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+        request.url === `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`,
     );
 
     store.deleteIncident(700);
     const deleteRequest = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents/700`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents/700`,
     );
     expect(deleteRequest.request.method).toBe('DELETE');
     deleteRequest.flush(null);
@@ -180,7 +180,7 @@ describe('IncidentStore - Sync Bursts & Automatic Synchronization', () => {
     window.dispatchEvent(new Event('online'));
 
     const duplicateCheck = httpMock.expectOne(
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`,
     );
     duplicateCheck.flush([]);
 

@@ -10,7 +10,7 @@ import { SafetyMonitoringApi } from './safety-monitoring-api';
 describe('SafetyMonitoringApi', () => {
   let api: SafetyMonitoringApi;
   let httpMock: HttpTestingController;
-  const locationsUrl = `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/locations`;
+  const locationsUrl = `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/locations`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

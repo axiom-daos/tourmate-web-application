@@ -29,9 +29,11 @@ export class LiveMonitoring {
   protected readonly zoom = signal(1);
   protected readonly selectedParticipantUserId = signal<number | null>(null);
   protected readonly availableTourists = computed(() => {
-    const assignedUserIds = new Set(this.store.participantsForTour().map(participant => participant.userId));
+    const assignedUserIds = new Set(
+      this.store.participantsForTour().map(participant => Number(participant.userId)),
+    );
     return this.store.users().filter(
-      user => user.role === UserRole.TOURIST && !assignedUserIds.has(user.id),
+      user => user.role === UserRole.TOURIST && !assignedUserIds.has(Number(user.id)),
     );
   });
 

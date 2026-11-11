@@ -13,7 +13,7 @@ export class IncidentStore {
   private http = inject(HttpClient);
   private readonly destroyRef = inject(DestroyRef);
   private readonly OFFLINE_STORAGE_KEY = 'tourmate_offline_incidents';
-  private readonly API_URL = `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`;
+  private readonly API_URL = `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`;
 
   private incidentsSignal = signal<Incident[]>(this.loadFromStorage());
   private loadingSignal = signal<boolean>(false);

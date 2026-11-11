@@ -93,10 +93,10 @@
     "email": "Correo electrónico",
     "role": "Rol de la cuenta",
     "roles": {
-      "admin": "Administrador",
-      "agency": "Agencia",
-      "guide": "Guía",
-      "tourist": "Turista"
+      "role_admin": "Administrador",
+      "role_agency_owner": "Agencia",
+      "role_tour_guide": "Guía",
+      "role_user": "Turista"
     }
   },
   "subscription": {

@@ -17,7 +17,7 @@ export class IncidentApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.incidentsApiBaseUrl.replace(/\/+$/, '')}/incidents`,
+      `${environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '')}/incidents`,
       new IncidentAssembler(),
     );
   }
