@@ -28,7 +28,7 @@ export class CommentApiEndpoint extends BaseApiEndpoint<
    */
   constructor(http: HttpClient) {
     // Obtenemos la dirección base configurada en environment.
-    const endpointUrl = `${environment.commentsApiBaseUrl}/comments`;
+    const endpointUrl = `${environment.tourmateProviderApiBaseUrl}/comments`;
 
     // Enviamos a la clase padre el cliente HTTP,
     // la URL de la API y el assembler de comentarios.

@@ -18,7 +18,7 @@ export class SubscriptionsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.subscriptionsApiBaseUrl}${environment.tourmateProviderSubscriptionsEndpointPath}`,
+      `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderSubscriptionsEndpointPath}`,
       new SubscriptionAssembler(),
     );
   }
