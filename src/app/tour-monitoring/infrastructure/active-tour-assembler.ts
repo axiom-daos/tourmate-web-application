@@ -6,31 +6,41 @@ import {BaseAssembler} from '../../shared/infrastructure/base-assembler';
  * Maps activeTours entities to and from API resources.
  */
 export class ActiveTourAssembler implements BaseAssembler<ActiveTour, ActiveTourResource, ActiveToursResponse> {
+  private parseId(value: number | string | undefined, field: string): number {
+    const id = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
+    if (typeof id !== 'number' || !Number.isSafeInteger(id) || id <= 0) {
+      throw new Error(`Active tour has an invalid ${field}`);
+    }
+    return id;
+  }
+
   /**
    * Converts a ActiveToursResponse to an array of ActiveToursEntity entities.
    * @param response - The API response containing activeTours.
    * @returns An array of ActiveToursEntity entities.
    */
-  toEntitiesFromResponse = (response: ActiveToursResponse): ActiveTour[] => {    console.log(response);
-    return response.activeTours.map(resource => this.toEntityFromResource(resource as ActiveTourResource));
-  };
+  toEntitiesFromResponse = (response: ActiveToursResponse): ActiveTour[] =>
+    response.activeTours.map(resource => this.toEntityFromResource(resource));
 
   /**
    * Converts a ActiveToursResource to a ActiveToursEntity entity.
    * @param resource - The resource to convert.
    * @returns The converted ActiveToursEntity entity.
    */
-  toEntityFromResource = (resource: ActiveTourResource): ActiveTour =>
-    new ActiveTour({
-      id: resource.id,
-      tourScheduleId: resource.tourScheduleId,
-      guideId: resource.guideId,
-      status: resource.status,
+  toEntityFromResource = (resource: ActiveTourResource): ActiveTour => {
+    const finishedAt = resource.finishedAt ?? null;
+    const guideId = resource.tourGuideId ?? resource.guideId;
+    return new ActiveTour({
+      id: this.parseId(resource.id, 'id'),
+      tourScheduleId: this.parseId(resource.tourScheduleId, 'tourScheduleId'),
+      guideId: this.parseId(guideId, 'tourGuideId'),
+      status: resource.status || (finishedAt ? 'FINISHED' : 'IN_PROGRESS'),
       currentLatitude: resource.currentLatitude,
       currentLongitude: resource.currentLongitude,
       startedAt: resource.startedAt,
-      finishedAt: resource.finishedAt,
+      finishedAt,
     });
+  };
 
 
   /**
@@ -42,13 +52,12 @@ export class ActiveTourAssembler implements BaseAssembler<ActiveTour, ActiveTour
     ({
       id: entity.id,
       tourScheduleId: entity.tourScheduleId,
-      guideId: entity.guideId,
+      tourGuideId: entity.guideId,
       status: entity.status,
       currentLatitude: entity.currentLatitude,
       currentLongitude: entity.currentLongitude,
       startedAt: entity.startedAt,
-      finishedAt: entity.finishedAt
-
-    } as ActiveTourResource);
+      finishedAt: entity.finishedAt,
+    });
 
 }
