@@ -10,7 +10,7 @@ import { SafetyMonitoringStore } from './safety-monitoring.store';
 describe('SafetyMonitoringStore', () => {
   let store: SafetyMonitoringStore;
   let httpMock: HttpTestingController;
-  const apiBase = environment.incidentsApiBaseUrl.replace(/\/+$/, '');
+  const apiBase = environment.tourmateProviderApiBaseUrl.replace(/\/+$/, '');
   const currentDate = new Date().toISOString();
   const wearable = {
     id: 'device-record-1',
