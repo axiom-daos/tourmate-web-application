@@ -8,6 +8,8 @@ export interface PlanResource extends BaseResource {
   name: string;
   priceAmount: number;
   priceCurrency: string;
+  description?: string;
+  maxActiveTours?: number;
   features?: { description: string; value: string }[];
 }
 

@@ -12,10 +12,10 @@ export class PlanAssembler implements BaseAssembler<Plan, PlanResource, PlansRes
 
   toEntityFromResource = (resource: PlanResource): Plan => {
     return new Plan({
-      id: resource.id,
+      id: Number(resource.id),
       name: resource.name,
-      priceAmount: resource.priceAmount,
-      priceCurrency: resource.priceCurrency,
+      priceAmount: Number(resource.priceAmount),
+      priceCurrency: resource.priceCurrency || 'USD',
       features: resource.features || [],
     });
   };
