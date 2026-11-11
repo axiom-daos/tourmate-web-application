@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, map } from 'rxjs';
 
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 
@@ -33,5 +34,30 @@ export class ReviewApiEndpoint extends BaseApiEndpoint<
     // Enviamos a la clase padre el cliente HTTP,
     // la URL de la API y el assembler de reseñas.
     super(http, endpointUrl, new ReviewAssembler());
+  }
+
+  override create(review: Review): Observable<Review> {
+    const payload = {
+      userId: Number(review.userId),
+      tourId: Number(review.tourId),
+      rating: Number(review.rating),
+    };
+    return this.http.post<ReviewResource>(this.endpointUrl, payload).pipe(
+      map((created) => this.assembler.toEntityFromResource(created)),
+      catchError(this.handleError('Failed to create review')),
+    );
+  }
+
+  getByTourId(tourId: number): Observable<Review[]> {
+    const url = `${this.endpointUrl}/tour/${tourId}`;
+    return this.http.get<ReviewsResponse | ReviewResource[]>(url).pipe(
+      map((response) => {
+        if (Array.isArray(response)) {
+          return response.map((resource) => this.assembler.toEntityFromResource(resource));
+        }
+        return this.assembler.toEntitiesFromResponse(response);
+      }),
+      catchError(this.handleError('Failed to fetch reviews for tour')),
+    );
   }
 }
