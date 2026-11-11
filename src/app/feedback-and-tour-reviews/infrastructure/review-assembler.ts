@@ -51,12 +51,13 @@ export class ReviewAssembler implements BaseAssembler<Review, ReviewResource, Re
   /**
    * Converts an API response into Review entities.
    */
-  toEntitiesFromResponse = (response: ReviewsResponse): Review[] => {
-    if (!Array.isArray(response.reviews)) {
+  toEntitiesFromResponse = (response: ReviewsResponse | ReviewResource[]): Review[] => {
+    const list = Array.isArray(response) ? response : response?.reviews;
+    if (!Array.isArray(list)) {
       throw new Error('La respuesta de reseñas no tiene un formato válido.');
     }
 
-    return response.reviews.map((resource) => this.toEntityFromResource(resource));
+    return list.map((resource) => this.toEntityFromResource(resource));
   };
 
   /**

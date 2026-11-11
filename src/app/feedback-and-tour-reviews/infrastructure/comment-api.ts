@@ -36,6 +36,16 @@ export class CommentApi extends BaseApi {
   }
 
   /**
+   * Retrieves comments belonging to a specific review.
+   */
+  getCommentsByReviewId(reviewId: number): Observable<Comment[]> {
+    if (!this.isValidId(reviewId)) {
+      return throwError(() => new Error('El identificador de la reseña es inválido.'));
+    }
+    return this.commentsEndpoint.getByReviewId(reviewId);
+  }
+
+  /**
    * Retrieves a comment by its identifier.
    */
   getComment(id: number): Observable<Comment> {

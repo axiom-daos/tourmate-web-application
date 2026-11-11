@@ -36,6 +36,16 @@ export class ReviewApi extends BaseApi {
   }
 
   /**
+   * Retrieves all reviews for a specific tour.
+   */
+  getReviewsByTourId(tourId: number): Observable<Review[]> {
+    if (!this.isValidId(tourId)) {
+      return throwError(() => new Error('El identificador del tour es inválido.'));
+    }
+    return this.reviewsEndpoint.getByTourId(tourId);
+  }
+
+  /**
    * Retrieves a review by its identifier.
    */
   getReview(id: number): Observable<Review> {

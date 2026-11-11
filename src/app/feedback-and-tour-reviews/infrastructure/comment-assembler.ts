@@ -33,12 +33,13 @@ export class CommentAssembler implements BaseAssembler<Comment, CommentResource,
   /**
    * Converts an API response into Comment entities.
    */
-  toEntitiesFromResponse = (response: CommentsResponse): Comment[] => {
-    if (!Array.isArray(response.comments)) {
+  toEntitiesFromResponse = (response: CommentsResponse | CommentResource[]): Comment[] => {
+    const list = Array.isArray(response) ? response : response?.comments;
+    if (!Array.isArray(list)) {
       throw new Error('La respuesta de comentarios no tiene un formato válido.');
     }
 
-    return response.comments.map((resource) => this.toEntityFromResource(resource));
+    return list.map((resource) => this.toEntityFromResource(resource));
   };
 
   /**
