@@ -1,0 +1,384 @@
+:host {
+  display: block;
+  color: #263e35;
+}
+
+.assigned-tours-page {
+  width: min(100%, 1100px);
+  margin: 0 auto;
+  padding: 4px 0 32px;
+}
+
+.back-link,
+.return-link {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 7px;
+  color: #315b4d;
+  font-size: 0.88rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.back-link {
+  margin-bottom: 16px;
+}
+
+.back-link:hover,
+.return-link:hover {
+  text-decoration: underline;
+}
+
+.page-heading {
+  position: relative;
+  padding: clamp(20px, 3vw, 30px);
+  border: 1px solid var(--tm-border);
+  border-radius: 18px;
+  background: var(--tm-surface);
+  box-shadow: 0 12px 30px rgb(31 56 47 / 5%);
+}
+
+.eyebrow {
+  margin: 0 0 5px;
+  color: var(--tm-accent);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.page-heading h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.7rem, 3vw, 2.25rem);
+  letter-spacing: -0.04em;
+}
+
+.page-heading > p:not(.eyebrow) {
+  margin: 0;
+  color: var(--tm-muted);
+  line-height: 1.6;
+}
+
+.role-badge,
+.assignment-badge,
+.status-chip {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #315b4d;
+  background: #eaf1e9;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.role-badge {
+  margin-top: 14px;
+}
+
+.result-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 24px 2px 12px;
+}
+
+.result-heading h2 {
+  margin: 0;
+  font-size: 1.12rem;
+}
+
+.result-heading span {
+  color: var(--tm-muted);
+  font-size: 0.82rem;
+}
+
+.tour-list {
+  display: grid;
+  gap: 16px;
+}
+
+.tour-card {
+  min-width: 0;
+  padding: clamp(16px, 2.5vw, 24px);
+  border: 1px solid var(--tm-border);
+  border-radius: 16px;
+  background: var(--tm-surface);
+  box-shadow: 0 10px 24px rgb(31 56 47 / 4%);
+}
+
+.tour-card-header {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.tour-icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  place-items: center;
+  border-radius: 14px;
+  color: #315b4d;
+  background: #eaf1e9;
+}
+
+.tour-title {
+  min-width: 0;
+  flex: 1;
+}
+
+.tour-title p {
+  margin: 0 0 3px;
+  color: var(--tm-muted);
+  font-size: 0.72rem;
+}
+
+.tour-title h2 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+.assignment-badge {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.tour-description {
+  margin: 18px 0;
+  color: #586b61;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.tour-details {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.tour-details > div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #e8ebe4;
+  border-radius: 11px;
+  background: #fbfbf8;
+}
+
+.tour-details dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  color: var(--tm-muted);
+  font-size: 0.75rem;
+}
+
+.tour-details dt mat-icon {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  color: #668271;
+  font-size: 17px;
+}
+
+.tour-details dd {
+  margin: 0;
+  color: var(--tm-forest);
+  font-size: 0.88rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.schedule-section {
+  margin-top: 20px;
+}
+
+.schedule-section h3 {
+  margin: 0 0 9px;
+  font-size: 0.94rem;
+}
+
+.schedule-list {
+  display: grid;
+  gap: 8px;
+}
+
+.schedule-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(70px, 0.5fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border: 1px solid #e8ebe4;
+  border-radius: 10px;
+  background: #fbfbf8;
+}
+
+.schedule-item > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.schedule-label {
+  color: var(--tm-muted);
+  font-size: 0.7rem;
+}
+
+.schedule-item time,
+.schedule-item > div > span:last-child {
+  color: var(--tm-forest);
+  font-size: 0.82rem;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.status-chip {
+  justify-self: end;
+  white-space: normal;
+  text-align: center;
+}
+
+.no-schedules {
+  margin: 16px 0 0;
+  padding: 12px;
+  border-radius: 10px;
+  color: var(--tm-muted);
+  background: #f5f6f1;
+  font-size: 0.84rem;
+}
+
+.state-panel {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 24px;
+  border: 1px dashed #cfd9cc;
+  border-radius: 16px;
+  color: var(--tm-muted);
+  background: var(--tm-surface);
+  text-align: center;
+}
+
+.state-panel > mat-icon {
+  width: 32px;
+  height: 32px;
+  color: #47715e;
+  font-size: 32px;
+}
+
+.state-panel h1,
+.state-panel h2,
+.state-panel p {
+  margin: 0;
+}
+
+.state-panel h1,
+.state-panel h2 {
+  color: var(--tm-forest);
+  font-size: 1.12rem;
+}
+
+.state-panel p {
+  max-width: 500px;
+  line-height: 1.55;
+}
+
+.error-panel {
+  border-style: solid;
+  border-color: #efd2ca;
+  background: #fff8f6;
+}
+
+.error-panel > mat-icon {
+  color: #a34f45;
+}
+
+.retry-button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid #d5ddd3;
+  border-radius: 10px;
+  color: var(--tm-forest);
+  background: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+}
+
+.back-link:focus-visible,
+.return-link:focus-visible,
+.retry-button:focus-visible {
+  outline: 3px solid #9a6528;
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .tour-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .tour-card-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .tour-title {
+    flex-basis: calc(100% - 60px);
+  }
+
+  .assignment-badge {
+    margin-left: 58px;
+  }
+
+  .schedule-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .schedule-item > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .schedule-item .status-chip {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .schedule-item > div:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 360px) {
+  .tour-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

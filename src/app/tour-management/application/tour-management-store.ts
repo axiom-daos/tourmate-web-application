@@ -70,6 +70,12 @@ export class TourManagementStore {
     return computed(() => id ? this.tourSchedules().find(ts => ts.id == id) : undefined)
   }
 
+  getToursLength = computed(() => this.tours().length)
+
+  getToursOpenedCount = computed(() => this.tours().filter(t => t.status === 'OPENED').length)
+
+  getTotalSpots = computed(() => this.tourSchedules().reduce((sum, ts) => sum + ts.maxCapacity, 0))
+
   addTour = (tour: Tour): void => {
     this.#loadingSignal.set(true)
     this.#errorSignal.set(null)
@@ -165,6 +171,8 @@ export class TourManagementStore {
       }
     })
   }
+
+
 
 
   #formatError = (error: unknown, fallback: string): string => {

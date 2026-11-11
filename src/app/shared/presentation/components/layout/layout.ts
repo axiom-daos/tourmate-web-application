@@ -49,6 +49,7 @@ export class Layout {
     },
     { link: '/subscriptions', label: 'option.subscriptions', icon: 'credit_card' },
     { link: '/feedback-and-tour-reviews', label: 'option.feedback_and_reviews', icon: 'mode_comment' },
+    { link: '/profiles', label: 'option.my_profile', icon: 'manage_accounts' },
     { link: '/about', label: 'option.about', icon: 'info' }
   ]);
 

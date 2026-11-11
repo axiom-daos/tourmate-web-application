@@ -11,21 +11,24 @@ export class IncidentAssembler implements BaseAssembler<
   IncidentResource,
   IncidentsResponse
 > {
-  toEntitiesFromResponse = (response: IncidentsResponse): Incident[] => {
-    return response.incidents.map((resource) => this.toEntityFromResource(resource));
+  toEntitiesFromResponse = (response: IncidentsResponse | IncidentResource[]): Incident[] => {
+    const resources = Array.isArray(response) ? response : (response.incidents ?? []);
+    return resources.map((resource) => this.toEntityFromResource(resource));
   };
 
   toEntityFromResource = (resource: IncidentResource): Incident =>
     new Incident({
-      id: resource.id,
-      uuid: resource.uuid,
-      activeTourId: resource.activeTourId,
-      reportedByUserId: resource.reportedByUserId,
+      id: Number(resource.id),
+      uuid: resource.uuid ?? '',
+      activeTourId: Number(resource.activeTourId),
+      reportedByUserId: Number(resource.reportedByUserId),
       description: resource.description,
-      latitude: resource.latitude,
-      longitude: resource.longitude,
+      latitude: Number(resource.latitude),
+      longitude: Number(resource.longitude),
       reportedAt: resource.reportedAt,
       status: resource.status as IncidentStatus,
+      severity: (resource as any).severity ?? 'MEDIUM',
+      isSynced: true,
     });
 
   toResourceFromEntity = (entity: Incident): IncidentResource =>
@@ -39,5 +42,6 @@ export class IncidentAssembler implements BaseAssembler<
       longitude: entity.longitude,
       reportedAt: entity.reportedAt,
       status: entity.status.toString(),
+      severity: entity.severity,
     }) as IncidentResource;
 }

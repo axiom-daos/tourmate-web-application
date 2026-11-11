@@ -196,12 +196,14 @@ export class TourMonitoringStore {
   });
 
   readonly participantCards = computed(() => {
-    const usersById = new Map(this.users().map(user => [user.id, user]));
-    return this.participantsForTour().map(participant => ({
-      participant,
-      user: usersById.get(participant.userId) ?? null,
-      displayName: this.displayName(usersById.get(participant.userId), participant.userId),
-    }));
+    return this.participantsForTour().map(participant => {
+      const user = this.users().find(candidate => this.idsMatch(candidate.id, participant.userId));
+      return {
+        participant,
+        user: user ?? null,
+        displayName: this.displayName(user, participant.userId),
+      };
+    });
   });
 
   readonly currentGuide = computed(() => {

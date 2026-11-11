@@ -1,9 +1,22 @@
+
+/* ==========================================
+   FEEDBACK AND TOUR REVIEWS
+   Estilos del formulario de reseñas
+   ========================================== */
+
+/* Estilos generales del componente */
 :host {
   display: block;
-  min-height: calc(100vh - 64px);
-  background: linear-gradient(180deg, #f3efe9 0%, #f0ece5 100%);
-  font-family: "Geist", "Segoe UI", sans-serif;
-  color: #1d2f2a;
+  min-height: calc(100vh - 140px);
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(201, 162, 90, 0.10),
+      transparent 25%
+    ),
+    linear-gradient(180deg, #f8f5f1 0%, #f4efe8 100%);
+  color: #1a2d29;
+  font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
 }
 
 *,
@@ -12,175 +25,421 @@
   box-sizing: border-box;
 }
 
+/* ==========================================
+   CONTENEDOR PRINCIPAL
+   ========================================== */
+
 .review-shell {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 48px 24px 32px;
+  width: calc(100% - 28px);
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 0 48px;
 }
 
-.review-card {
-  width: min(980px, 100%);
-  background: rgba(255, 255, 255, 0.28);
-  border: 1px solid rgba(29, 47, 42, 0.12);
-  border-radius: 20px;
-  box-shadow: 0 12px 30px rgba(20, 28, 26, 0.06);
-  backdrop-filter: blur(8px);
-  padding: 24px 26px 20px;
-}
+/* ==========================================
+   ENCABEZADO DEL FORMULARIO
+   ========================================== */
 
-.card-header {
+.form-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 24px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid rgba(29, 47, 42, 0.12);
+  gap: 18px;
+  margin-bottom: 22px;
 }
 
-.title-block {
+.header-copy {
   flex: 1;
-
-  h2 {
-    margin: 0;
-    font-size: clamp(2rem, 2vw + 0.8rem, 3rem);
-    line-height: 1.08;
-    letter-spacing: -0.06em;
-    color: #1b2d2a;
-    font-weight: 800;
-  }
+  min-width: 0;
 }
+
+.header-copy h1 {
+  margin: 0 0 10px;
+  color: #1c312e;
+  font-size: clamp(2rem, 2.8vw, 2.7rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1.15;
+}
+
+.header-copy p {
+  margin: 0;
+  color: #5e726b;
+  font-size: 0.96rem;
+  line-height: 1.65;
+}
+
+/* ==========================================
+   PANEL DEL FORMULARIO
+   ========================================== */
+
+.review-panel {
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(128, 145, 138, 0.16);
+  border-radius: 28px;
+  box-shadow: 0 16px 36px rgba(24, 38, 32, 0.07);
+}
+
+/* Sección informativa superior */
+.panel-highlight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  background: linear-gradient(
+    135deg,
+    #f7f2e9 0%,
+    #f9f6f3 100%
+  );
+  border-bottom: 1px solid rgba(129, 144, 137, 0.14);
+}
+
+.panel-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  place-items: center;
+  color: #2f5a4d;
+  background: #edf5ee;
+  border: 1px solid rgba(101, 140, 106, 0.15);
+  border-radius: 14px;
+}
+
+.panel-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.panel-copy strong {
+  color: #1f342f;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.panel-copy span {
+  color: #667b73;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+/* ==========================================
+   FORMULARIO Y CAMPOS
+   ========================================== */
 
 .review-form {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  padding-top: 18px;
+  padding: 26px 24px 24px;
 }
 
-.form-row {
-  display: flex;
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+  width: 100%;
+}
 
-  &.two-columns > * {
-    flex: 1;
-  }
+.form-grid.single {
+  grid-template-columns: 1fr;
 }
 
 .full-width {
   width: 100%;
+  min-width: 0;
 }
 
-/* Angular Material Overrides personalizados */
-:host ::ng-deep {
-  .mat-mdc-form-field {
-    width: 100%;
-  }
-
-  .mat-mdc-text-field-wrapper {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 14px;
-    box-shadow: inset 0 0 0 1px rgba(29, 47, 42, 0.14);
-    transition: box-shadow 0.2s ease;
-
-    &:hover {
-      box-shadow: inset 0 0 0 1px rgba(29, 47, 42, 0.28);
-    }
-  }
-
-  .mdc-notched-outline__leading,
-  .mdc-notched-outline__notch,
-  .mdc-notched-outline__trailing {
-    border-color: rgba(29, 47, 42, 0.2) !important;
-  }
-
-  .mat-mdc-form-field-label {
-    color: #5b6e67;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-
-  .mat-mdc-input-element,
-  .mat-mdc-select-value {
-    color: #1d2d2a;
-    font-size: 1rem;
-  }
+/* Personalizamos los campos de Angular Material */
+:host ::ng-deep .mat-mdc-form-field {
+  width: 100%;
 }
 
-.field-label {
-  margin-top: 4px;
-  font-size: 0.68rem;
+:host ::ng-deep .mat-mdc-text-field-wrapper {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-radius: 16px !important;
+}
+
+:host ::ng-deep .mdc-notched-outline__leading,
+:host ::ng-deep .mdc-notched-outline__notch,
+:host ::ng-deep .mdc-notched-outline__trailing {
+  border-color: rgba(126, 147, 139, 0.42);
+  transition: border-color 0.2s ease;
+}
+
+/* Color del borde cuando se pasa el cursor */
+:host ::ng-deep .mat-mdc-form-field:hover
+.mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field:hover
+.mdc-notched-outline__notch,
+:host ::ng-deep .mat-mdc-form-field:hover
+.mdc-notched-outline__trailing {
+  border-color: #376d5b;
+}
+
+/* Color del borde cuando hay un error */
+:host ::ng-deep .mat-mdc-form-field.mat-form-field-invalid
+.mdc-notched-outline__leading,
+:host ::ng-deep .mat-mdc-form-field.mat-form-field-invalid
+.mdc-notched-outline__notch,
+:host ::ng-deep .mat-mdc-form-field.mat-form-field-invalid
+.mdc-notched-outline__trailing {
+  border-color: #c84d47;
+}
+
+:host ::ng-deep .mat-mdc-input-element,
+:host ::ng-deep .mat-mdc-select-value {
+  color: #1f352f;
+  font-size: 0.96rem;
+}
+
+:host ::ng-deep .mat-mdc-floating-label {
+  color: #48655e;
+  font-size: 0.9rem;
+}
+
+/* Mejoramos la visibilidad de los mensajes de error */
+:host ::ng-deep .mat-mdc-form-field-error {
+  color: #b42318;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+/* ==========================================
+   CAMPO DE COMENTARIOS
+   ========================================== */
+
+.comment-field textarea {
+  min-height: 128px;
+  max-height: 350px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   CUADROS INFORMATIVOS
+   ========================================== */
+
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 15px 17px;
+  background: linear-gradient(
+    135deg,
+    #edf6ef 0%,
+    #f4faf4 100%
+  );
+  border: 1px solid rgba(125, 166, 133, 0.20);
+  border-radius: 16px;
+}
+
+.info-box mat-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #36715d;
+  font-size: 24px;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.info-content strong {
+  color: #23463d;
+  font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: #5b6e67;
 }
 
-.textarea-field {
-  margin-top: -6px;
+.info-content span {
+  color: #56776b;
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
+
+/* ==========================================
+   MENSAJES DE ERROR
+   ========================================== */
+
+.form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  color: #9d453a;
+  background: #fff3f1;
+  border: 1px solid rgba(198, 120, 100, 0.3);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.form-error mat-icon {
+  flex-shrink: 0;
+  color: #bc4c40;
+}
+
+/* ==========================================
+   BOTONES DEL FORMULARIO
+   ========================================== */
 
 .footer-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  justify-content: flex-end;
+  gap: 12px;
   padding-top: 18px;
-  border-top: 1px solid rgba(29, 47, 42, 0.12);
+  border-top: 1px solid #edf0ea;
 }
 
+/* Botón para cancelar */
 .secondary-btn {
-  background: transparent !important;
-  border: 1px solid rgba(29, 47, 42, 0.32) !important;
-  color: #203f3a !important;
-  border-radius: 12px !important;
-  min-height: 42px !important;
+  min-height: 44px !important;
   padding: 0 18px !important;
+  color: #1d342f !important;
+  background: #fff !important;
+  border: 1px solid rgba(128, 146, 139, 0.45) !important;
+  border-radius: 12px !important;
   font-weight: 700 !important;
-  transition: background-color 0.2s ease !important;
-
-  &:hover {
-    background: rgba(29, 47, 42, 0.04) !important;
-  }
 }
 
+.secondary-btn:hover:not(:disabled) {
+  background: #f3f7f3 !important;
+  border-color: #376d5b !important;
+}
+
+/* Botón para guardar o actualizar */
 .submit-btn {
-  background: linear-gradient(135deg, #bf785d 0%, #a95d3d 100%) !important;
-  color: #fffdfc !important;
-  border-radius: 12px !important;
-  min-height: 42px !important;
+  min-height: 46px !important;
   padding: 0 22px !important;
+  color: #fff !important;
+  background: linear-gradient(
+    135deg,
+    #234c43 0%,
+    #17352f 100%
+  ) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 12px 24px rgba(33, 76, 67, 0.18) !important;
   font-weight: 800 !important;
-  box-shadow: 0 12px 18px rgba(169, 93, 61, 0.18);
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease !important;
+}
 
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 14px 22px rgba(169, 93, 61, 0.24);
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 28px rgba(33, 76, 67, 0.24) !important;
+}
+
+/* Evitamos efectos visuales al deshabilitar botones */
+.submit-btn:disabled,
+.secondary-btn:disabled {
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.65;
+}
+
+/* Resaltamos los botones al navegar con teclado */
+.submit-btn:focus-visible,
+.secondary-btn:focus-visible {
+  outline: 3px solid #8cb9a6;
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   DISEÑO RESPONSIVE
+   ========================================== */
+
+/* Pantallas medianas */
+@media (max-width: 768px) {
+  .review-shell {
+    padding-top: 20px;
+  }
+
+  .review-form {
+    padding: 22px 18px;
+  }
+
+  .form-grid {
+    gap: 14px;
   }
 }
 
-.back-btn {
-  margin-bottom: 12px;
-  border-radius: 12px !important;
-  border-color: rgba(29, 47, 42, 0.24) !important;
-  color: #203f3a !important;
-  font-weight: 700 !important;
-  min-height: 40px !important;
-  padding: 0 16px !important;
-}
+/* Celulares */
+@media (max-width: 640px) {
+  .review-shell {
+    width: calc(100% - 20px);
+    padding: 16px 0 32px;
+  }
 
-.back-btn:hover {
-  background: rgba(29, 47, 42, 0.04);
-}
-
-@media (max-width: 900px) {
-  .card-header,
-  .form-row,
-  .footer-actions {
+  .form-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
+  }
+
+  .header-copy h1 {
+    font-size: 1.85rem;
+  }
+
+  .review-panel {
+    border-radius: 20px;
+  }
+
+  .panel-highlight {
+    padding: 16px;
+  }
+
+  .panel-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .review-form {
+    gap: 14px;
+    padding: 18px 14px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .footer-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .secondary-btn,
+  .submit-btn {
+    width: 100%;
+  }
+}
+
+/* Respetamos las preferencias de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .submit-btn,
+  .secondary-btn {
+    transition: none !important;
+  }
+
+  .submit-btn:hover {
+    transform: none;
   }
 }

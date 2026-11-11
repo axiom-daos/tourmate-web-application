@@ -9,16 +9,15 @@ import {ActiveToursApiEndpoint} from './active-tours-api-endpoint';
 describe('ActiveToursApiEndpoint CRUD', () => {
   let endpoint: ActiveToursApiEndpoint;
   let httpTesting: HttpTestingController;
-  const url = `${environment.activeToursApiBaseUrl}${environment.tourmateProviderActiveToursEndpointPath}`;
+  const url = `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderActiveToursEndpointPath}`;
   const resource = {
     id: 21,
     tourScheduleId: 4,
-    guideId: 3,
-    status: 'IN_PROGRESS',
+    tourGuideId: 3,
     currentLatitude: -13.16,
     currentLongitude: -72.52,
     startedAt: '2026-10-06T08:00:00.000Z',
-    finishedAt: '',
+    finishedAt: null,
   };
 
   beforeEach(() => {
@@ -39,27 +38,64 @@ describe('ActiveToursApiEndpoint CRUD', () => {
     expect(result).toHaveLength(1);
     expect(result[0].tourScheduleId).toBe(4);
     expect(result[0].guideId).toBe(3);
+    expect(result[0].status).toBe('IN_PROGRESS');
+  });
+
+  it('accepts the legacy guideId field returned by other active-tour APIs', () => {
+    let result: ActiveTour[] = [];
+    endpoint.getAll().subscribe(tours => result = tours);
+    httpTesting.expectOne(url).flush([{...resource, tourGuideId: undefined, guideId: '3'}]);
+
+    expect(result[0].guideId).toBe(3);
+  });
+
+  it('derives a finished status when the local API omits status', () => {
+    let result: ActiveTour[] = [];
+    endpoint.getAll().subscribe(tours => result = tours);
+    httpTesting.expectOne(url).flush([{...resource, finishedAt: '2026-10-06T12:00:00.000Z'}]);
+
+    expect(result[0].status).toBe('FINISHED');
   });
 
   it('creates without sending the temporary ID and returns the generated entity', () => {
-    const activeTour = new ActiveTour({...resource, id: 0});
+    const activeTour = new ActiveTour({
+      id: 0,
+      tourScheduleId: 4,
+      guideId: 3,
+      status: 'IN_PROGRESS',
+      currentLatitude: resource.currentLatitude,
+      currentLongitude: resource.currentLongitude,
+      startedAt: resource.startedAt,
+      finishedAt: resource.finishedAt,
+    });
     let created: ActiveTour | undefined;
     endpoint.create(activeTour).subscribe(value => created = value);
     const request = httpTesting.expectOne(url);
 
     expect(request.request.method).toBe('POST');
     expect(request.request.body).not.toHaveProperty('id');
+    expect(request.request.body.tourGuideId).toBe(3);
     request.flush(resource);
     expect(created?.id).toBe(21);
   });
 
   it('updates the requested active tour', () => {
-    const activeTour = new ActiveTour(resource);
+    const activeTour = new ActiveTour({
+      id: resource.id,
+      tourScheduleId: resource.tourScheduleId,
+      guideId: resource.tourGuideId,
+      status: 'IN_PROGRESS',
+      currentLatitude: resource.currentLatitude,
+      currentLongitude: resource.currentLongitude,
+      startedAt: resource.startedAt,
+      finishedAt: resource.finishedAt,
+    });
     endpoint.update(activeTour, activeTour.id).subscribe();
     const request = httpTesting.expectOne(`${url}/21`);
 
     expect(request.request.method).toBe('PUT');
     expect(request.request.body.tourScheduleId).toBe(4);
+    expect(request.request.body.tourGuideId).toBe(3);
     request.flush(resource);
   });
 

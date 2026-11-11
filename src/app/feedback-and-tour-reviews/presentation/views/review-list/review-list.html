@@ -1,94 +1,208 @@
-<div class="review-container">
-  <header class="review-header">
-    <div class="header-copy">
-      <span class="eyebrow">{{ 'shell.platform' | translate }}</span>
+
+<div class="review-page">
+
+  <header class="review-hero">
+    <div class="hero-copy">
       <h1>{{ 'reviews.list_title' | translate }}</h1>
       <p>{{ 'reviews.list_subtitle' | translate }}</p>
     </div>
-    <a mat-flat-button class="submit-btn" routerLink="new">
+
+    <button
+      mat-flat-button
+      type="button"
+      class="primary-cta"
+      [disabled]="loading()"
+      (click)="addReview()">
+
       <mat-icon aria-hidden="true">rate_review</mat-icon>
       <span>{{ 'reviews.add_new' | translate }}</span>
-    </a>
+    </button>
   </header>
 
-  @if (reviewStore.loading()) {
+  @if (loading() && reviews().length === 0) {
     <div class="feedback-message" role="status">
-      <mat-spinner diameter="24"></mat-spinner>
+      <mat-spinner
+        diameter="26"
+        [attr.aria-label]="'common.loading' | translate">
+      </mat-spinner>
+
       <span>{{ 'common.loading' | translate }}</span>
     </div>
+  } @else if (error() && reviews().length === 0) {
+    <section class="empty-state error-state" role="alert">
+
+      <span class="empty-icon" aria-hidden="true">
+        <mat-icon>error_outline</mat-icon>
+      </span>
+
+      <h2>{{ 'reviews.load_error_title' | translate }}</h2>
+      <p>{{ 'reviews.review_load_error' | translate }}</p>
+
+      <button
+        mat-stroked-button
+        type="button"
+        class="retry-btn"
+        (click)="reviewStore.loadData()">
+
+        <mat-icon aria-hidden="true">refresh</mat-icon>
+        {{ 'reviews.retry' | translate }}
+      </button>
+
+    </section>
   } @else if (reviews().length === 0) {
     <section class="empty-state" aria-live="polite">
-      <span class="empty-icon" aria-hidden="true"><mat-icon>rate_review</mat-icon></span>
+
+      <span class="empty-icon" aria-hidden="true">
+        <mat-icon>rate_review</mat-icon>
+      </span>
+
       <h2>{{ 'reviews.empty_title' | translate }}</h2>
       <p>{{ 'reviews.empty_description' | translate }}</p>
-      <a mat-stroked-button routerLink="new">{{ 'reviews.add_new' | translate }}</a>
+
+      <button
+        mat-stroked-button
+        type="button"
+        class="empty-btn"
+        (click)="addReview()">
+
+        {{ 'reviews.add_new' | translate }}
+      </button>
+
     </section>
   } @else {
-    <section class="review-feed" [attr.aria-label]="'reviews.list_title' | translate">
-      <p class="review-count" aria-live="polite">
-        {{ 'reviews.review_count' | translate: { count: reviews().length } }}
-      </p>
+
+    @if (error()) {
+      <div class="feedback-message" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+
+        <span>{{ 'reviews.review_load_error' | translate }}</span>
+
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="loading()"
+          (click)="reviewStore.loadData()">
+
+          <mat-icon aria-hidden="true">refresh</mat-icon>
+          {{ 'reviews.retry' | translate }}
+        </button>
+      </div>
+    }
+
+    <section
+      class="review-feed"
+      [attr.aria-label]="'reviews.list_title' | translate">
+
+      <div class="feed-header">
+        <span class="feed-title">
+          {{ 'reviews.review_count' | translate: { count: reviews().length } }}
+        </span>
+      </div>
 
       <div class="review-grid">
-        @for (review of reviews(); track review.id) {
+
+        @for (review of orderedReviews(); track review.id) {
           <article class="review-card">
-            <div class="review-card-top">
-              <span class="review-avatar" aria-hidden="true">
-                <mat-icon>rate_review</mat-icon>
-              </span>
+
+            <div class="tour-image-wrap">
+              <img
+                class="tour-image"
+                [src]="tourImage(review.tourId)"
+                [alt]="tourName(review.tourId)"
+                loading="lazy" />
+            </div>
+
+            <div class="review-card-header">
+
+              <div class="review-avatar" aria-hidden="true">
+                <mat-icon>person</mat-icon>
+              </div>
+
               <div class="review-author">
                 <h2>{{ reviewerName(review.userId) }}</h2>
-                <p>{{ 'reviews.date' | translate }} · {{ review.createdAt | date:'mediumDate' }}</p>
+                <p>{{ review.createdAt | date:'mediumDate' }}</p>
               </div>
-              <span class="review-id">#{{ review.id }}</span>
+
+              <span class="review-id">
+                #{{ review.id }}
+              </span>
+
+            </div>
+
+            <div class="tour-name-row">
+              <span class="tour-pill">
+                {{ tourName(review.tourId) }}
+              </span>
             </div>
 
             <div
               class="star-rating"
               role="img"
               [attr.aria-label]="'reviews.rating_aria' | translate: { rating: review.rating }"
-            >
+              [attr.title]="review.rating === 0 ? ('reviews.rating_zero' | translate) : null">
+
               @for (filled of ratingStars(review.rating); track $index) {
-                <mat-icon aria-hidden="true">{{ filled ? 'star' : 'star_border' }}</mat-icon>
+                <mat-icon aria-hidden="true">
+                  {{ filled ? 'star' : 'star_border' }}
+                </mat-icon>
               }
-              <span class="rating-value">{{ review.rating }}<span class="rating-scale"> / 5</span></span>
+
+              <span class="rating-value">
+                {{ review.rating }}
+                <span class="rating-scale">/5</span>
+              </span>
+
             </div>
 
             <blockquote>
-              <mat-icon class="quote-icon" aria-hidden="true">format_quote</mat-icon>
-              <p>{{ review.comment || ('reviews.no_comment' | translate) }}</p>
+              <p>
+                {{ review.comment || ('reviews.no_comment' | translate) }}
+              </p>
             </blockquote>
 
             <footer class="review-card-footer">
-              <span class="tour-reference">
-                <mat-icon aria-hidden="true">landscape</mat-icon>
-                {{ tourName(review.tourId) }}
-              </span>
               <div class="review-actions">
+
                 <button
                   mat-stroked-button
                   type="button"
                   class="edit-btn"
+                  [disabled]="loading()"
                   [attr.aria-label]="'reviews.edit' | translate"
-                  (click)="editReview(review.id)"
-                >
+                  (click)="editReview(review.id)">
+
                   <mat-icon aria-hidden="true">edit</mat-icon>
                   {{ 'reviews.edit' | translate }}
                 </button>
+
                 <button
                   mat-icon-button
                   type="button"
                   class="delete-btn"
+                  [disabled]="loading() || deletingId() !== null"
                   [attr.aria-label]="'reviews.delete' | translate"
-                  (click)="deleteReview(review.id)"
-                >
-                  <mat-icon aria-hidden="true">delete_outline</mat-icon>
+                  (click)="deleteReview(review.id)">
+
+                  @if (deletingId() === review.id) {
+                    <mat-icon aria-hidden="true">
+                      hourglass_top
+                    </mat-icon>
+                  } @else {
+                    <mat-icon aria-hidden="true">
+                      delete_outline
+                    </mat-icon>
+                  }
+
                 </button>
+
               </div>
             </footer>
+
           </article>
         }
+
       </div>
     </section>
   }
+
 </div>

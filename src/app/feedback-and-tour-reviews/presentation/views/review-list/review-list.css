@@ -1,156 +1,239 @@
+
+/* ==========================================
+   FEEDBACK AND TOUR REVIEWS
+   Estilos de la lista de reseñas
+   ========================================== */
+
+/* Estilos generales */
 :host {
   display: block;
-  color: var(--tm-forest, #29483e);
+  min-height: calc(100vh - 64px);
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(198, 167, 102, 0.12),
+      transparent 28%
+    ),
+    linear-gradient(180deg, #f8f5f1 0%, #f3efe9 100%);
+  color: #1b2d28;
+  font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
 }
 
-.review-container {
-  width: min(100%, 1280px);
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   CONTENEDOR PRINCIPAL
+   ========================================== */
+
+.review-page {
+  max-width: 1280px;
   margin: 0 auto;
+  padding: 32px 20px 52px;
 }
 
-.review-header {
+/* ==========================================
+   ENCABEZADO
+   ========================================== */
+
+.review-hero {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 26px;
-  padding: clamp(22px, 4vw, 38px);
-  border: 1px solid var(--tm-border, #dce3d9);
-  border-radius: 20px;
-  background:
-    radial-gradient(ellipse at 100% 0%, rgb(226 235 221 / 75%), transparent 42%),
-    var(--tm-surface, #fffefb);
-  box-shadow: 0 12px 30px rgb(36 58 43 / 5%);
+  gap: 16px;
+  padding: 26px 28px;
+  margin-bottom: 22px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(123, 138, 130, 0.18);
+  border-radius: 28px;
+  box-shadow: 0 18px 32px rgba(27, 45, 40, 0.06);
 }
 
-.header-copy {
+.hero-copy {
+  flex: 1;
   min-width: 0;
 }
 
-.eyebrow {
-  color: var(--tm-muted, #77847b);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-
-.review-header h1 {
-  margin: 8px 0 6px;
-  color: #20392d;
-  font-size: clamp(1.65rem, 3.7vw, 2.6rem);
-  font-weight: 740;
-  letter-spacing: -0.045em;
-  line-height: 1.15;
-}
-
-.review-header p {
+.hero-copy h1 {
   margin: 0;
-  color: var(--tm-muted, #77847b);
-  font-size: 0.94rem;
-  line-height: 1.55;
+  color: #1d312e;
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
 }
 
-.submit-btn {
-  display: inline-flex;
-  min-height: 46px;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 8px;
-  padding: 0 18px !important;
-  border-radius: 11px !important;
-  color: white !important;
-  background: var(--tm-forest, #29483e) !important;
-  font-weight: 650;
-  text-decoration: none;
-  box-shadow: 0 6px 16px rgb(41 72 62 / 16%);
-  transition: transform 160ms ease, box-shadow 160ms ease;
+.hero-copy p {
+  margin: 10px 0 0;
+  color: #5d706b;
+  font-size: 0.98rem;
+  line-height: 1.6;
 }
 
-.submit-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 9px 20px rgb(41 72 62 / 22%);
+/* Botón para registrar una reseña */
+.primary-cta {
+  min-height: 52px !important;
+  padding: 0 20px !important;
+  color: #fff !important;
+  background: linear-gradient(
+    135deg,
+    #214d43 0%,
+    #18362f 100%
+  ) !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 0 18px 26px rgba(33, 77, 67, 0.2) !important;
+  font-weight: 800 !important;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease !important;
 }
+
+.primary-cta:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 30px rgba(33, 77, 67, 0.25) !important;
+}
+
+.primary-cta mat-icon {
+  margin-right: 8px;
+}
+
+/* ==========================================
+   MENSAJES DE CARGA Y ERROR
+   ========================================== */
 
 .feedback-message {
   display: flex;
-  min-height: 180px;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  min-height: 110px;
+  padding: 24px;
+  margin-bottom: 18px;
+  color: #536d64;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(123, 138, 130, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 10px 18px rgba(25, 34, 31, 0.04);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.feedback-message span {
+  overflow-wrap: anywhere;
+}
+
+.feedback-message mat-icon {
+  color: #b36552;
+}
+
+.feedback-message button {
+  min-height: 38px;
+  border-radius: 10px;
+}
+
+/* ==========================================
+   LISTADO DE RESEÑAS
+   ========================================== */
+
+.review-feed {
+  width: 100%;
+}
+
+.feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  color: var(--tm-muted, #77847b);
+  margin-bottom: 18px;
 }
 
-.review-count {
-  margin: 0 0 14px 2px;
-  color: var(--tm-muted, #77847b);
-  font-size: 0.85rem;
-  font-weight: 600;
+.feed-title {
+  color: #5f6f67;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
+/* Cuadrícula de tarjetas */
 .review-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
-  align-items: stretch;
-  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
 }
+
+/* ==========================================
+   TARJETAS DE RESEÑAS
+   ========================================== */
 
 .review-card {
-  position: relative;
   display: flex;
-  min-width: 0;
   flex-direction: column;
+  min-width: 0;
   overflow: hidden;
-  padding: 22px;
-  border: 1px solid var(--tm-border, #dce3d9);
-  border-radius: 16px;
-  background: var(--tm-surface, #fffefb);
-  box-shadow: 0 5px 18px rgb(36 58 43 / 4%);
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
-}
-
-.review-card::before {
-  position: absolute;
-  top: 0;
-  right: 20px;
-  left: 20px;
-  height: 3px;
-  border-radius: 0 0 3px 3px;
-  background: linear-gradient(90deg, #b6955e, #e4d3ae);
-  content: "";
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(124, 141, 133, 0.16);
+  border-radius: 24px;
+  box-shadow: 0 16px 32px rgba(29, 45, 40, 0.06);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .review-card:hover {
-  transform: translateY(-2px);
-  border-color: #cbd8cb;
-  box-shadow: 0 12px 26px rgb(36 58 43 / 9%);
+  transform: translateY(-4px);
+  border-color: rgba(95, 124, 112, 0.3);
+  box-shadow: 0 20px 40px rgba(29, 45, 40, 0.10);
 }
 
-.review-card-top {
+/* Imagen del tour */
+.tour-image-wrap {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: #e9f0eb;
+}
+
+.tour-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.review-card:hover .tour-image {
+  transform: scale(1.03);
+}
+
+/* ==========================================
+   INFORMACIÓN DEL USUARIO
+   ========================================== */
+
+.review-card-header {
   display: flex;
-  min-width: 0;
   align-items: center;
   gap: 12px;
+  padding: 16px 18px 0;
 }
 
 .review-avatar {
   display: grid;
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
   place-items: center;
-  border: 1px solid #d8e2d5;
-  border-radius: 50%;
-  color: var(--tm-forest, #29483e);
-  background: linear-gradient(145deg, #eef2e9, #dfe9dd);
-  font-size: 1rem;
-  font-weight: 750;
-}
-
-.review-avatar mat-icon {
-  width: 23px;
-  height: 23px;
-  font-size: 23px;
+  color: #315b4d;
+  background: #ebf2eb;
+  border: 1px solid rgba(102, 142, 112, 0.15);
+  border-radius: 12px;
 }
 
 .review-author {
@@ -159,38 +242,66 @@
 }
 
 .review-author h2 {
+  margin: 0 0 4px;
+  color: #1d312e;
+  font-size: 1rem;
+  font-weight: 800;
   overflow: hidden;
-  margin: 0 0 3px;
-  color: #2b4033;
-  font-size: 0.91rem;
-  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .review-author p {
   margin: 0;
-  color: var(--tm-muted, #77847b);
-  font-size: 0.75rem;
+  color: #6d7e79;
+  font-size: 0.74rem;
+  line-height: 1.5;
 }
 
 .review-id {
   align-self: flex-start;
-  padding: 4px 7px;
-  border-radius: 6px;
-  color: #7e897f;
-  background: #f1f3ee;
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  flex-shrink: 0;
+  padding: 5px 8px;
+  color: #61776f;
+  background: #f3f6f3;
+  border-radius: 10px;
   font-size: 0.68rem;
-  font-weight: 650;
+  font-weight: 800;
 }
+
+/* ==========================================
+   INFORMACIÓN DEL TOUR
+   ========================================== */
+
+.tour-name-row {
+  padding: 12px 18px 0;
+}
+
+.tour-pill {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 8px 11px;
+  color: #214d43;
+  background: rgba(33, 77, 67, 0.09);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   CALIFICACIÓN CON ESTRELLAS
+   ========================================== */
 
 .star-rating {
   display: flex;
   align-items: center;
-  gap: 2px;
-  margin: 18px 0 12px;
-  color: #b58a3a;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: 14px 18px 10px;
+  color: #c7953d;
 }
 
 .star-rating mat-icon {
@@ -200,180 +311,282 @@
 }
 
 .rating-value {
-  margin-left: 5px;
-  color: #31483a;
-  font-size: 0.84rem;
-  font-weight: 750;
+  margin-left: 8px;
+  color: #1f352f;
+  font-size: 0.85rem;
+  font-weight: 900;
 }
 
 .rating-scale {
-  color: #8a948b;
-  font-weight: 500;
+  color: #7a8883;
+  font-weight: 700;
 }
 
+/* ==========================================
+   COMENTARIOS DE LOS VIAJEROS
+   ========================================== */
+
 blockquote {
-  position: relative;
-  flex: 1;
-  margin: 0;
-  padding: 14px 14px 14px 16px;
-  border-left: 2px solid #d7c39a;
-  border-radius: 0 10px 10px 0;
-  background: #faf9f4;
+  margin: 0 18px;
+  padding: 14px 16px;
+  background: linear-gradient(
+    180deg,
+    #faf7f1 0%,
+    #f7f0e5 100%
+  );
+  border-left: 3px solid #d7b16d;
+  border-radius: 0 14px 14px 0;
+  overflow: hidden;
 }
 
 blockquote p {
   margin: 0;
-  color: #536157;
-  font-size: 0.9rem;
+  color: #4f5f59;
+  font-size: 0.92rem;
   line-height: 1.7;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
-.quote-icon {
-  display: none;
-}
+/* ==========================================
+   BOTONES DE EDITAR Y ELIMINAR
+   ========================================== */
 
 .review-card-footer {
   display: flex;
-  min-width: 0;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 18px;
-  padding-top: 13px;
-  border-top: 1px solid #edf0e9;
-}
-
-.tour-reference {
-  display: inline-flex;
-  min-width: 0;
-  align-items: center;
-  gap: 6px;
-  color: #77847b;
-  font-size: 0.76rem;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-}
-
-.tour-reference mat-icon {
-  width: 17px;
-  height: 17px;
-  flex: 0 0 auto;
-  color: #5f7b66;
-  font-size: 17px;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: auto;
+  padding: 20px 18px 18px;
 }
 
 .review-actions {
   display: flex;
-  flex: 0 0 auto;
   align-items: center;
-  gap: 3px;
+  gap: 8px;
 }
 
+/* Botón para editar una reseña */
 .edit-btn {
-  min-height: 36px;
-  padding: 0 10px !important;
-  border-color: #dce3d9 !important;
-  border-radius: 9px !important;
-  color: #3f5c49 !important;
+  min-height: 38px !important;
+  padding: 0 12px !important;
+  color: #264d42 !important;
+  background: #fff !important;
+  border: 1px solid rgba(128, 147, 139, 0.4) !important;
+  border-radius: 10px !important;
   font-size: 0.78rem;
+  font-weight: 700 !important;
+}
+
+.edit-btn:hover:not(:disabled) {
+  background: #eef6f1 !important;
+  border-color: #376d5b !important;
 }
 
 .edit-btn mat-icon {
-  width: 17px;
-  height: 17px;
   margin-right: 4px;
-  font-size: 17px;
 }
 
+/* Botón para eliminar una reseña */
 .delete-btn {
-  color: #8c5a4b !important;
+  color: #bf6558 !important;
+  border-radius: 10px !important;
 }
 
-.delete-btn:hover {
-  background: #f8ede8 !important;
+.delete-btn:hover:not(:disabled) {
+  background: #f9efe9 !important;
 }
+
+/* Estados de botones deshabilitados */
+.primary-cta:disabled,
+.edit-btn:disabled,
+.delete-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none !important;
+}
+
+/* Accesibilidad al navegar con teclado */
+.primary-cta:focus-visible,
+.edit-btn:focus-visible,
+.delete-btn:focus-visible {
+  outline: 3px solid #8cb9a6;
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   ESTADO SIN RESEÑAS
+   ========================================== */
 
 .empty-state {
   display: flex;
   min-height: 300px;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 30px 20px;
-  border: 1px dashed #d4ded3;
-  border-radius: 18px;
-  background: linear-gradient(145deg, #fffefb, #f7f8f4);
+  align-items: center;
+  padding: 36px 20px;
   text-align: center;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px dashed rgba(127, 146, 138, 0.5);
+  border-radius: 24px;
 }
 
 .empty-icon {
   display: grid;
-  width: 60px;
-  height: 60px;
-  margin-bottom: 12px;
+  width: 70px;
+  height: 70px;
+  margin-bottom: 14px;
   place-items: center;
-  border-radius: 19px;
-  color: #53715b;
-  background: #eaf0e8;
-}
-
-.empty-icon mat-icon {
-  width: 28px;
-  height: 28px;
-  font-size: 28px;
+  color: #2f5c51;
+  background: #edf5ed;
+  border-radius: 22px;
+  box-shadow: 0 12px 22px rgba(62, 95, 80, 0.12);
 }
 
 .empty-state h2 {
-  margin: 0 0 5px;
-  color: #2b4033;
-  font-size: 1.15rem;
+  margin: 0 0 8px;
+  color: #1f342f;
+  font-size: 1.2rem;
+  font-weight: 800;
 }
 
 .empty-state p {
-  max-width: 400px;
-  margin: 0 0 16px;
-  color: var(--tm-muted, #77847b);
-  font-size: 0.88rem;
-  line-height: 1.55;
+  max-width: 420px;
+  margin: 0 0 18px;
+  color: #647a72;
+  line-height: 1.6;
 }
 
-@media (max-width: 620px) {
-  .review-header {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 20px;
-    border-radius: 16px;
+.empty-btn,
+.retry-btn {
+  min-height: 44px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+}
+
+/* Estado cuando ocurre un error */
+.error-state {
+  border-style: solid;
+  border-color: rgba(173, 91, 79, 0.25);
+  background: linear-gradient(
+    180deg,
+    #ffffff,
+    #fff8f6
+  );
+}
+
+.error-state .empty-icon {
+  color: #b6554c;
+  background: #fff0ed;
+}
+
+/* ==========================================
+   DISEÑO RESPONSIVE
+   ========================================== */
+
+/* Pantallas medianas: dos tarjetas por fila */
+@media (max-width: 1100px) {
+  .review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Tabletas y celulares: una tarjeta por fila */
+@media (max-width: 720px) {
+  .review-page {
+    padding: 22px 14px 42px;
   }
 
-  .submit-btn {
+  .review-hero {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 22px 18px;
+    border-radius: 20px;
+  }
+
+  .hero-copy h1 {
+    font-size: 2rem;
+  }
+
+  .primary-cta {
     width: 100%;
     justify-content: center;
-    box-sizing: border-box;
   }
 
   .review-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .review-card {
-    padding: 18px;
+    border-radius: 20px;
   }
 
-  .review-card-footer {
-    align-items: flex-start;
-    flex-wrap: wrap;
+  .tour-image-wrap {
+    height: 200px;
+  }
+
+  .feedback-message {
+    min-height: 100px;
   }
 }
 
+/* Celulares pequeños */
+@media (max-width: 420px) {
+  .review-page {
+    padding: 16px 10px 32px;
+  }
+
+  .review-hero {
+    padding: 18px 14px;
+  }
+
+  .hero-copy h1 {
+    font-size: 1.75rem;
+  }
+
+  .tour-image-wrap {
+    height: 170px;
+  }
+
+  .review-card-header {
+    gap: 9px;
+    padding: 14px 12px 0;
+  }
+
+  .tour-name-row {
+    padding: 12px 12px 0;
+  }
+
+  .star-rating {
+    margin: 14px 12px 10px;
+  }
+
+  blockquote {
+    margin: 0 12px;
+  }
+
+  .review-card-footer {
+    padding: 18px 12px 14px;
+  }
+
+  .feedback-message {
+    padding: 18px 12px;
+  }
+}
+
+/* Respetamos las preferencias de movimiento reducido */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+  .review-card,
+  .tour-image,
+  .primary-cta {
+    transition: none !important;
+  }
+
+  .review-card:hover,
+  .review-card:hover .tour-image,
+  .primary-cta:hover {
+    transform: none !important;
   }
 }

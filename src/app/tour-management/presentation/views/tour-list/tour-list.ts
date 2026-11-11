@@ -17,7 +17,6 @@ import {MatPaginator} from '@angular/material/paginator';
 import {TourManagementStore} from '../../../application/tour-management-store';
 import {Router} from '@angular/router';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
-import {MatGridList, MatGridTile} from '@angular/material/grid-list';
 import {TourItem} from '../../components/tour-item/tour-item';
 
 
@@ -46,6 +45,15 @@ export class TourList {
 
   protected readonly sort: Signal<MatSort | undefined> = viewChild(MatSort)
   protected readonly paginator: Signal<MatPaginator | undefined> = viewChild(MatPaginator)
+
+  protected readonly images = [
+    './assets/tours/plantilla_1.png',
+    './assets/tours/plantilla_2.png',
+    './assets/tours/plantilla_3.png',
+    './assets/tours/plantilla_4.png',
+    './assets/tours/plantilla_5.png',
+    './assets/tours/plantilla_6.png'
+  ]
 
   protected onViewChange(view: string): void {
     if (view === 'tour-schedules') {
@@ -80,6 +88,8 @@ export class TourList {
   protected deleteTour(id: number) {
     this.store.deleteTour(id)
   }
+
+
 
 
 

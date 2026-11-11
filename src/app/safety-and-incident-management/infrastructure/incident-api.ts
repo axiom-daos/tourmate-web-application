@@ -13,6 +13,8 @@ export class IncidentApi extends BaseApi {
   private readonly http = inject(HttpClient);
   private readonly incidentsEndpoint = new IncidentApiEndpoint(this.http);
 
+  getIncidents = (): Observable<Incident[]> => this.incidentsEndpoint.getAll();
+
   getCourses = (): Observable<Incident[]> => this.incidentsEndpoint.getAll();
 
   getIncident = (id: number): Observable<Incident> => this.incidentsEndpoint.getById(id);

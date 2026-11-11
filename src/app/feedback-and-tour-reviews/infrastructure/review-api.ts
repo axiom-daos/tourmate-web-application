@@ -1,30 +1,87 @@
 import { inject, Injectable } from '@angular/core';
-import { Review } from '../domain/model/aggregates/review.entity';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
-export class ReviewApi {
+import { BaseApi } from '../../shared/infrastructure/base-api';
+import { Review } from '../domain/model/aggregates/review.entity';
+import { ReviewApiEndpoint } from './review-api-endpoint';
+
+/**
+ * Infrastructure service responsible for
+ * communicating with the Reviews REST API.
+ *
+ * Bounded Context: Feedback and Tour Reviews.
+ */
+@Injectable({
+  providedIn: 'root',
+})
+export class ReviewApi extends BaseApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'https://6ac570fc54a61668c5f72d4d.mockapi.io/api/v1/reviews';
 
-  getReviews(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl);
+  private readonly reviewsEndpoint = new ReviewApiEndpoint(this.http);
+
+  /**
+   * Validates an identifier before making
+   * a request to the API.
+   */
+  private isValidId(id: number): boolean {
+    return Number.isSafeInteger(id) && id > 0;
   }
 
-  getReview(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${id}`);
+  /**
+   * Retrieves all reviews.
+   */
+  getReviews(): Observable<Review[]> {
+    return this.reviewsEndpoint.getAll();
   }
 
-  createReview(review: Review): Observable<any> {
-    return this.http.post<any>(this.baseUrl, review);
+  /**
+   * Retrieves all reviews for a specific tour.
+   */
+  getReviewsByTourId(tourId: number): Observable<Review[]> {
+    if (!this.isValidId(tourId)) {
+      return throwError(() => new Error('El identificador del tour es inválido.'));
+    }
+    return this.reviewsEndpoint.getByTourId(tourId);
   }
 
-  updateReview(review: Review): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/${review.id}`, review);
+  /**
+   * Retrieves a review by its identifier.
+   */
+  getReview(id: number): Observable<Review> {
+    if (!this.isValidId(id)) {
+      return throwError(() => new Error('El identificador de la reseña es inválido.'));
+    }
+
+    return this.reviewsEndpoint.getById(id);
   }
 
+  /**
+   * Creates a new review.
+   */
+  createReview(review: Review): Observable<Review> {
+    return this.reviewsEndpoint.create(review);
+  }
+
+  /**
+   * Updates an existing review.
+   */
+  updateReview(review: Review): Observable<Review> {
+    if (!this.isValidId(review.id)) {
+      return throwError(() => new Error('No se puede actualizar una reseña sin ID válido.'));
+    }
+
+    return this.reviewsEndpoint.update(review, review.id);
+  }
+
+  /**
+   * Deletes a review by its identifier.
+   */
   deleteReview(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    if (!this.isValidId(id)) {
+      return throwError(() => new Error('No se puede eliminar una reseña sin ID válido.'));
+    }
+
+    return this.reviewsEndpoint.delete(id);
   }
 }

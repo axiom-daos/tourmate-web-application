@@ -1,0 +1,132 @@
+<section class="assigned-tours-page">
+  <a
+    class="back-link"
+    [routerLink]="['/profiles']"
+    [queryParams]="profile() ? { profileId: profile()?.id } : null"
+  >
+    <mat-icon aria-hidden="true">arrow_back</mat-icon>
+    {{ 'profiles.tours.back_to_profile' | translate }}
+  </a>
+
+  @if (loadingProfile() || loadingTours()) {
+    <div class="state-panel" role="status">
+      <mat-spinner diameter="28" [attr.aria-label]="'common.loading' | translate" />
+      <span>{{ 'common.loading' | translate }}</span>
+    </div>
+  } @else if (profileNotFound()) {
+    <div class="state-panel error-panel" role="alert">
+      <mat-icon aria-hidden="true">person_off</mat-icon>
+      <h1>{{ 'profiles.tours.profile_not_found' | translate }}</h1>
+      <a class="return-link" [routerLink]="['/profiles']">
+        {{ 'profiles.tours.back_to_profile' | translate }}
+      </a>
+    </div>
+  } @else if (profileLoadError()) {
+    <div class="state-panel error-panel" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <h1>{{ 'profiles.tours.load_error_title' | translate }}</h1>
+      <p>{{ 'profiles.load_error' | translate }}</p>
+      <button type="button" class="retry-button" (click)="loadProfileAndTours()">
+        <mat-icon aria-hidden="true">refresh</mat-icon>
+        {{ 'profiles.tours.retry' | translate }}
+      </button>
+    </div>
+  } @else if (error()) {
+    <div class="state-panel error-panel" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <h1>{{ 'profiles.tours.load_error_title' | translate }}</h1>
+      <p>{{ 'profiles.tours.load_error' | translate }}</p>
+      <button type="button" class="retry-button" (click)="loadProfileAndTours()">
+        <mat-icon aria-hidden="true">refresh</mat-icon>
+        {{ 'profiles.tours.retry' | translate }}
+      </button>
+    </div>
+  } @else if (profile(); as currentProfile) {
+    <header class="page-heading">
+      <p class="eyebrow">{{ 'profiles.tours.eyebrow' | translate }}</p>
+      <h1>{{ 'profiles.tours.title' | translate }}</h1>
+      <p>
+        {{ 'profiles.tours.subtitle' | translate: { name: currentProfile.fullName } }}
+      </p>
+      <span class="role-badge">{{ roleLabel(currentProfile.role) }}</span>
+    </header>
+
+    @if (tours().length === 0) {
+      <section class="state-panel empty-panel" role="status">
+        <mat-icon aria-hidden="true">hiking</mat-icon>
+        <h2>{{ 'profiles.tours.empty_title' | translate }}</h2>
+        <p>{{ 'profiles.tours.empty_description' | translate }}</p>
+      </section>
+    } @else {
+      <div class="result-heading" aria-live="polite">
+        <h2>{{ 'profiles.tours.list_heading' | translate }}</h2>
+        <span>{{ 'profiles.tours.count' | translate: { count: tours().length } }}</span>
+      </div>
+
+      <div class="tour-list">
+        @for (assignment of tours(); track assignment.tour.id) {
+          <article class="tour-card">
+            <header class="tour-card-header">
+              <span class="tour-icon" aria-hidden="true"><mat-icon>landscape</mat-icon></span>
+              <div class="tour-title">
+                <p>{{ 'profiles.tours.tour_id' | translate: { id: assignment.tour.id } }}</p>
+                <h2>{{ assignment.tour.details.title }}</h2>
+              </div>
+              <span class="assignment-badge">{{ assignmentLabel(assignment.assignment) }}</span>
+            </header>
+
+            <p class="tour-description">{{ assignment.tour.details.description }}</p>
+
+            <dl class="tour-details">
+              <div>
+                <dt><mat-icon aria-hidden="true">schedule</mat-icon>{{ 'profiles.tours.duration' | translate }}</dt>
+                <dd>{{ assignment.tour.details.duration }}</dd>
+              </div>
+              <div>
+                <dt><mat-icon aria-hidden="true">terrain</mat-icon>{{ 'profiles.tours.difficulty_label' | translate }}</dt>
+                <dd>{{ difficultyLabel(assignment.tour.details.difficulty) }}</dd>
+              </div>
+              <div>
+                <dt><mat-icon aria-hidden="true">payments</mat-icon>{{ 'profiles.tours.price' | translate }}</dt>
+                <dd>{{ assignment.tour.details.price.amount | currency: assignment.tour.details.price.currency }}</dd>
+              </div>
+              <div>
+                <dt><mat-icon aria-hidden="true">flag</mat-icon>{{ 'profiles.tours.tour_status' | translate }}</dt>
+                <dd>{{ statusLabel(assignment.tour.status) }}</dd>
+              </div>
+            </dl>
+
+            @if (assignment.schedules.length > 0) {
+              <section class="schedule-section" [attr.aria-label]="'profiles.tours.departures' | translate">
+                <h3>{{ 'profiles.tours.departures' | translate }}</h3>
+                <div class="schedule-list">
+                  @for (item of assignment.schedules; track item.schedule.id) {
+                    <div class="schedule-item">
+                      <div>
+                        <span class="schedule-label">
+                          {{ 'profiles.tours.departure' | translate }}
+                        </span>
+                        <time [attr.datetime]="item.schedule.departureDateTime">
+                          {{ item.schedule.departureDateTime | date: 'medium' }}
+                        </time>
+                      </div>
+                      <div>
+                        <span class="schedule-label">{{ 'profiles.tours.capacity' | translate }}</span>
+                        <span>{{ item.schedule.maxCapacity }}</span>
+                      </div>
+                      <span class="status-chip">
+                        {{ statusLabel(item.activeStatus ?? item.schedule.status) }}
+                      </span>
+                    </div>
+                  }
+                </div>
+              </section>
+            } @else {
+              <p class="no-schedules">{{ 'profiles.tours.no_departures' | translate }}</p>
+            }
+          </article>
+        }
+      </div>
+    }
+  }
+</section>

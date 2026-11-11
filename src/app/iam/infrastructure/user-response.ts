@@ -1,10 +1,9 @@
 import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
-import { UserRole } from '../domain/model/value-object/user-role';
 
 export interface UserResource extends BaseResource {
   id: number;
   email: string;
-  role: UserRole;
+  role: string;
   firstName: string;
   lastName: string;
 }

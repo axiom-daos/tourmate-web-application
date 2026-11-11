@@ -24,7 +24,7 @@ export class ActiveTour implements BaseEntity {
                 currentLatitude: number;
                 currentLongitude: number;
                 startedAt: string;
-                finishedAt: string;
+                finishedAt: string | null;
                 tourSchedule?: TourSchedule | null;
                 guide?: TourGuide | null;}) {
     this.#id = activeTour.id;

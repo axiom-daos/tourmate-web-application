@@ -18,7 +18,7 @@ export class ActiveToursApiEndpoint extends BaseApiEndpoint<ActiveTour, ActiveTo
    * @param http - The HttpClient to be used for making API requests.
    */
   constructor(http: HttpClient) {
-    super(http, `${environment.activeToursApiBaseUrl}${environment.tourmateProviderActiveToursEndpointPath}`, new ActiveTourAssembler());
+    super(http, `${environment.tourmateProviderApiBaseUrl}${environment.tourmateProviderActiveToursEndpointPath}`, new ActiveTourAssembler());
   }
 
   override create(activeTour: ActiveTour): Observable<ActiveTour> {
